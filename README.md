@@ -1,2 +1,2 @@
 # DuperTech
-Trabajo en equipo de la materia Tc2005B.
+Trabajo en equipo de la materia TC2005B.

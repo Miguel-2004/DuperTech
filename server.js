@@ -18,6 +18,11 @@ app.get('/', (req, res) => {
     res.render('index'); // Usamos render para vistas con EJS
 });
 
+app.get('/main', (req, res) => {
+    res.render('main', { pageTitle: 'Página Principal' }); // Renderiza el archivo main.ejs
+});
+
+
 // Ruta para manejar 404
 app.use((req, res) => {
     res.status(404).render('404', { pageTitle: 'Página no encontrada' });

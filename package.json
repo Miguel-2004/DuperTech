@@ -1,0 +1,11 @@
+{
+  "name": "dupertech",
+  "version": "1.0.0",
+  "description": "Trabajo en equipo de la materia TC2005B.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

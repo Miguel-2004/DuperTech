@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser'); // Necesario para manejar datos de formularios
+const bodyParser = require('body-parser'); 
 
 const app = express();
 const PORT = 3000;
@@ -13,9 +13,9 @@ app.set('views', 'views');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Rutas principales (puedes modularizarlas en archivos separados)
+
 app.get('/', (req, res) => {
-    res.render('index'); // Usamos render para vistas con EJS
+    res.render('index');
 });
 
 app.get('/main', (req, res) => {

@@ -63,3 +63,84 @@
 </body>
 </html>
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duper Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        .login-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #041e3f;
+        }
+        .box {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+        }
+        .login-image {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .login-image img {
+            max-width: 100px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="box has-background-white">
+            <div class="login-image">
+                <img src="/images/dp_white.png" alt="Logo">
+            </div>
+            <h1 class="title has-text-centered">Iniciar Sesión</h1>
+            <form id="loginForm" action="/users/login" method="POST">
+                <div class="field">
+                    <label class="label">Correo Electrónico</label>
+                    <div class="control">
+                        <input class="input" id="email" type="email" placeholder="ejemplo@correo.com" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Contraseña</label>
+                    <div class="control">
+                        <input class="input" id="password" type="password" placeholder="********" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <input type="submit" class="button is-primary is-fullwidth" value="Entrar">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Evita el envío del formulario
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                if (email && password) {
+                    window.location.href = '/main'; 
+                } else {
+                    alert('Por favor, completa ambos campos antes de continuar.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

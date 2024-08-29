@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <%- include('includes/head') %> <!-- Partial para el head -->
+    <style>
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0; /* Añadir espacio entre las líneas */
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .worker-name {
+            flex-grow: 1; /* Esto permite que el nombre ocupe el espacio disponible */
+            margin-right: 20px; /* Espacio entre el nombre y el botón */
+        }
+
+        .edit-button {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+ <!-- Main content -->
+ <div class="column is-10">
+    <section class="section">
+        <div class="box">
+            <h1 class="title">Trabajadores</h1>
+
+            <!-- Search -->
+            <div class="field has-addons">
+                <div class="control has-icons-left is-expanded">
+                    <input class="input" type="text" placeholder="Buscar">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-search"></i>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Worker List with Edit Button -->
+            <div class="list">
+                <div class="list-item">
+                    <span class="worker-name">Miguel Angel Becerra Ayala</span>
+                    <button class="button is-small is-link is-light edit-button">Editar</button>
+                </div>
+                <div class="list-item">
+                    <span class="worker-name">Erick Eduardo Bautista Acosta</span>
+                    <button class="button is-small is-link is-light edit-button">Editar</button>
+                </div>
+                <div class="list-item">
+                    <span class="worker-name">Diego Ponce de León Betanzos</span>
+                    <button class="button is-small is-link is-light edit-button">Editar</button>
+                </div>
+                <div class="list-item">
+                    <span class="worker-name">Santiago Palacios Menes</span>
+                    <button class="button is-small is-link is-light edit-button">Editar</button>
+                </div>
+            </div>
+
+            <!-- Add New Worker Button -->
+            <div class="has-text-centered mt-5">
+                <button class="button is-success is-medium">Añadir</button>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- FontAwesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

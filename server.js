@@ -22,6 +22,9 @@ app.get('/main', (req, res) => {
     res.render('main', { pageTitle: 'Página Principal' }); // Renderiza el archivo main.ejs
 });
 
+app.get('/empleados', (req, res) => {
+    res.render('empleados', { pageTitle: 'Página Principal' }); // 
+});
 
 // Ruta para manejar 404
 app.use((req, res) => {

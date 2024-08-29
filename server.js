@@ -26,9 +26,8 @@ app.get('/empleados', (req, res) => {
     res.render('empleados', { pageTitle: 'Página Principal' }); // 
 });
 
-// Ruta para manejar 404
-app.use((req, res) => {
-    res.status(404).render('404', { pageTitle: 'Página no encontrada' });
+app.use((req, res, next) => {
+    res.status(404).render('404');  // Renderiza la vista 404.ejs cuando no se encuentra la ruta
 });
 
 // Iniciar el servidor

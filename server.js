@@ -22,6 +22,9 @@ app.get('/main', (req, res) => {
     res.render('main', { pageTitle: 'Página Principal' }); // Renderiza el archivo main.ejs
 });
 
+app.get('/empleados', (req, res) => {
+    res.render('empleados', { pageTitle: 'Página Principal' }); // 
+});
 
 app.use((req, res, next) => {
     res.status(404).render('404');  // Renderiza la vista 404.ejs cuando no se encuentra la ruta

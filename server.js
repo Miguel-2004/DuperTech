@@ -30,6 +30,10 @@ app.get('/clientes', (req,res)=> {
     res.render('clientes', { pageTitle: 'clientes' }); 
 });
 
+app.get('/reportes', (req,res)=> {
+    res.render('reportes', { pageTitle: 'reportes' }); 
+});
+
 app.use((req, res, next) => {
     res.status(404).render('404');  
 });

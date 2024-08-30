@@ -88,7 +88,7 @@
                 <td>15/03/1985</td>
                 <td>**** **** **** 1234</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Editar</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
             <tr>
                 <td>2</td>
@@ -98,7 +98,7 @@
                 <td>10/07/1990</td>
                 <td>**** **** **** 5678</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Editar</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
             <tr>
                 <td>3</td>
@@ -108,7 +108,7 @@
                 <td>5/11/1982</td>
                 <td>**** **** **** 9012</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Editar</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
             <tr>
                 <td>4</td>
@@ -128,38 +128,38 @@
         <h2 class="title has-text-link">Detalles de cuenta</h2>
         <p>Sellos totales:</p>
         <p>Recompensas reclamadas:</p>
-        <button id="cerrarPopup2">Cerrar</button>
+        <button id="cerrarPopup">Cerrar</button>
     </div>
 
     <script>
-        function mostrarPopup2() {
+        function mostrarPopup() {
             const popup = document.getElementById('miPopup');
             popup.style.display = 'block';
         }
 
-        const cerrarPopup2 = document.getElementById('cerrarPopup');
+        const cerrarPopup = document.getElementById('cerrarPopup');
         cerrarPopup.addEventListener('click', function() {
             const popup = document.getElementById('miPopup');
             popup.style.display = 'none';
         });
     </script>
 
-<div class="popup" id="miPopup">
-    <h2 class="title has-text-link">Detalles de cuenta</h2>
-    <p>Sellos totales:</p>
-    <p>Recompensas reclamadas:</p>
-    <button id="cerrarPopup">Cerrar</button>
+<div class="popup" id="miPopup2">
+    <h2 class="title has-text-link">Informacion de la cuenta</h2>
+    <p>Nombre: Nombre Apellidos</p>
+    <p>Número: 442 5555 5555</p>
+    <button id="cerrarPopup2">Cerrar</button>
 </div>
 
 <script>
-    function mostrarPopup() {
-        const popup = document.getElementById('miPopup');
+    function mostrarPopup2() {
+        const popup = document.getElementById('miPopup2');
         popup.style.display = 'block';
     }
 
-    const cerrarPopup = document.getElementById('cerrarPopup');
-    cerrarPopup.addEventListener('click', function() {
-        const popup = document.getElementById('miPopup');
+    const cerrarPopup2 = document.getElementById('cerrarPopup2');
+    cerrarPopup2.addEventListener('click', function() {
+        const popup = document.getElementById('miPopup2');
         popup.style.display = 'none';
     });
 </script>

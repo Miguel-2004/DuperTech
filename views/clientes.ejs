@@ -35,6 +35,7 @@
             width: 600px; 
             height: 400px;
             text-align: left; 
+            
         }
         .popup h2 {
             font-size: 1.5rem;
@@ -86,7 +87,7 @@
                 <td>555-123-4567</td>
                 <td>Masculino</td>
                 <td>15/03/1985</td>
-                <td>**** **** **** 1234</td>
+                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 1234</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
                 <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
@@ -96,7 +97,7 @@
                 <td>555-987-6543</td>
                 <td>Femenino</td>
                 <td>10/07/1990</td>
-                <td>**** **** **** 5678</td>
+                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 5678</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
                 <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
@@ -106,7 +107,7 @@
                 <td>555-555-5555</td>
                 <td>Masculino</td>
                 <td>5/11/1982</td>
-                <td>**** **** **** 9012</td>
+                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 9012</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
                 <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
@@ -116,7 +117,7 @@
                 <td>555-222-3333</td>
                 <td>Femenino</td>
                 <td>20/07/1995</td>
-                <td>**** **** **** 3456</td>
+                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 3456</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
                 <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
@@ -131,18 +132,6 @@
         <button id="cerrarPopup">Cerrar</button>
     </div>
 
-    <script>
-        function mostrarPopup() {
-            const popup = document.getElementById('miPopup');
-            popup.style.display = 'block';
-        }
-
-        const cerrarPopup = document.getElementById('cerrarPopup');
-        cerrarPopup.addEventListener('click', function() {
-            const popup = document.getElementById('miPopup');
-            popup.style.display = 'none';
-        });
-    </script>
 
 <div class="popup" id="miPopup2">
     <h2 class="title has-text-link">Informacion de la cuenta</h2>
@@ -151,7 +140,29 @@
     <button id="cerrarPopup2">Cerrar</button>
 </div>
 
+<!-- Pop-up de tarjeta -->
+<div class="popup" id="miPopup3">
+    <h2 class="title has-text-link">Tarjeta de cliente</h2>
+    <p>Total de sellos: 25 </p>
+    <p>Recompensas reclamadas: 5</p>
+    <p>Platillo mas comprado: Chilaquiles con pollo</p>
+    <button id="cerrarPopup3">Cerrar</button>
+</div>
+
 <script>
+
+    function mostrarPopup() {
+        const popup = document.getElementById('miPopup');
+        popup.style.display = 'block';
+    }
+
+    const cerrarPopup = document.getElementById('cerrarPopup');
+    cerrarPopup.addEventListener('click', function() {
+        const popup = document.getElementById('miPopup');
+        popup.style.display = 'none';
+    });
+
+
     function mostrarPopup2() {
         const popup = document.getElementById('miPopup2');
         popup.style.display = 'block';
@@ -160,6 +171,17 @@
     const cerrarPopup2 = document.getElementById('cerrarPopup2');
     cerrarPopup2.addEventListener('click', function() {
         const popup = document.getElementById('miPopup2');
+        popup.style.display = 'none';
+    });
+
+    function mostrarPopup3() {
+        const popup = document.getElementById('miPopup3');
+        popup.style.display = 'block';
+    }
+
+    const cerrarPopup3 = document.getElementById('cerrarPopup3');
+    cerrarPopup3.addEventListener('click', function() {
+        const popup = document.getElementById('miPopup3');
         popup.style.display = 'none';
     });
 </script>

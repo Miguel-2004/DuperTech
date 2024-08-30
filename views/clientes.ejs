@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('includes/head') %> 
+    <title>Lista de Clientes</title>
+
+</head>
+<body>
+
+    <h1>Clientes</h1>
+    <table class="table mt-6">
+        <thead>
+            <tr>
+                <th><abbr title="ID">ID</abbr></th>
+                <th>Team</th>
+                <th><abbr title="Nombre">Nombre</abbr></th>
+                <th><abbr title="Telefono">Telefono</abbr></th>
+                <th><abbr title="Sexo">Sexo</abbr></th>
+                <th><abbr title="FechaNac">Fecha de nacimiento</abbr></th>
+                <th><abbr title="IDTarjeta">tarjeta</abbr></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th><abbr title="ID">ID</abbr></th>
+                <th>Team</th>
+                <th><abbr title="Nombre">Nombre</abbr></th>
+                <th><abbr title="Telefono">Telefono</abbr></th>
+                <th><abbr title="Sexo">Sexo</abbr></th>
+                <th><abbr title="FechaNac">Fecha de nacimiento</abbr></th>
+                <th><abbr title="IDTarjeta">tarjeta</abbr></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Juan Pérez</td>
+                <td>555-123-4567</td>
+                <td>Masculino</td>
+                <td>15/03/1985</td>
+                <td>**** **** **** 1234</td>
+                <td><button>Ver Detalles</button></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>María López</td>
+                <td>555-987-6543</td>
+                <td>Femenino</td>
+                <td>10/07/1990</td>
+                <td>**** **** **** 5678</td>
+                <td><button>Ver Detalles</button></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Carlos Rodríguez</td>
+                <td>555-555-5555</td>
+                <td>Masculino</td>
+                <td>5/11/1982</td>
+                <td>**** **** **** 9012</td>
+                <td><button>Ver Detalles</button></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Laura García</td>
+                <td>555-222-3333</td>
+                <td>Femenino</td>
+                <td>20/07/1995</td>
+                <td>**** **** **** 3456</td>
+                <td><button>Ver Detalles</button></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <!-- Agrega tus scripts JS aquí -->
+    
+    <%- include('includes/footer') %>
+</body>
+</html>

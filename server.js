@@ -26,8 +26,12 @@ app.get('/empleados', (req, res) => {
     res.render('empleados', { pageTitle: 'Página Principal' }); // 
 });
 
+app.get('/clientes', (req,res)=> {
+    res.render('clientes', { pageTitle: 'clientes' }); 
+});
+
 app.use((req, res, next) => {
-    res.status(404).render('404');  // Renderiza la vista 404.ejs cuando no se encuentra la ruta
+    res.status(404).render('404');  
 });
 
 // Iniciar el servidor

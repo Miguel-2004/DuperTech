@@ -22,6 +22,39 @@
             margin-left: 170px;
         }
 
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            width: 600px; 
+            height: 400px;
+            text-align: left; 
+        }
+        .popup h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .popup p {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        .popup button {
+            background-color: #0074d9;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .popup button:hover {
+            background-color: #005ea6;
+        }
     </style>
 
     <h1 class="title is-3 has-text-link">Clientes</h1>
@@ -29,7 +62,6 @@
         <thead>
             <tr>
                 <th><abbr title="ID">ID</abbr></th>
-                <th>Team</th>
                 <th><abbr title="Nombre">Nombre</abbr></th>
                 <th><abbr title="Telefono">Telefono</abbr></th>
                 <th><abbr title="Sexo">Sexo</abbr></th>
@@ -40,7 +72,6 @@
         <tfoot>
             <tr>
                 <th><abbr title="ID">ID</abbr></th>
-                <th>Team</th>
                 <th><abbr title="Nombre">Nombre</abbr></th>
                 <th><abbr title="Telefono">Telefono</abbr></th>
                 <th><abbr title="Sexo">Sexo</abbr></th>
@@ -56,7 +87,7 @@
                 <td>Masculino</td>
                 <td>15/03/1985</td>
                 <td>**** **** **** 1234</td>
-                <td><button class="button is-link">Ver Detalles</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
             </tr>
             <tr>
                 <td>2</td>
@@ -65,7 +96,7 @@
                 <td>Femenino</td>
                 <td>10/07/1990</td>
                 <td>**** **** **** 5678</td>
-                <td><button class="button is-link">Ver Detalles</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
             </tr>
             <tr>
                 <td>3</td>
@@ -74,7 +105,7 @@
                 <td>Masculino</td>
                 <td>5/11/1982</td>
                 <td>**** **** **** 9012</td>
-                <td><button class="button is-link">Ver Detalles</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
             </tr>
             <tr>
                 <td>4</td>
@@ -83,12 +114,32 @@
                 <td>Femenino</td>
                 <td>20/07/1995</td>
                 <td>**** **** **** 3456</td>
-                <td><button class="button is-link">Ver Detalles</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
             </tr>
         </tbody>
     </table>
     
-    <!-- Agrega tus scripts JS aquí -->
+    <!-- Pop-up -->
+    <div class="popup" id="miPopup">
+        <h2 class="title has-text-link">Detalles de cuenta</h2>
+        <p>Sellos totales:</p>
+        <p>Recompensas reclamadas:</p>
+        <button id="cerrarPopup">Cerrar</button>
+    </div>
+
+    <script>
+        function mostrarPopup() {
+            const popup = document.getElementById('miPopup');
+            popup.style.display = 'block';
+        }
+
+        const cerrarPopup = document.getElementById('cerrarPopup');
+        cerrarPopup.addEventListener('click', function() {
+            const popup = document.getElementById('miPopup');
+            popup.style.display = 'none';
+        });
+    </script>
+    
     
     <%- include('includes/footer') %>
 </body>

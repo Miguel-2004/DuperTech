@@ -7,8 +7,25 @@
 </head>
 <body>
 
-    <h1>Clientes</h1>
-    <table class="table mt-6">
+    <style>
+        .table {
+            margin: 0 auto; 
+            width: 80%; /* Ajusta el ancho según tus necesidades */
+        }
+        .table th,
+        .table td {
+            padding: 10px; /* Espaciado interno para las celdas */
+            text-align: center; 
+        }
+        .title {
+            text-align: left;
+            margin-left: 170px;
+        }
+
+    </style>
+
+    <h1 class="title is-3 has-text-link">Clientes</h1>
+    <table class="table">
         <thead>
             <tr>
                 <th><abbr title="ID">ID</abbr></th>
@@ -39,7 +56,7 @@
                 <td>Masculino</td>
                 <td>15/03/1985</td>
                 <td>**** **** **** 1234</td>
-                <td><button>Ver Detalles</button></td>
+                <td><button class="button is-link">Ver Detalles</button></td>
             </tr>
             <tr>
                 <td>2</td>
@@ -48,7 +65,7 @@
                 <td>Femenino</td>
                 <td>10/07/1990</td>
                 <td>**** **** **** 5678</td>
-                <td><button>Ver Detalles</button></td>
+                <td><button class="button is-link">Ver Detalles</button></td>
             </tr>
             <tr>
                 <td>3</td>
@@ -57,7 +74,7 @@
                 <td>Masculino</td>
                 <td>5/11/1982</td>
                 <td>**** **** **** 9012</td>
-                <td><button>Ver Detalles</button></td>
+                <td><button class="button is-link">Ver Detalles</button></td>
             </tr>
             <tr>
                 <td>4</td>
@@ -66,7 +83,7 @@
                 <td>Femenino</td>
                 <td>20/07/1995</td>
                 <td>**** **** **** 3456</td>
-                <td><button>Ver Detalles</button></td>
+                <td><button class="button is-link">Ver Detalles</button></td>
             </tr>
         </tbody>
     </table>

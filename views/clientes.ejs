@@ -118,7 +118,7 @@
                 <td>20/07/1995</td>
                 <td>**** **** **** 3456</td>
                 <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Editar</button></td>
+                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
             </tr>
         </tbody>
     </table>
@@ -128,21 +128,41 @@
         <h2 class="title has-text-link">Detalles de cuenta</h2>
         <p>Sellos totales:</p>
         <p>Recompensas reclamadas:</p>
-        <button id="cerrarPopup">Cerrar</button>
+        <button id="cerrarPopup2">Cerrar</button>
     </div>
 
     <script>
-        function mostrarPopup() {
+        function mostrarPopup2() {
             const popup = document.getElementById('miPopup');
             popup.style.display = 'block';
         }
 
-        const cerrarPopup = document.getElementById('cerrarPopup');
+        const cerrarPopup2 = document.getElementById('cerrarPopup');
         cerrarPopup.addEventListener('click', function() {
             const popup = document.getElementById('miPopup');
             popup.style.display = 'none';
         });
     </script>
+
+<div class="popup" id="miPopup">
+    <h2 class="title has-text-link">Detalles de cuenta</h2>
+    <p>Sellos totales:</p>
+    <p>Recompensas reclamadas:</p>
+    <button id="cerrarPopup">Cerrar</button>
+</div>
+
+<script>
+    function mostrarPopup() {
+        const popup = document.getElementById('miPopup');
+        popup.style.display = 'block';
+    }
+
+    const cerrarPopup = document.getElementById('cerrarPopup');
+    cerrarPopup.addEventListener('click', function() {
+        const popup = document.getElementById('miPopup');
+        popup.style.display = 'none';
+    });
+</script>
     
     
     <%- include('includes/footer') %>

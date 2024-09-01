@@ -61,35 +61,61 @@
     <ul>
         <li>
             <a href="#">
-                <img src="images/DB_S_ICON.png" alt="empleado_logo">
+                <img id="btn1" src="images/DB_S_ICON.png" alt="Duperbrand_logo">
             </a>          
         </li>      
         <li>
             <a href="#">
-                <img src="images/EMP_ICON.png" alt="empleado_logo">
+                <img id="btn2" src="images/EMP_ICON.png" alt="empleado_logo">
             </a>          
         </li>
         <li>
             <a href="#">
-                <img src="images/CLI_ICON.png" alt="cliente_logo">
+                <img id="btn3" src="images/CLI_ICON.png" alt="cliente_logo">
             </a>  
         </li>
         <li>
             <a href="#">
-                <img src="images/TJ_ICON.png" alt="tarjeta_logo">
+                <img id="btn4" src="images/TJ_ICON.png" alt="tarjeta_logo">
             </a>  
         </li>
         <li>
             <a href="#">
-                <img src="images/PRO_ICON.png" alt="Promo_logo">
+                <img id="btn5" src="images/PRO_ICON.png" alt="Promo_logo">
             </a>  
         </li>
         <li>
             <a href="#">
-                <img src="images/REP_ICON.png" alt="Graf_logo">
+                <img id="btn6" src="images/REP_ICON.png" alt="Graf_logo">
             </a>  
         </li>
     </ul>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtener referencias a los botones
+            const btn1 = document.getElementById('btn1');
+            const btn2 = document.getElementById('btn2');
+            const btn3 = document.getElementById('btn3');
+
+            // Asignar eventos de clic a cada botón
+            btn1.addEventListener('click', function() {
+                window.location.href = '/main'; 
+            });
+
+            btn2.addEventListener('click', function() {
+                window.location.href = '/empleados'; 
+            });
+
+            btn3.addEventListener('click', function() {
+                window.location.href = '/clientes'; 
+            });
+
+            btn6.addEventListener('click', function() {
+                window.location.href = '/reportes'; 
+            });
+        });
+    </script>
 </body>
 </html>

@@ -5,7 +5,7 @@ const DuperModel = require('../models/duper.models');
 // Controlador para manejar la solicitud GET
 exports.getDuper = async (req, res, next) => {
     try {
-        const data = await DuperModel.getAllData(); // Asegúrate de usar la función correcta de tu modelo
+        const data = await DuperModel.getAllData(); 
         res.render('main', { data }); // Renderiza la vista `main` con los datos obtenidos
     } catch (err) {
         console.error(err);
@@ -16,8 +16,6 @@ exports.getDuper = async (req, res, next) => {
 // Controlador para manejar la solicitud POST
 exports.postDuper = async (req, res, next) => {
     try {
-        // Lógica para manejar la solicitud POST (guardar datos, validar, etc.)
-        // Por ejemplo, si tu modelo tiene una función para guardar datos:
         await DuperModel.saveData(req.body); // Guarda los datos enviados en el formulario
         res.redirect('/main'); // Redirige a la ruta `/main` después de procesar la solicitud
     } catch (err) {

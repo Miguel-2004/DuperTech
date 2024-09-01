@@ -23,7 +23,7 @@ app.get('/main', (req, res) => {
 });
 
 app.get('/empleados', (req, res) => {
-    res.render('empleados', { pageTitle: 'Página Principal' }); // 
+    res.render('empleados', { pageTitle: 'empleados' }); // 
 });
 
 app.get('/clientes', (req,res)=> {

@@ -8,182 +8,140 @@
 <body>
 
     <style>
-        .table {
-            margin: 0 auto; 
-            width: 80%; /* Ajusta el ancho según tus necesidades */
+        /* Estilo para centrar y agrandar el recuadro */
+        .box-centered {
+            width: 80%; /* Ajusta el tamaño del recuadro, aquí está al 80% del ancho de la página */
+            max-width: 1200px; /* Ancho máximo del recuadro */
+            margin: 50px auto; /* Centrar horizontalmente y dar espacio desde la parte superior */
+            padding: 20px;
         }
-        .table th,
-        .table td {
-            padding: 10px; /* Espaciado interno para las celdas */
-            text-align: center; 
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0; /* Añadir espacio entre las líneas */
+            border-bottom: 1px solid #e5e5e5;
         }
-        .title {
-            text-align: left;
-            margin-left: 170px;
+
+        .worker-name {
+            flex-grow: 1; /* Permitir que el nombre ocupe el espacio disponible */
+            margin-right: 20px; /* Espacio entre el nombre y el botón */
+        }
+
+        .edit-button {
+            margin-left: auto;
         }
 
         .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #f9f9f9;
-            padding: 20px;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            z-index: 9999;
-            width: 600px; 
-            height: 400px;
-            text-align: left; 
-            
-        }
-        .popup h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        .popup p {
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-        .popup button {
-            background-color: #0074d9;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .popup button:hover {
-            background-color: #005ea6;
-        }
-    </style>
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    max-width: 300px;
+    width: 200%;
+}
 
-    <h1 class="title is-3 has-text-link">Clientes</h1>
-    <table class="table">
-        <thead>
-            <tr>
-                <th><abbr title="ID">ID</abbr></th>
-                <th><abbr title="Nombre">Nombre</abbr></th>
-                <th><abbr title="Telefono">Telefono</abbr></th>
-                <th><abbr title="Sexo">Sexo</abbr></th>
-                <th><abbr title="FechaNac">Fecha de nacimiento</abbr></th>
-                <th><abbr title="IDTarjeta">Tarjeta</abbr></th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th><abbr title="ID">ID</abbr></th>
-                <th><abbr title="Nombre">Nombre</abbr></th>
-                <th><abbr title="Telefono">Telefono</abbr></th>
-                <th><abbr title="Sexo">Sexo</abbr></th>
-                <th><abbr title="FechaNac">Fecha de nacimiento</abbr></th>
-                <th><abbr title="IDTarjeta">tarjeta</abbr></th>
-            </tr>
-        </tfoot>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Juan Pérez</td>
-                <td>555-123-4567</td>
-                <td>Masculino</td>
-                <td>15/03/1985</td>
-                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 1234</td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>María López</td>
-                <td>555-987-6543</td>
-                <td>Femenino</td>
-                <td>10/07/1990</td>
-                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 5678</td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Carlos Rodríguez</td>
-                <td>555-555-5555</td>
-                <td>Masculino</td>
-                <td>5/11/1982</td>
-                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 9012</td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Laura García</td>
-                <td>555-222-3333</td>
-                <td>Femenino</td>
-                <td>20/07/1995</td>
-                <td button class="button is-text" onclick="mostrarPopup3()">**** **** **** 3456</td>
-                <td><button class="button is-link" onclick="mostrarPopup()">Ver Detalles</button></td>
-                <td><button class="button is-link" onclick="mostrarPopup2()">Editar</button></td>
-            </tr>
-        </tbody>
-    </table>
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+    </style>
+</head>
+<body>
+
+    <!-- Main content -->
+    <div class="container">
+        <section class="section">
+            <div class="box box-centered"> 
+                <h1 class="title">Clientes</h1>
+
+                <!-- Search -->
+                <div class="field has-addons">
+                    <div class="control has-icons-left is-expanded">
+                        <input class="input" type="text" placeholder="Buscar">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Worker List with Edit Button -->
+                <div class="list">
+                    <div class="list-item">
+                        <span class="worker-name">Miguel Angel Becerra Ayala</span>
+                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
+                    </div>
+                    <div class="list-item">
+                        <span class="worker-name">Erick Eduardo Bautista Acosta</span>
+                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
+                    </div>
+                    <div class="list-item">
+                        <span class="worker-name">Diego Ponce de León Betanzos</span>
+                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
+                    </div>
+                    <div class="list-item">
+                        <span class="worker-name">Santiago Palacios Menes</span>
+                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
+                    </div>
+                </div>
+
+                <!-- Add New Worker Button -->
+                <div class="has-text-centered mt-5">
+                    <button class="button is-success is-medium">Añadir</button>
+                </div>
+            </div>
+        </section>
+    </div>
     
     <!-- Pop-up -->
-    <div class="popup" id="miPopup">
-        <h2 class="title has-text-link">Detalles de cuenta</h2>
-        <p>Sellos totales:</p>
-        <p>Recompensas reclamadas:</p>
-        <button id="cerrarPopup">Cerrar</button>
+    <div class="popup box" id="miPopup" style="display:none;">
+        <button id="cerrarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
+        <h2 class="title is-4 has-text-link">Detalles de cuenta</h2>
+        <p><strong>ID:</strong> 10</p>
+        <p><strong>Teléfono:</strong> 9626281112</p>
+        <p><strong>Tarjeta relacionada:</strong> 109626281112</p>
+        <p><strong>Sellos totales:</strong> 10</p>
+        <p><strong>Recompensas reclamadas:</strong> 3</p>
+        <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
     </div>
-
-
-<div class="popup" id="miPopup2">
-    <h2 class="title has-text-link">Informacion de la cuenta</h2>
-    <p>Nombre: Nombre Apellidos</p>
-    <p>Número: 442 5555 5555</p>
-    <button id="cerrarPopup2">Cerrar</button>
-</div>
-
-<!-- Pop-up de tarjeta -->
-<div class="popup" id="miPopup3">
-    <h2 class="title has-text-link">Tarjeta de cliente</h2>
-    <p>Total de sellos: 25 </p>
-    <p>Recompensas reclamadas: 5</p>
-    <p>Platillo mas comprado: Chilaquiles con pollo</p>
-    <button id="cerrarPopup3">Cerrar</button>
-</div>
+    
+    
 
 <script>
 
-    function mostrarPopup() {
-        const popup = document.getElementById('miPopup');
-        popup.style.display = 'block';
-    }
+function mostrarPopup() {
+    const popup = document.getElementById('miPopup');
+    popup.style.display = 'block';
+}
 
-    const cerrarPopup = document.getElementById('cerrarPopup');
-    cerrarPopup.addEventListener('click', function() {
-        const popup = document.getElementById('miPopup');
-        popup.style.display = 'none';
-    });
+const cerrarPopup = document.getElementById('cerrarPopup');
+cerrarPopup.addEventListener('click', function() {
+    const popup = document.getElementById('miPopup');
+    popup.style.display = 'none';
+});
+
+const editarPopup = document.getElementById('editarPopup');
+editarPopup.addEventListener('click', function() {
+    // Aquí puedes añadir la lógica para editar los detalles de la cuenta.
+    alert('Funcionalidad de editar aún no implementada.');
+});
 
 
-    function mostrarPopup2() {
-        const popup = document.getElementById('miPopup2');
-        popup.style.display = 'block';
-    }
 
-    const cerrarPopup2 = document.getElementById('cerrarPopup2');
-    cerrarPopup2.addEventListener('click', function() {
-        const popup = document.getElementById('miPopup2');
-        popup.style.display = 'none';
-    });
 
-    function mostrarPopup3() {
-        const popup = document.getElementById('miPopup3');
-        popup.style.display = 'block';
-    }
-
-    const cerrarPopup3 = document.getElementById('cerrarPopup3');
-    cerrarPopup3.addEventListener('click', function() {
-        const popup = document.getElementById('miPopup3');
-        popup.style.display = 'none';
-    });
 </script>
     
     

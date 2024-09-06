@@ -10,9 +10,9 @@
     <style>
         /* Estilo para centrar y agrandar el recuadro */
         .box-centered {
-            width: 80%; /* Ajusta el tamaño del recuadro, aquí está al 80% del ancho de la página */
-            max-width: 1200px; /* Ancho máximo del recuadro */
-            margin: 50px auto; /* Centrar horizontalmente y dar espacio desde la parte superior */
+            width: 80%; 
+            max-width: 1200px; 
+            margin: 50px auto; 
             padding: 20px;
         }
 
@@ -20,7 +20,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0; /* Añadir espacio entre las líneas */
+            padding: 10px 0; 
             border-bottom: 1px solid #e5e5e5;
         }
 
@@ -62,13 +62,13 @@
 </head>
 <body>
 
-    <!-- Main content -->
+    <!-- contenedor principal -->
     <div class="container">
         <section class="section">
             <div class="box box-centered"> 
                 <h1 class="title">Clientes</h1>
 
-                <!-- Search -->
+                <!-- barra de busqueda -->
                 <div class="field has-addons">
                     <div class="control has-icons-left is-expanded">
                         <input class="input" type="text" placeholder="Buscar">
@@ -78,7 +78,7 @@
                     </div>
                 </div>
 
-                <!-- Worker List with Edit Button -->
+                <!-- lista de clientes con boton de mas informacion -->
                 <div class="list">
                     <div class="list-item">
                         <span class="worker-name">Miguel Angel Becerra Ayala</span>
@@ -98,7 +98,7 @@
                     </div>
                 </div>
 
-                <!-- Add New Worker Button -->
+                <!-- boton nuevo cliente -->
                 <div class="has-text-centered mt-5">
                     <button class="button is-success is-medium">Añadir</button>
                 </div>
@@ -135,7 +135,6 @@ cerrarPopup.addEventListener('click', function() {
 
 const editarPopup = document.getElementById('editarPopup');
 editarPopup.addEventListener('click', function() {
-    // Aquí puedes añadir la lógica para editar los detalles de la cuenta.
     alert('Funcionalidad de editar aún no implementada.');
 });
 

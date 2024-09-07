@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const password = document.getElementById('password').value;
 
         if (email && password) {
-            // Aquí puedes agregar cualquier validación adicional si es necesario
             window.location.href = '/main'; 
         } else {
             alert('Por favor, completa ambos campos antes de continuar.');

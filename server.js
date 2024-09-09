@@ -13,6 +13,9 @@ app.set('views', 'views');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const rutaUsers = require('./routes/main')
+
+app.use('/users',rutaUsers)
 
 app.get('/', (req, res) => {
     res.render('Login');
@@ -21,6 +24,7 @@ app.get('/', (req, res) => {
 app.get('/main', (req, res) => {
     res.render('main', { pageTitle: 'Página Principal' }); // Renderiza el archivo main.ejs
 });
+
 
 app.get('/empleados', (req, res) => {
     res.render('empleados', { pageTitle: 'empleados' }); // 

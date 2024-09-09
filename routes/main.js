@@ -15,5 +15,7 @@ const isAuthenticated = (req, res, next) => {
 router.get('/main', isAuthenticated, duperController.getDuper);
 router.post('/main', isAuthenticated, duperController.postDuper);
 
+router.post('/login',duperController.verificarUser)
+
 
 module.exports = router;

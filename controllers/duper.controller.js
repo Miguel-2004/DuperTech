@@ -23,3 +23,21 @@ exports.postDuper = async (req, res, next) => {
         res.status(500).send('Error al procesar la solicitud');
     }
 };
+
+exports.verificarUser = async (req, res, next) => {
+    try{
+        const userCorreo = req.body.email
+        const userContrasena = req.body.password
+
+        const usuario = await DuperModel.veryUser(userCorreo, userContrasena) 
+
+        if (!usuario){
+            res.render('/Login')
+        }
+
+        res.redirect('/main')
+    } catch (e) {
+        console.error(e)
+        res.render('/Login')
+    }
+}

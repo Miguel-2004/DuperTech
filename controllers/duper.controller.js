@@ -2,6 +2,22 @@
 
 const DuperModel = require('../models/duper.models');
 
+
+exports.getAllTrabajadores = async (req, res, next) => {
+    try{
+        const Trabajadores = await DuperModel.usuarios.trabajadorPrueba();
+        console.log(Trabajadores)
+
+        const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
+        res.render('empleados', { Trabajadores: TrabajadoresArray });
+
+        //res.render('empleados', {Trabajadores});
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error al cargar la página principal');
+    }
+};
+
 // Controlador para manejar la solicitud GET
 exports.getDuper = async (req, res, next) => {
     try {
@@ -29,7 +45,7 @@ exports.verificarUser = async (req, res, next) => {
         const userCorreo = req.body.email
         const userContrasena = req.body.password
 
-        const usuario = await DuperModel.veryUser(userCorreo, userContrasena) 
+        const usuario = await DuperModel.veryUser(userCorreo, userContrasena) // Cambiar veryUser a verifyUser cuando haya coneccion con la base de datos.
 
         if (!usuario){
             res.render('/Login')

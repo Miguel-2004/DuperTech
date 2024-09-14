@@ -16,6 +16,6 @@ router.get('/main', isAuthenticated, duperController.getDuper);
 router.post('/main', isAuthenticated, duperController.postDuper);
 
 router.post('/login',duperController.verificarUser)
-
-
+router.get('/empleados',duperController.getAllTrabajadores)
+ 
 module.exports = router;

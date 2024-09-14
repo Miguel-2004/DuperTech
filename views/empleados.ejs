@@ -34,6 +34,8 @@
 </head>
 <body>
 
+    <%- include('includes/sidebar') %>
+
     <!-- Main content -->
     <div class="container">
         <section class="section">
@@ -52,23 +54,16 @@
 
                 <!-- Worker List with Edit Button -->
                 <div class="list">
-                    <div class="list-item">
-                        <span class="worker-name">Miguel Angel Becerra Ayala</span>
-                        <button class="button is-small is-link is-light edit-button">Editar</button>
-                    </div>
-                    <div class="list-item">
-                        <span class="worker-name">Erick Eduardo Bautista Acosta</span>
-                        <button class="button is-small is-link is-light edit-button">Editar</button>
-                    </div>
-                    <div class="list-item">
-                        <span class="worker-name">Diego Ponce de León Betanzos</span>
-                        <button class="button is-small is-link is-light edit-button">Editar</button>
-                    </div>
-                    <div class="list-item">
-                        <span class="worker-name">Santiago Palacios Menes</span>
-                        <button class="button is-small is-link is-light edit-button">Editar</button>
-                    </div>
+                    <% for (let i = 0; i < Trabajadores.length; i++) { %>
+                        <div class="list-item">
+                            <span class="worker-name"><%= Trabajadores[i].nombre %></span>
+                            <button class="button is-small is-link is-light edit-button">Editar</button>
+                        </div>
+                    <% } %>
                 </div>
+
+
+
 
                 <!-- Add New Worker Button -->
                 <div class="has-text-centered mt-5">

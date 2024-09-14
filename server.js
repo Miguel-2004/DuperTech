@@ -17,6 +17,8 @@ const rutaUsers = require('./routes/main')
 
 app.use('/users',rutaUsers)
 
+app.use('/empleados',rutaUsers)
+
 app.get('/', (req, res) => {
     res.render('Login');
 });
@@ -25,10 +27,6 @@ app.get('/main', (req, res) => {
     res.render('main', { pageTitle: 'Página Principal' }); // Renderiza el archivo main.ejs
 });
 
-
-app.get('/empleados', (req, res) => {
-    res.render('empleados', { pageTitle: 'empleados' }); // 
-});
 
 app.get('/clientes', (req,res)=> {
     res.render('clientes', { pageTitle: 'clientes' }); 

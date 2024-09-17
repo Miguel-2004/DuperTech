@@ -1,64 +1,188 @@
 <!DOCTYPE html>
 <html data-theme="dark">
-    <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-        <%- include('includes/head') %> 
-        <body>
-            <%- include('includes/sidebar') %>
-            
-            <div class="columns is-centered">
-                <div class="column is-one-third">
-                    <div class="box has-text-centered">
-                      
-                        <img class="image is-4by3" src="images/GRAF1.pnG" />
-                        <div class="block">
-                            Gráfica de consulta.
-                        </div>
-                      
-                    </div>
-                    No reporte final, puesta por fines de demostración.*
-                </div>
-                <div class="column is-one-third">
-                    <div class="box has-text-centered">
-                        <img class="image is-4by3" src="images/GRAF2.png" />
-                        <div class="block">
-                            Reporte de consulta.
-                        </div>
-                     
-                    </div>
-                    No reporte final, puesta por fines de demostración.*
-                </div>
-            </div>
-        
-            <div class="columns is-centered">
-                <div class="column is-one-third">
-                    <div class="box has-text-centered">
-                        <img class="image is-4by3" src="images/GRAF3.png" />
-                        <div class="block">
-                            Gráfica de consulta.
-                        </div>
-                        
-                    </div>
-                    No reporte final, puesta por fines de demostración.*
-                </div>
-                <div class="column is-one-third">
-                    <div class="box has-text-centered">
-                        <img src="images/GRAF4.png" />
-                        <div class="block">
-                            Reporte de consulta.
-                        </div>
-                     
-                    </div>
-                    No reporte final, puesta por fines de demostración.*
-                </div>
-            </div>
-        </body>
-        
-        
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <%- include('includes/head') %> 
+  </head>
+  <body>
+    <%- include('includes/sidebar') %>
 
-        
-        
-        
-        <%- include('includes/footer') %> <!-- Partial para el footer -->
-    </body>
+    <div class="columns is-centered"> 
+      <div class="column is-one-third">
+        <div class="box has-text-centered">
+          <canvas id="chart1" class="block"></canvas>
+          <div class="block"> 
+            <div class="field">
+              <label class="label">Editar Consulta</label>
+              <div class="control">
+                <div class="select">
+                  <select>
+                    <option>Select dropdown</option>
+                    <option>With options</option>
+                    <option>Another option</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p>No reporte final, puesta por fines de demostración.*</p>
+      </div>
+      <div class="column is-one-third">
+        <div class="box has-text-centered">
+          <canvas id="chart2" class="block"></canvas>
+          <div class="block">
+            <div class="field">
+              <label class="label">Editar Consulta</label>
+              <div class="control">
+                <div class="select">
+                  <select>
+                    <option>Select dropdown</option>
+                    <option>With options</option>
+                    <option>Another option</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p>No reporte final, puesta por fines de demostración.*</p>
+      </div>
+    </div>
+
+    <div class="columns is-centered">
+      <div class="column is-one-third">
+        <div class="box has-text-centered">
+          <canvas id="chart3" class="block"></canvas>
+          <div class="block">
+            <div class="field">
+              <label class="label">Editar Consulta</label>
+              <div class="control">
+                <div class="select">
+                  <select>
+                    <option>Select dropdown</option>
+                    <option>With options</option>
+                    <option>Another option</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p>No reporte final, puesta por fines de demostración.*</p>
+      </div>
+      <div class="column is-one-third">
+        <div class="box has-text-centered">
+          <canvas id="chart4" class="block"></canvas>
+          <div class="block">
+            <div class="field">
+              <label class="label">Editar Consulta</label>
+              <div class="control">
+                <div class="select">
+                  <select>
+                    <option>Select dropdown</option>
+                    <option>With options</option>
+                    <option>Another option</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p>No reporte final, puesta por fines de demostración.*</p>
+      </div>
+    </div>
+
+    <script>
+      // Datos para la primera gráfica
+      const data1 = {
+        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+        datasets: [{
+          label: 'Pedidos al Mes',
+          data: [65, 59, 80, 81, 56, 55, 40],
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
+        }]
+      };
+
+      // Configuración de la primera gráfica
+      const config1 = {
+        type: 'line',
+        data: data1,
+      };
+
+      // Datos para la segunda gráfica
+      const data2 = {
+        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+        datasets: [{
+          label: 'Sellos totales',
+          data: [28, 48, 40, 19, 86, 27, 90],
+          fill: false,
+          borderColor: 'rgb(255, 99, 132)',
+          tension: 0.1
+        }]
+      };
+
+      // Configuración de la segunda gráfica
+      const config2 = {
+        type: 'line',
+        data: data2,
+      };
+
+      // Datos para la tercera gráfica
+      const data3 = {
+        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+        datasets: [{
+          label: 'Clientes registrados',
+          data: [18, 12, 6, 9, 16, 23, 30],
+          fill: false,
+          borderColor: 'rgb(54, 162, 235)',
+          tension: 0.1
+        }]
+      };
+
+      // Configuración de la tercera gráfica
+      const config3 = {
+        type: 'line',
+        data: data3,
+      };
+
+      // Datos para la cuarta gráfica
+      const data4 = {
+        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
+        datasets: [{
+          label: 'Promociones canjeadas',
+          data: [40, 20, 30, 50, 60, 70, 90],
+          fill: false,
+          borderColor: 'rgb(153, 102, 255)',
+          tension: 0.1
+        }]
+      };
+
+      // Configuración de la cuarta gráfica
+      const config4 = {
+        type: 'line',
+        data: data4,
+      };
+
+      const ctx1 = document.getElementById('chart1').getContext('2d');
+      const chart1 = new Chart(ctx1, config1);
+
+      const ctx2 = document.getElementById('chart2').getContext('2d');
+      const chart2 = new Chart(ctx2, config2);
+
+      const ctx3 = document.getElementById('chart3').getContext('2d');
+      const chart3 = new Chart(ctx3, config3);
+
+      const ctx4 = document.getElementById('chart4').getContext('2d');
+      const chart4 = new Chart(ctx4, config4);
+    </script>
+
+    <%- include('includes/footer') %> <!-- Partial para el footer -->
+  </body>
 </html>

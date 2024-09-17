@@ -18,6 +18,21 @@ exports.getAllTrabajadores = async (req, res, next) => {
     }
 };
 
+exports.getAllClientes = async (req, res, next) => {
+    try{
+        const Clientes = await DuperModel.usuarios.clientePrueba();
+        console.log(Clientes)
+
+        const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
+        res.render('clientes', { Clientes: ClientesArray });
+
+        //res.render('empleados', {Trabajadores});
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error al cargar la página principal');
+    }
+};
+
 // Controlador para manejar la solicitud GET
 exports.getDuper = async (req, res, next) => {
     try {

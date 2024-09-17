@@ -31,7 +31,7 @@ exports.usuarios = class{
             await connection.release()
         }
     }
-
+    // funcion para obtener los datos de los trabajadores
     static async getTrabajador(){
         try {
             const connection = await db()
@@ -47,6 +47,7 @@ exports.usuarios = class{
         }
     }
 
+    // codigo de prueba
     static async trabajadorPrueba() {
         return [
             {
@@ -66,6 +67,45 @@ exports.usuarios = class{
             },
             {
                 nombre: "Santiago",
+                id: 4,
+                activo: true
+            }
+        ];
+    }
+    static async getCliente(){
+        try {
+            const connection = await db()
+            const result = await connection.execute(`
+            SELECT IDUsuario, Nombre FROM Usuarios
+            WHERE Rol = 'cliente'
+            `)
+            await connection.release()
+            const realResult = result[0]
+            return realResult
+        } catch (e) {
+            throw e
+        }
+    }
+
+    static async clientePrueba() {
+        return [
+            {
+                nombre: "sandia",
+                id: 1,
+                activo: true
+            },
+            {
+                nombre: "Pepino",
+                id: 2,
+                activo: true
+            },
+            {
+                nombre: "Jicama",
+                id: 3,
+                activo: false
+            },
+            {
+                nombre: "Mango",
                 id: 4,
                 activo: true
             }

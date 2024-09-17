@@ -82,22 +82,12 @@
 
                 <!-- lista de clientes con boton de mas informacion -->
                 <div class="list">
-                    <div class="list-item">
-                        <span class="worker-name">Miguel Angel Becerra Ayala</span>
-                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
-                    </div>
-                    <div class="list-item">
-                        <span class="worker-name">Erick Eduardo Bautista Acosta</span>
-                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
-                    </div>
-                    <div class="list-item">
-                        <span class="worker-name">Diego Ponce de León Betanzos</span>
-                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
-                    </div>
-                    <div class="list-item">
-                        <span class="worker-name">Santiago Palacios Menes</span>
-                        <button class="button is-small is-link is-light edit-button" onclick="mostrarPopup()">Mas información</button>
-                    </div>
+                    <% for (let i = 0; i < Clientes.length; i++) { %>
+                        <div class="list-item">
+                            <span class="worker-name"><%= Clientes[i].nombre %></span>
+                            <button class="button is-small is-link is-light edit-button">mas informacion</button>
+                        </div>
+                    <% } %>
                 </div>
 
                 <!-- boton nuevo cliente -->

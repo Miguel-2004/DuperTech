@@ -19,6 +19,8 @@ app.use('/users',rutaUsers)
 
 app.use('/empleados',rutaUsers)
 
+app.use('/clientes',rutaUsers)
+
 app.get('/', (req, res) => {
     res.render('Login');
 });

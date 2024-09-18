@@ -5,7 +5,7 @@ const DuperModel = require('../models/duper.models');
 
 exports.getAllTrabajadores = async (req, res, next) => {
     try{
-        const Trabajadores = await DuperModel.usuarios.trabajadorPrueba();
+        const Trabajadores = await DuperModel.usuarios.getTrabajador();
         console.log(Trabajadores)
 
         const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
@@ -20,7 +20,7 @@ exports.getAllTrabajadores = async (req, res, next) => {
 
 exports.getAllClientes = async (req, res, next) => {
     try{
-        const Clientes = await DuperModel.usuarios.clientePrueba();
+        const Clientes = await DuperModel.usuarios.getCliente();
         console.log(Clientes)
 
         const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
@@ -60,15 +60,17 @@ exports.verificarUser = async (req, res, next) => {
         const userCorreo = req.body.email
         const userContrasena = req.body.password
 
-        const usuario = await DuperModel.veryUser(userCorreo, userContrasena) // Cambiar veryUser a verifyUser cuando haya coneccion con la base de datos.
+        const usuario = await DuperModel.usuarios.verifyUser(userCorreo, userContrasena) // Cambiar veryUser a verifyUser cuando haya coneccion con la base de datos.
+
+        console.log(usuario)
 
         if (!usuario){
-            res.render('/Login')
+            res.render('Login')
         }
 
         res.redirect('/main')
     } catch (e) {
         console.error(e)
-        res.render('/Login')
+        res.render('Login')
     }
 }

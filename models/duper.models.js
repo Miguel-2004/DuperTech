@@ -1,3 +1,4 @@
+const db = require('../utils/database')
 
 //funcion de prueba mientras no haya conexion a la base de datos.
 exports.veryUser = function (usuario, password) {
@@ -16,7 +17,7 @@ exports.usuarios = class{
             await connection.beginTransaction()
     
             const [rows] = await connection.execute(`
-                SELECT * FROM Usuarios WHERE Correo = ? AND Contrasena = ?`,
+                SELECT * FROM administrador WHERE Usuario = ? AND Contrasenia = ?`,
                 [correo, contrasena]
             )
     
@@ -36,9 +37,7 @@ exports.usuarios = class{
         try {
             const connection = await db()
             const result = await connection.execute(`
-            SELECT IDUsuario, Nombre FROM Usuarios
-            WHERE Rol = 'empleado'
-            `)
+            SELECT ID_Empleado, Nombre_Empleado FROM empleado`)
             await connection.release()
             const realResult = result[0]
             return realResult
@@ -76,9 +75,7 @@ exports.usuarios = class{
         try {
             const connection = await db()
             const result = await connection.execute(`
-            SELECT IDUsuario, Nombre FROM Usuarios
-            WHERE Rol = 'cliente'
-            `)
+            SELECT ID_Cliente, Nombre_Cliente FROM cliente`)
             await connection.release()
             const realResult = result[0]
             return realResult

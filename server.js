@@ -21,6 +21,8 @@ app.use('/empleados',rutaUsers)
 
 app.use('/clientes',rutaUsers)
 
+app.use('/promociones',rutaUsers)
+
 app.get('/', (req, res) => {
     res.render('Login');
 });
@@ -37,6 +39,11 @@ app.get('/clientes', (req,res)=> {
 app.get('/reportes', (req,res)=> {
     res.render('reportes', { pageTitle: 'reportes' }); 
 });
+
+app.get('/promociones', (req,res)=> {
+    res.render('promocion', { pageTitle: 'promocion' }); 
+});
+
 
 app.use((req, res, next) => {
     res.status(404).render('404');  

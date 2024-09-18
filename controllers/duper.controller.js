@@ -33,6 +33,24 @@ exports.getAllClientes = async (req, res, next) => {
     }
 };
 
+
+//promocion
+// Obtener todas las promociones
+exports.getAllPromociones = async (req, res, next) => {
+    try {
+        const Promociones = await DuperModel.usuarios.PromocionesPrueba();
+        console.log(Promociones); // Debug para verificar los datos recibidos
+
+        const PromocionesArray = Array.isArray(Promociones) ? Promociones : [Promociones]; // Asegurar que siempre sea un array
+
+        res.render('promocion', { Promociones: PromocionesArray }); // Enviar "PromocionesArray" como "Promociones"
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error al cargar la página de promociones');
+    }
+};
+
+
 // Controlador para manejar la solicitud GET
 exports.getDuper = async (req, res, next) => {
     try {

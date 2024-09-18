@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Promociones</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Carga de FontAwesome -->
+    <%- include('includes/head') %> 
+    <style>
+        /* Estilo para centrar y agrandar el recuadro */
+        .box-centered {
+            width: 80%; /* Ajusta el tamaño del recuadro, aquí está al 80% del ancho de la página */
+            max-width: 1200px; /* Ancho máximo del recuadro */
+            margin: 50px auto; /* Centrar horizontalmente y dar espacio desde la parte superior */
+            padding: 20px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0; /* Añadir espacio entre las líneas */
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .promotion-name {
+            flex-grow: 1; /* Permitir que el nombre ocupe el espacio disponible */
+            margin-right: 20px; /* Espacio entre el nombre y el botón */
+        }
+
+        .view-button {
+            margin-left: auto;
+        }
+
+        /* Estilo para el pop-up */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .popup h2 {
+            margin-top: 0;
+        }
+
+        .popup button.delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('includes/sidebar') %>
+
+    <!-- Main content -->
+    <div class="container">
+        <section class="section">
+            <div class="box box-centered"> 
+                <h1 class="title">Promociones</h1>
+
+                <!-- Lista de promociones con botón Ver detalles -->
+                <div class="list">
+                    <!-- Solo muestra una promoción de ejemplo -->
+                    <div class="list-item">
+                        <span class="promotion-name">Promoción de Ejemplo</span>
+                        <button class="button is-small is-link is-light view-button" onclick="showPopup('Promoción de Ejemplo', 'Descripción de la promoción de ejemplo.', '2024-01-01', '2024-12-31')">Ver detalles</button>
+                    </div>
+                </div>
+
+                <!-- Añadir nueva promoción -->
+                <div class="has-text-centered mt-5">
+                    <button class="button is-success is-medium">Añadir</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Pop-up -->
+    <div class="popup" id="miPopup" style="display:none;">
+        <button id="cerrarPopup" class="delete"></button>
+        <h2 class="title is-4 has-text-link">Detalles de la Promoción</h2>
+        <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
+        <p><strong>Descripción:</strong> <span id="popupDescripcion"></span></p>
+        <p><strong>Fecha de Inicio:</strong> <span id="popupFechaInicio"></span></p>
+        <p><strong>Fecha Final:</strong> <span id="popupFechaFinal"></span></p>
+        <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
+    </div>
+
+    <%- include('includes/footer') %>
+
+    <script>
+        function showPopup(nombre, descripcion, fechaInicio, fechaFinal) {
+            document.getElementById('popupNombre').innerText = nombre;
+            document.getElementById('popupDescripcion').innerText = descripcion;
+            document.getElementById('popupFechaInicio').innerText = fechaInicio;
+            document.getElementById('popupFechaFinal').innerText = fechaFinal;
+            document.getElementById('miPopup').style.display = 'block';
+        }
+
+        document.getElementById('cerrarPopup').addEventListener('click', function() {
+            document.getElementById('miPopup').style.display = 'none';
+        });
+    </script>
+
+</body>
+</html>

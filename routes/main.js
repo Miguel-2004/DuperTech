@@ -20,5 +20,6 @@ router.get('/login',duperController.verificarUser)
 router.post('/login',duperController.verificarUser)
 router.get('/empleados',duperController.getAllTrabajadores)
 router.get('/clientes',duperController.getAllClientes)
- 
+router.get('/promociones', duperController.getAllPromociones);
+
 module.exports = router;

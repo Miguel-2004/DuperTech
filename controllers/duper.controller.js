@@ -117,3 +117,54 @@ exports.listarTarjetas = async (req, res) => {
     }
 };
 
+exports.listarPromociones = async (req, res) => {
+    try {
+        const promociones = await DuperModel.obtenerPromociones();
+        if (!promociones || promociones.length === 0) {
+            console.log('No se encontraron promociones');
+            return res.render('promocion', { promociones: [] });  // Envía un array vacío
+        }
+
+        console.log('Promociones obtenidas en el controlador:', promociones);
+        res.render('promocion', { promociones });
+    } catch (error) {
+        console.error('Error al listar las promociones:', error);
+        res.status(500).send('Error al listar las promociones.');
+    }
+};
+
+exports.registrarPromocion = async (req, res) => {
+    const { nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
+
+    // Validar campos
+    if (!nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
+        console.log('Campos incompletos para registrar la promoción');
+        return res.status(400).send('Todos los campos son obligatorios.');
+    }
+
+    try {
+        await DuperModel.insertarPromocion(nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
+        res.redirect('/promociones');
+    } catch (error) {
+        console.error('Error al registrar la promoción:', error);
+        res.status(500).send('Error al registrar la promoción.');
+    }
+};
+
+exports.editarPromocion = async (req, res) => {
+    const { idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
+
+    // Validar campos
+    if (!idRecompensa || !nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
+        console.log('Campos incompletos para editar la promoción');
+        return res.status(400).send('Todos los campos son obligatorios.');
+    }
+
+    try {
+        await DuperModel.actualizarPromocion(idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
+        res.redirect('/promociones');
+    } catch (error) {
+        console.error('Error al editar la promoción:', error);
+        res.status(500).send('Error al editar la promoción.');
+    }
+};

@@ -3,36 +3,16 @@
 <head>
     <title>Promociones</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Carga de FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <%- include('includes/head') %> 
     <style>
-        /* Estilo para centrar y agrandar el recuadro */
         .box-centered {
-            width: 80%; /* Ajusta el tamaño del recuadro, aquí está al 80% del ancho de la página */
-            max-width: 1200px; /* Ancho máximo del recuadro */
-            margin: 50px auto; /* Centrar horizontalmente y dar espacio desde la parte superior */
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
             padding: 20px;
         }
-
-        .list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0; /* Añadir espacio entre las líneas */
-            border-bottom: 1px solid #e5e5e5;
-        }
-
-        .promotion-name {
-            flex-grow: 1; /* Permitir que el nombre ocupe el espacio disponible */
-            margin-right: 20px; /* Espacio entre el nombre y el botón */
-        }
-
-        .view-button {
-            margin-left: auto;
-        }
-
-        /* Estilo para el pop-up */
-        .popup {
+        .popup, .form-popup {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -44,13 +24,12 @@
             border: 1px solid #ddd;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
+            display: none;
         }
-
-        .popup h2 {
+        .popup h2, .form-popup h2 {
             margin-top: 0;
         }
-
-        .popup button.delete {
+        .popup button.delete, .form-popup button.delete {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -67,47 +46,140 @@
             <div class="box box-centered"> 
                 <h1 class="title">Promociones</h1>
 
-                <!-- Lista de promociones con botón Ver detalles -->
-                <div class="list">
-                    <!-- Solo muestra una promoción de ejemplo -->
-                    <div class="list-item">
-                        <span class="promotion-name">Promoción de Ejemplo</span>
-                        <button class="button is-small is-link is-light view-button" onclick="showPopup('Promoción de Ejemplo', 'Descripción de la promoción de ejemplo.', '2024-01-01', '2024-12-31')">Ver detalles</button>
-                    </div>
+                <!-- Lista de promociones con botón "Editar" -->
+                <div class="promociones-lista">
+                    <h2 class="title is-4">Promociones Existentes</h2>
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID Recompensa</th>
+                                <th>Nombre Recompensa</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Final</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (typeof promociones !== 'undefined' && Array.isArray(promociones) && promociones.length > 0) { %>
+                                <% for (let i = 0; i < promociones.length; i++) { %>
+                                    <tr>
+                                        <td><%= promociones[i].ID_Recompensa %></td>
+                                        <td><%= promociones[i].Nombre_Recompensa %></td>
+                                        <td><%= promociones[i].Fecha_Inicio %></td>
+                                        <td><%= promociones[i].Fecha_Final %></td>
+                                        <td>
+                                            <button class="button is-small is-link" onclick="showEditPopup('<%= promociones[i].ID_Recompensa %>', '<%= promociones[i].Nombre_Recompensa %>', '<%= promociones[i].Fecha_Inicio %>', '<%= promociones[i].Fecha_Final %>', '<%= promociones[i].Descripcion_Regalo %>')">Editar</button>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="has-text-centered">No hay promociones disponibles.</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
                 </div>
 
                 <!-- Añadir nueva promoción -->
                 <div class="has-text-centered mt-5">
-                    <button class="button is-success is-medium">Añadir</button>
+                    <button class="button is-success is-medium" onclick="showFormPopup()">Añadir</button>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Pop-up -->
-    <div class="popup" id="miPopup" style="display:none;">
-        <button id="cerrarPopup" class="delete"></button>
-        <h2 class="title is-4 has-text-link">Detalles de la Promoción</h2>
-        <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
-        <p><strong>Descripción:</strong> <span id="popupDescripcion"></span></p>
-        <p><strong>Fecha de Inicio:</strong> <span id="popupFechaInicio"></span></p>
-        <p><strong>Fecha Final:</strong> <span id="popupFechaFinal"></span></p>
-        <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
+    <!-- Pop-up para añadir una nueva promoción -->
+    <div class="form-popup" id="formPopup">
+        <button id="cerrarFormPopup" class="delete"></button>
+        <h2 class="title is-4 has-text-link">Registrar Nueva Promoción</h2>
+        <form action="/promociones/añadir" method="POST">
+            <div class="field">
+                <label for="nombreRecompensa" class="label">Nombre Recompensa:</label>
+                <div class="control">
+                    <input type="text" id="nombreRecompensa" name="nombreRecompensa" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="fechaInicio" class="label">Fecha Inicio:</label>
+                <div class="control">
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="fechaFinal" class="label">Fecha Final:</label>
+                <div class="control">
+                    <input type="date" id="fechaFinal" name="fechaFinal" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="descripcionRegalo" class="label">Descripción Regalo:</label>
+                <div class="control">
+                    <textarea id="descripcionRegalo" name="descripcionRegalo" class="textarea" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="button is-link is-fullwidth mt-4">Registrar</button>
+        </form>
+    </div>
+
+    <!-- Pop-up para editar promoción -->
+    <div class="form-popup" id="editFormPopup">
+        <button id="cerrarEditFormPopup" class="delete"></button>
+        <h2 class="title is-4 has-text-link">Editar Promoción</h2>
+        <form id="editForm" action="/promociones/editar" method="POST">
+            <input type="hidden" id="editIdRecompensa" name="idRecompensa">
+            <div class="field">
+                <label for="editNombreRecompensa" class="label">Nombre Recompensa:</label>
+                <div class="control">
+                    <input type="text" id="editNombreRecompensa" name="nombreRecompensa" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="editFechaInicio" class="label">Fecha Inicio:</label>
+                <div class="control">
+                    <input type="date" id="editFechaInicio" name="fechaInicio" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="editFechaFinal" class="label">Fecha Final:</label>
+                <div class="control">
+                    <input type="date" id="editFechaFinal" name="fechaFinal" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="editDescripcionRegalo" class="label">Descripción Regalo:</label>
+                <div class="control">
+                    <textarea id="editDescripcionRegalo" name="descripcionRegalo" class="textarea" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="button is-link is-fullwidth mt-4">Guardar Cambios</button>
+        </form>
     </div>
 
     <%- include('includes/footer') %>
 
     <script>
-        function showPopup(nombre, descripcion, fechaInicio, fechaFinal) {
-            document.getElementById('popupNombre').innerText = nombre;
-            document.getElementById('popupDescripcion').innerText = descripcion;
-            document.getElementById('popupFechaInicio').innerText = fechaInicio;
-            document.getElementById('popupFechaFinal').innerText = fechaFinal;
-            document.getElementById('miPopup').style.display = 'block';
+        // Mostrar el formulario para añadir promoción
+        function showFormPopup() {
+            document.getElementById('formPopup').style.display = 'block';
         }
 
-        document.getElementById('cerrarPopup').addEventListener('click', function() {
-            document.getElementById('miPopup').style.display = 'none';
+        document.getElementById('cerrarFormPopup').addEventListener('click', function() {
+            document.getElementById('formPopup').style.display = 'none';
+        });
+
+        // Mostrar el formulario de edición
+        function showEditPopup(idRecompensa, nombre, fechaInicio, fechaFinal, descripcion) {
+            document.getElementById('editIdRecompensa').value = idRecompensa;
+            document.getElementById('editNombreRecompensa').value = nombre;
+            document.getElementById('editFechaInicio').value = fechaInicio;
+            document.getElementById('editFechaFinal').value = fechaFinal;
+            document.getElementById('editDescripcionRegalo').value = descripcion;
+            document.getElementById('editFormPopup').style.display = 'block';
+        }
+
+        document.getElementById('cerrarEditFormPopup').addEventListener('click', function() {
+            document.getElementById('editFormPopup').style.display = 'none';
         });
     </script>
 

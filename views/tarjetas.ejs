@@ -3,10 +3,10 @@
 <head>
     <title>Tarjetas</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Carga de FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <%- include('includes/head') %> 
     <style>
-        /* Estilo para centrar y darle un mejor diseño al recuadro */
+
         .box-centered {
             width: 80%;
             max-width: 1200px;
@@ -52,7 +52,6 @@
             box-shadow: 0 0 0 0.125em #084461;
         }
 
-        /* Estilo para la selección de sucursal */
         .select.is-fullwidth select {
             border-color: #084461;
             border-radius: 5px;
@@ -85,7 +84,7 @@
                     <div class="control">
                         <div class="select is-fullwidth">
                             <select id="sucursalSelect">
-                                <option value="">Todas las Sucursales</option> <!-- Opción para mostrar todas -->
+                                <option value="">Todas las Sucursales</option>
                                 <% for (let i = 0; i < establecimientos.length; i++) { %>
                                     <option value="<%= establecimientos[i].ID_Establecimiento %>">
                                         <%= establecimientos[i].Nombre_Establecimiento %>
@@ -96,7 +95,7 @@
                     </div>
                 </div>
 
-                <!-- Barra de búsqueda -->
+               
                 <div class="field has-addons">
                     <div class="control has-icons-left is-expanded">
                         <input class="input" type="text" placeholder="Buscar tarjeta o cliente..." id="searchBar">
@@ -106,7 +105,7 @@
                     </div>
                 </div>
 
-                <!-- Lista de Tarjetas -->
+               
                 <div class="list" id="tarjetasList">
                     <% for (let i = 0; i < tarjetas.length; i++) { %>
                         <div class="tarjeta-info <%= i >= 10 ? 'hidden' : '' %>">
@@ -117,7 +116,7 @@
                     <% } %>
                 </div>
 
-                <!-- Total de tarjetas -->
+                
                 <div class="total-tarjetas">
                     Total de Tarjetas: <%= totalTarjetas %>
                 </div>
@@ -126,13 +125,13 @@
     </div>
     
     <script>
-        // Filtrar tarjetas por sucursal
+    
         document.getElementById('sucursalSelect').addEventListener('change', function() {
             const selectedSucursal = this.value;
             window.location.href = selectedSucursal ? `/tarjetas?sucursalID=${selectedSucursal}` : '/tarjetas';
         });
 
-        // Función de búsqueda para filtrar las tarjetas
+       
         document.getElementById('searchBar').addEventListener('keyup', function() {
             const query = this.value.toLowerCase();
             const items = document.querySelectorAll('.tarjeta-info');

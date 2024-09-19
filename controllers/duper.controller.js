@@ -97,7 +97,6 @@ exports.listarTarjetas = async (req, res) => {
     try {
         const sucursalID = req.query.sucursalID || null;  // Obtener el ID de la sucursal del query
 
-        // Si no se filtra por sucursal, se obtienen todas las tarjetas
         const tarjetas = sucursalID 
             ? await DuperModel.getTarjetasPorSucursal(sucursalID)
             : await DuperModel.getTarjetasConClientes();

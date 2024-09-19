@@ -20,10 +20,9 @@
               <label class="label">Editar Consulta</label>
               <div class="control">
                 <div class="select">
-                  <select>
-                    <option>Select dropdown</option>
-                    <option>With options</option>
-                    <option>Another option</option>
+                  <select id="dropdown1">
+                    <option value="pedidos">Pedidos</option>
+                    <option value="sellos">Sellos</option>
                   </select>
                 </div>
               </div>
@@ -40,10 +39,9 @@
               <label class="label">Editar Consulta</label>
               <div class="control">
                 <div class="select">
-                  <select>
-                    <option>Select dropdown</option>
-                    <option>With options</option>
-                    <option>Another option</option>
+                  <select id="dropdown2">
+                    <option value="clientes">Clientes</option>
+                    <option value="promociones">Promociones</option>
                   </select>
                 </div>
               </div>
@@ -53,134 +51,74 @@
         <p>No reporte final, puesta por fines de demostración.*</p>
       </div>
     </div>
-
-    <div class="columns is-centered">
-      <div class="column is-one-third">
-        <div class="box has-text-centered">
-          <canvas id="chart3" class="block"></canvas>
-          <div class="block">
-            <div class="field">
-              <label class="label">Editar Consulta</label>
-              <div class="control">
-                <div class="select">
-                  <select>
-                    <option>Select dropdown</option>
-                    <option>With options</option>
-                    <option>Another option</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>No reporte final, puesta por fines de demostración.*</p>
-      </div>
-      <div class="column is-one-third">
-        <div class="box has-text-centered">
-          <canvas id="chart4" class="block"></canvas>
-          <div class="block">
-            <div class="field">
-              <label class="label">Editar Consulta</label>
-              <div class="control">
-                <div class="select">
-                  <select>
-                    <option>Select dropdown</option>
-                    <option>With options</option>
-                    <option>Another option</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>No reporte final, puesta por fines de demostración.*</p>
-      </div>
-    </div>
-
+    
     <script>
-      // Datos para la primera gráfica
-      const data1 = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
-        datasets: [{
-          label: 'Pedidos al Mes',
-          data: [65, 59, 80, 81, 56, 55, 40],
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }]
-      };
+      // Clase que simula las consultas a la base de datos
+      class DataManager {
+        constructor() {
+          // Simulación de los resultados de la base de datos
+          this.data = {
+            pedidos: [65, 59, 80, 81, 56, 55, 40], // Consulta que devolvería el número de pedidos 
+            sellos: [28, 48, 40, 19, 86, 27, 90],  // Consulta que devolvería el número de sellos 
+            clientes: [18, 12, 6, 9, 16, 23, 30],  // Consulta de clientes registrados
+            promociones: [40, 20, 30, 50, 60, 70, 90] // Promociones canjeadas 
+          };
+        }
 
-      // Configuración de la primera gráfica
-      const config1 = {
-        type: 'line',
-        data: data1,
-      };
+        // Método para obtener datos de una "consulta" específica
+        getData(category) {
+          // Aqui se haria la consulta de la base de datos, esta es una simulacion tomando los datos del arrey
+          return this.data[category] || [];
+        }
+      }
 
-      // Datos para la segunda gráfica
-      const data2 = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
-        datasets: [{
-          label: 'Sellos totales',
-          data: [28, 48, 40, 19, 86, 27, 90],
-          fill: false,
-          borderColor: 'rgb(255, 99, 132)',
-          tension: 0.1
-        }]
-      };
+      // Instanciar la clase DataManager como si fuera el controlador de la base de datos
+      const dataManager = new DataManager();
 
-      // Configuración de la segunda gráfica
-      const config2 = {
-        type: 'line',
-        data: data2,
-      };
+      // Función para inicializar una gráfica con los datos obtenidos
+      function initializeChart(ctx, data, label) {
+        return new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'], 
+            datasets: [{
+              label: label, 
+              data: data,   // Datos obtenidos de la "base de datos"
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+            }]
+          }
+        });
+      }
 
-      // Datos para la tercera gráfica
-      const data3 = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
-        datasets: [{
-          label: 'Clientes registrados',
-          data: [18, 12, 6, 9, 16, 23, 30],
-          fill: false,
-          borderColor: 'rgb(54, 162, 235)',
-          tension: 0.1
-        }]
-      };
-
-      // Configuración de la tercera gráfica
-      const config3 = {
-        type: 'line',
-        data: data3,
-      };
-
-      // Datos para la cuarta gráfica
-      const data4 = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'],
-        datasets: [{
-          label: 'Promociones canjeadas',
-          data: [40, 20, 30, 50, 60, 70, 90],
-          fill: false,
-          borderColor: 'rgb(153, 102, 255)',
-          tension: 0.1
-        }]
-      };
-
-      // Configuración de la cuarta gráfica
-      const config4 = {
-        type: 'line',
-        data: data4,
-      };
-
+      // Iniciacion de las gráficas con los resultados de la base de datos iniciales
       const ctx1 = document.getElementById('chart1').getContext('2d');
-      const chart1 = new Chart(ctx1, config1);
+      let chart1 = initializeChart(ctx1, dataManager.getData('pedidos'), 'Pedidos al Mes');
 
       const ctx2 = document.getElementById('chart2').getContext('2d');
-      const chart2 = new Chart(ctx2, config2);
+      let chart2 = initializeChart(ctx2, dataManager.getData('clientes'), 'Clientes Registrados');
 
-      const ctx3 = document.getElementById('chart3').getContext('2d');
-      const chart3 = new Chart(ctx3, config3);
+      // Función para actualizar las gráficas con nuevos datos
+      // Simula el cambio de datos desde una base de datos cuando el usuario selecciona algo diferente via los dropdown
+      function updateChart(chart, data, label) {
+        chart.data.datasets[0].data = data; // Actualizamos los datos del gráfico
+        chart.data.datasets[0].label = label; // Actualizamos la etiqueta
+        chart.update(); // Refrescamos la gráfica
+      }
 
-      const ctx4 = document.getElementById('chart4').getContext('2d');
-      const chart4 = new Chart(ctx4, config4);
+      //Cambio en el primer dropdown
+      document.getElementById('dropdown1').addEventListener('change', function() {
+        const selectedOption = this.value; // Tomamos la opción seleccionada
+        //Actualiza la gráfica correspondiente con los nuevos datos
+        updateChart(chart1, dataManager.getData(selectedOption), selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1));
+      });
+
+      //Cambio en el segundo dropdown
+      document.getElementById('dropdown2').addEventListener('change', function() {
+        const selectedOption = this.value;
+        updateChart(chart2, dataManager.getData(selectedOption), selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1));
+      });
     </script>
 
     <%- include('includes/footer') %> <!-- Partial para el footer -->

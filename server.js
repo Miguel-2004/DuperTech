@@ -43,7 +43,7 @@ app.get('/reportes', (req,res)=> {
 });
 
 app.get('/promociones', (req,res)=> {
-    res.render('promocion', { pageTitle: 'promocion' }); 
+    res.render('promocion', { pageTitle: 'promociones' }); 
 });
 
 app.get('/tarjetas', (req, res) => {

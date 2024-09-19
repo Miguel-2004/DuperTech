@@ -88,26 +88,110 @@
     <div class="popup" id="miPopup" style="display:none;">
         <button id="cerrarPopup" class="delete"></button>
         <h2 class="title is-4 has-text-link">Detalles de la Promoción</h2>
-        <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
-        <p><strong>Descripción:</strong> <span id="popupDescripcion"></span></p>
-        <p><strong>Fecha de Inicio:</strong> <span id="popupFechaInicio"></span></p>
-        <p><strong>Fecha Final:</strong> <span id="popupFechaFinal"></span></p>
+        
+        <!-- Detalles de la promoción (solo visibles cuando no se está editando) -->
+        <div id="popupDetails">
+            <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
+            <p><strong>Descripción:</strong> <span id="popupDescripcion"></span></p>
+            <p><strong>Fecha de Inicio:</strong> <span id="popupFechaInicio"></span></p>
+            <p><strong>Fecha Final:</strong> <span id="popupFechaFinal"></span></p>
+        </div>
+
+        <!-- Formulario de edición (se muestra al hacer clic en 'Editar') -->
+        <div id="editForm" style="display: none;">
+            <div class="field">
+                <label class="label">Nombre</label>
+                <div class="control">
+                    <input class="input" type="text" id="editNombre">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Descripción</label>
+                <div class="control">
+                    <textarea class="textarea" id="editDescripcion"></textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Fecha de Inicio</label>
+                <div class="control">
+                    <input class="input" type="date" id="editFechaInicio">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Fecha Final</label>
+                <div class="control">
+                    <input class="input" type="date" id="editFechaFinal">
+                </div>
+            </div>
+
+            <button id="guardarEdicion" class="button is-success is-fullwidth mt-4">Guardar</button>
+        </div>
+
+        <!-- Botones de acción -->
         <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
     </div>
 
     <%- include('includes/footer') %>
 
     <script>
+        // Función para mostrar los detalles de la promoción en el pop-up
         function showPopup(nombre, descripcion, fechaInicio, fechaFinal) {
             document.getElementById('popupNombre').innerText = nombre;
             document.getElementById('popupDescripcion').innerText = descripcion;
             document.getElementById('popupFechaInicio').innerText = fechaInicio;
             document.getElementById('popupFechaFinal').innerText = fechaFinal;
+            
+            // Cargar los valores actuales en el formulario de edición
+            document.getElementById('editNombre').value = nombre;
+            document.getElementById('editDescripcion').value = descripcion;
+            document.getElementById('editFechaInicio').value = fechaInicio;
+            document.getElementById('editFechaFinal').value = fechaFinal;
+
+            // Mostrar el pop-up
             document.getElementById('miPopup').style.display = 'block';
+            // Ocultar el formulario de edición por defecto
+            document.getElementById('editForm').style.display = 'none';
+            // Mostrar los detalles por defecto
+            document.getElementById('popupDetails').style.display = 'block';
+            document.getElementById('editarPopup').style.display = 'block';
         }
 
+        // Evento para cerrar el pop-up
         document.getElementById('cerrarPopup').addEventListener('click', function() {
             document.getElementById('miPopup').style.display = 'none';
+        });
+
+        // Evento para abrir el formulario de edición
+        document.getElementById('editarPopup').addEventListener('click', function() {
+            // Ocultar los detalles y mostrar el formulario de edición
+            document.getElementById('popupDetails').style.display = 'none';
+            document.getElementById('editarPopup').style.display = 'none';
+            document.getElementById('editForm').style.display = 'block';
+        });
+
+        // Evento para guardar los cambios del formulario
+        document.getElementById('guardarEdicion').addEventListener('click', function() {
+            // Obtener los nuevos valores del formulario
+            var nuevoNombre = document.getElementById('editNombre').value;
+            var nuevaDescripcion = document.getElementById('editDescripcion').value;
+            var nuevaFechaInicio = document.getElementById('editFechaInicio').value;
+            var nuevaFechaFinal = document.getElementById('editFechaFinal').value;
+
+            // Actualizar los campos de detalle con los nuevos valores
+            document.getElementById('popupNombre').innerText = nuevoNombre;
+            document.getElementById('popupDescripcion').innerText = nuevaDescripcion;
+            document.getElementById('popupFechaInicio').innerText = nuevaFechaInicio;
+            document.getElementById('popupFechaFinal').innerText = nuevaFechaFinal;
+
+            // Aquí puedes enviar los datos actualizados al servidor o guardarlos según tu lógica
+
+            // Ocultar el formulario de edición y mostrar los detalles actualizados
+            document.getElementById('editForm').style.display = 'none';
+            document.getElementById('popupDetails').style.display = 'block';
+            document.getElementById('editarPopup').style.display = 'block';
         });
     </script>
 

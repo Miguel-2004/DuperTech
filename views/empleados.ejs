@@ -62,17 +62,74 @@
                     <% } %>
                 </div>
 
-
-
-
                 <!-- Add New Worker Button -->
                 <div class="has-text-centered mt-5">
                     <button class="button is-success is-medium">Añadir</button>
                 </div>
             </div>
+            <!-- Modal para añadir trabajador -->
+            <div class="modal" id="addWorkerModal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Añadir Trabajador</p>
+                    <button class="delete" aria-label="close" id="closeModalBtn"></button>
+                </header>
+                <section class="modal-card-body">
+                    <!-- Contenido del formulario para añadir trabajador -->
+                    <form>
+                    <div class="field">
+                        <label class="label">Nombre del Trabajador</label>
+                        <div class="control">
+                        <input class="input" type="text" placeholder="Nombre">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Puesto</label>
+                        <div class="control">
+                        <input class="input" type="text" placeholder="Puesto">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Correo Electrónico</label>
+                        <div class="control">
+                        <input class="input" type="email" placeholder="Correo Electrónico">
+                        </div>
+                    </div>
+                    </form>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success">Guardar</button>
+                    <button class="button" id="cancelBtn">Cancelar</button>
+                </footer>
+                </div>
+            </div>
+  
         </section>
     </div>
-
+    
+    <script>
+        // Seleccionar los elementos del DOM
+        const addWorkerBtn = document.querySelector('.button.is-success.is-medium');
+        const addWorkerModal = document.getElementById('addWorkerModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+    
+        // Abrir el modal al hacer clic en el botón 'Añadir'
+        addWorkerBtn.addEventListener('click', function() {
+            addWorkerModal.classList.add('is-active');
+        });
+    
+        // Cerrar el modal al hacer clic en la 'X' o en el botón 'Cancelar'
+        closeModalBtn.addEventListener('click', function() {
+            addWorkerModal.classList.remove('is-active');
+        });
+    
+        cancelBtn.addEventListener('click', function() {
+            addWorkerModal.classList.remove('is-active');
+        });
+    </script>
+    
     <%- include('includes/footer') %>
 
 </body>

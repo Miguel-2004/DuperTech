@@ -1,126 +1,89 @@
 <!DOCTYPE html>
-<html data-theme="dark">
+<html lang="es" data-theme="dark">
   <head>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
-    />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Dinámicos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <%- include('includes/head') %> 
+    <%- include('includes/head') %> <!-- Mantener el head -->
   </head>
   <body>
-    <%- include('includes/sidebar') %>
+    <%- include('includes/sidebar') %> <!-- Mantener el sidebar -->
 
-    <div class="columns is-centered"> 
-      <div class="column is-one-third">
-        <div class="box has-text-centered">
-          <canvas id="chart1" class="block"></canvas>
-          <div class="block"> 
-            <div class="field">
-              <label class="label">Editar Consulta</label>
-              <div class="control">
-                <div class="select">
-                  <select id="dropdown1">
-                    <option value="pedidos">Pedidos</option>
-                    <option value="sellos">Sellos</option>
-                  </select>
-                </div>
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="box">
+          <canvas id="graficoReporte"></canvas>
+          <div class="field">
+            <label class="label">Seleccionar Reporte</label>
+            <div class="control">
+              <div class="select">
+                <select id="dropdownReporte">
+                  <option value="promociones_reclamadas">Promociones Reclamadas</option>
+                </select>
               </div>
             </div>
           </div>
         </div>
-        <p>No reporte final, puesta por fines de demostración.*</p>
-      </div>
-      <div class="column is-one-third">
-        <div class="box has-text-centered">
-          <canvas id="chart2" class="block"></canvas>
-          <div class="block">
-            <div class="field">
-              <label class="label">Editar Consulta</label>
-              <div class="control">
-                <div class="select">
-                  <select id="dropdown2">
-                    <option value="clientes">Clientes</option>
-                    <option value="promociones">Promociones</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p>No reporte final, puesta por fines de demostración.*</p>
       </div>
     </div>
-    
+
     <script>
-      // Clase que simula las consultas a la base de datos
-      class DataManager {
-        constructor() {
-          // Simulación de los resultados de la base de datos
-          this.data = {
-            pedidos: [65, 59, 80, 81, 56, 55, 40], // Consulta que devolvería el número de pedidos 
-            sellos: [28, 48, 40, 19, 86, 27, 90],  // Consulta que devolvería el número de sellos 
-            clientes: [18, 12, 6, 9, 16, 23, 30],  // Consulta de clientes registrados
-            promociones: [40, 20, 30, 50, 60, 70, 90] // Promociones canjeadas 
-          };
-        }
-
-        // Método para obtener datos de una "consulta" específica
-        getData(category) {
-          // Aqui se haria la consulta de la base de datos, esta es una simulacion tomando los datos del arrey
-          return this.data[category] || [];
-        }
-      }
-
-      // Instanciar la clase DataManager como si fuera el controlador de la base de datos
-      const dataManager = new DataManager();
-
-      // Función para inicializar una gráfica con los datos obtenidos
-      function initializeChart(ctx, data, label) {
-        return new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'], 
-            datasets: [{
-              label: label, 
-              data: data,   // Datos obtenidos de la "base de datos"
-              fill: false,
-              borderColor: 'rgb(75, 192, 192)',
-              tension: 0.1
-            }]
+      // Inicializar Chart.js
+      const ctx = document.getElementById('graficoReporte').getContext('2d');
+      let grafico = new Chart(ctx, {
+        type: 'line', 
+        data: {
+          labels: [], // Fechas (X)
+          datasets: [{
+            label: 'Promociones Reclamadas',
+            data: [], // Total reclamaciones (Y)
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
           }
-        });
-      }
-
-      // Iniciacion de las gráficas con los resultados de la base de datos iniciales
-      const ctx1 = document.getElementById('chart1').getContext('2d');
-      let chart1 = initializeChart(ctx1, dataManager.getData('pedidos'), 'Pedidos al Mes');
-
-      const ctx2 = document.getElementById('chart2').getContext('2d');
-      let chart2 = initializeChart(ctx2, dataManager.getData('clientes'), 'Clientes Registrados');
-
-      // Función para actualizar las gráficas con nuevos datos
-      // Simula el cambio de datos desde una base de datos cuando el usuario selecciona algo diferente via los dropdown
-      function updateChart(chart, data, label) {
-        chart.data.datasets[0].data = data; // Actualizamos los datos del gráfico
-        chart.data.datasets[0].label = label; // Actualizamos la etiqueta
-        chart.update(); // Refrescamos la gráfica
-      }
-
-      //Cambio en el primer dropdown
-      document.getElementById('dropdown1').addEventListener('change', function() {
-        const selectedOption = this.value; // Tomamos la opción seleccionada
-        //Actualiza la gráfica correspondiente con los nuevos datos
-        updateChart(chart1, dataManager.getData(selectedOption), selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1));
+        }
       });
 
-      //Cambio en el segundo dropdown
-      document.getElementById('dropdown2').addEventListener('change', function() {
-        const selectedOption = this.value;
-        updateChart(chart2, dataManager.getData(selectedOption), selectedOption.charAt(0).toUpperCase() + selectedOption.slice(1));
-      });
+      // Función para obtener los datos desde el servidor
+      async function obtenerDatosPromociones() {
+        try {
+          const response = await fetch(`/reportes?category=promociones_reclamadas`);
+          const data = await response.json();
+
+          // Mostrar los datos en la consola
+          console.log("Datos devueltos por el servidor:", data);
+
+          if (!data || data.length === 0) {
+            console.error('No hay datos disponibles para mostrar.');
+            return;
+          }
+
+          // Mapear las fechas y totales
+          const fechas = data.map(item => item.Mes); // Etiquetas del eje X
+          const totales = data.map(item => item.Total_Reclamaciones); // Valores del eje Y
+
+          // Actualizar la gráfica
+          grafico.data.labels = fechas; // Asignar las fechas en el eje X
+          grafico.data.datasets[0].data = totales; // Asignar los totales en el eje Y
+          grafico.update(); // Refrescar la gráfica
+        } catch (error) {
+          console.error('Error al obtener los datos del reporte:', error);
+        }
+      }
+
+      // Llamar a la función para cargar los datos al iniciar la página
+      obtenerDatosPromociones();
     </script>
 
-    <%- include('includes/footer') %> <!-- Partial para el footer -->
+    <%- include('includes/footer') %> <!-- Mantener el footer -->
   </body>
 </html>

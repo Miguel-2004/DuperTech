@@ -116,3 +116,26 @@ exports.getTarjetasPorSucursal = async (sucursalID) => {
         throw error;
     }
 };
+
+//reportes
+
+// Obtener las promociones reclamadas por mes
+exports.getPromocionesReclamadasPorMes = async () => {
+    try {
+        const [rows] = await db.execute(`
+            SELECT 
+                DATE_FORMAT(Fecha_Reclamacion, '%Y-%m') AS Mes,
+                COUNT(ID_Reclamacion) AS Total_Reclamaciones
+            FROM 
+                reclamacion_recompensa
+            GROUP BY 
+                Mes
+            ORDER BY 
+                Mes;
+        `);
+        return rows; // Devolver el resultado de la consulta
+    } catch (error) {
+        console.error('Error al obtener promociones reclamadas por mes:', error);
+        throw error;
+    }
+};

@@ -21,5 +21,5 @@ router.get('/empleados',duperController.getAllTrabajadores);
 router.get('/clientes',duperController.getAllClientes);
 router.get('/promociones', duperController.getAllPromociones);
 router.get('/tarjetas', duperController.listarTarjetas);
-
+router.get('/reportes', duperController.getReporte); 
 module.exports = router;

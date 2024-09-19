@@ -117,3 +117,20 @@ exports.listarTarjetas = async (req, res) => {
     }
 };
 
+//reportes
+
+// Controlador para obtener los reportes dinámicamente
+exports.getReporte = async (req, res) => {
+    const { category } = req.query;
+
+    try {
+        let data = [];
+        if (category === 'promociones_reclamadas') {
+            data = await DuperModel.getPromocionesReclamadasPorMes();
+        }
+        res.json(data); // Devolver los datos en formato JSON
+    } catch (error) {
+        console.error('Error al obtener los datos del reporte:', error);
+        res.status(500).json({ error: 'Error al obtener los datos' });
+    }
+};

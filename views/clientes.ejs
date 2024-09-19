@@ -85,7 +85,10 @@
                     <% for (let i = 0; i < Clientes.length; i++) { %>
                         <div class="list-item">
                             <span class="worker-name"><%= Clientes[i].Nombre_Cliente %></span>
-                            <button class="button is-small is-link is-light edit-button">mas informacion</button>
+                            <button class="button is-small is-link is-light edit-button" 
+                                    onclick="mostrarPopup('<%= Clientes[i].Nombre_Cliente %>', '<%= Clientes[i].ID_Cliente %>', '<%= Clientes[i].Telefono_Cliente %>',
+                                     '<%= Clientes[i].Fecha_Nac %>', '<%= Clientes[i].Sexo %>', '<%= Clientes[i].Tarjeta %>', '<%= Clientes[i].Sellos %>',
+                                      '<%= Clientes[i].Recompensas %>')">más información</button>
                         </div>
                     <% } %>
                 </div>
@@ -102,38 +105,35 @@
     <div class="popup box" id="miPopup" style="display:none;">
         <button id="cerrarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
         <h2 class="title is-4 has-text-link">Detalles de cuenta</h2>
-        <p><strong>ID:</strong> 10</p>
-        <p><strong>Teléfono:</strong> 9626281112</p>
-        <p><strong>Tarjeta relacionada:</strong> 109626281112</p>
-        <p><strong>Sellos totales:</strong> 10</p>
-        <p><strong>Recompensas reclamadas:</strong> 3</p>
+        <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
+        <p><strong>ID:</strong> <span id="popupID"></span></p>
+        <p><strong>Teléfono:</strong> <span id="popupTelefono"></span></p>
+        <p><strong>Tarjeta relacionada:</strong> <span id="popupTarjeta"></span></p>
+        <p><strong>Sellos totales:</strong> <span id="popupSellos"></span></p>
+        <p><strong>Recompensas reclamadas:</strong> <span id="popupRecompensas"></span></p>
         <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
     </div>
-    
-    
 
-<script>
+    <script>
+        // Función para mostrar el pop-up y actualizar la información del cliente
+        function mostrarPopup(nombre, id, telefono, tarjeta, sellos, recompensas) {
+            // Asignar los valores del cliente al pop-up
+            document.getElementById('popupNombre').textContent = nombre;
+            document.getElementById('popupID').textContent = id;
+            document.getElementById('popupTelefono').textContent = telefono;
+            document.getElementById('popupTarjeta').textContent = tarjeta;
+            document.getElementById('popupSellos').textContent = sellos;
+            document.getElementById('popupRecompensas').textContent = recompensas;
 
-function mostrarPopup() {
-    const popup = document.getElementById('miPopup');
-    popup.style.display = 'block';
-}
+            // Mostrar el pop-up
+            document.getElementById('miPopup').style.display = 'block';
+        }
 
-const cerrarPopup = document.getElementById('cerrarPopup');
-cerrarPopup.addEventListener('click', function() {
-    const popup = document.getElementById('miPopup');
-    popup.style.display = 'none';
-});
-
-const editarPopup = document.getElementById('editarPopup');
-editarPopup.addEventListener('click', function() {
-    alert('Funcionalidad de editar aún no implementada.');
-});
-
-
-
-
-</script>
+        // Función para cerrar el pop-up
+        document.getElementById('cerrarPopup').addEventListener('click', function() {
+            document.getElementById('miPopup').style.display = 'none';
+        });
+    </script>
     
     
     <%- include('includes/footer') %>

@@ -37,7 +37,7 @@ exports.usuarios = class{
         try {
             const connection = await db()
             const result = await connection.execute(`
-            SELECT ID_Empleado, Nombre_Empleado FROM empleado`)
+            SELECT * FROM empleado`)
             await connection.release()
             const realResult = result[0]
             return realResult
@@ -46,36 +46,12 @@ exports.usuarios = class{
         }
     }
 
-    // codigo de prueba
-    static async trabajadorPrueba() {
-        return [
-            {
-                nombre: "Samuel",
-                id: 1,
-                activo: true
-            },
-            {
-                nombre: "Erick",
-                id: 2,
-                activo: true
-            },
-            {
-                nombre: "Diego",
-                id: 3,
-                activo: false
-            },
-            {
-                nombre: "Santiago",
-                id: 4,
-                activo: true
-            }
-        ];
-    }
+    // obtener datos de clientes
     static async getCliente(){
         try {
             const connection = await db()
             const result = await connection.execute(`
-            SELECT ID_Cliente, Nombre_Cliente FROM cliente`)
+            SELECT * FROM cliente`)
             await connection.release()
             const realResult = result[0]
             return realResult
@@ -84,30 +60,7 @@ exports.usuarios = class{
         }
     }
 
-    static async clientePrueba() {
-        return [
-            {
-                nombre: "sandia",
-                id: 1,
-                activo: true
-            },
-            {
-                nombre: "Pepino",
-                id: 2,
-                activo: true
-            },
-            {
-                nombre: "Jicama",
-                id: 3,
-                activo: false
-            },
-            {
-                nombre: "Mango",
-                id: 4,
-                activo: true
-            }
-        ];
-    }
+    
 }
 
 

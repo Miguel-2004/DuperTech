@@ -91,4 +91,24 @@ exports.verificarUser = async (req, res, next) => {
         console.error(e)
         res.render('Login')
     }
-}
+};
+
+exports.listarTarjetas = async (req, res) => {
+    try {
+        const sucursalID = req.query.sucursalID || null;  // Obtener el ID de la sucursal del query
+
+        // Si no se filtra por sucursal, se obtienen todas las tarjetas
+        const tarjetas = sucursalID 
+            ? await DuperModel.getTarjetasPorSucursal(sucursalID)
+            : await DuperModel.getTarjetasConClientes();
+
+        const establecimientos = await DuperModel.getEstablecimientos();
+        const totalTarjetas = tarjetas.length;
+
+        res.render('tarjetas', { tarjetas, establecimientos, totalTarjetas });
+    } catch (error) {
+        console.error('Error al listar las tarjetas:', error);
+        res.status(500).send('Error al listar las tarjetas.');
+    }
+};
+

@@ -23,6 +23,8 @@ app.use('/clientes',rutaUsers)
 
 app.use('/promociones',rutaUsers)
 
+app.use('/tarjetas', rutaUsers);
+
 app.get('/', (req, res) => {
     res.render('Login');
 });
@@ -44,6 +46,9 @@ app.get('/promociones', (req,res)=> {
     res.render('promocion', { pageTitle: 'promocion' }); 
 });
 
+app.get('/tarjetas', (req, res) => {
+    res.render('tarjetas', { pageTitle: 'tarjetas' });
+});
 
 app.use((req, res, next) => {
     res.status(404).render('404');  

@@ -1,66 +1,118 @@
-const db = require('../utils/database')
+const db = require('../utils/database');
 
-//funcion de prueba mientras no haya conexion a la base de datos.
+// Función de prueba mientras no haya conexión a la base de datos.
 exports.veryUser = function (usuario, password) {
     return {
         nombre: "Samuel",
-        id:1,
+        id: 1,
         activo: true
-    }
-}
+    };
+};
 
-//funcion para verificar el usuario. Es para el inicio de sesion
-exports.usuarios = class{
+// Clase para manejar usuarios.
+exports.usuarios = class {
+    // Verificar usuario para inicio de sesión
     static async verifyUser(correo, contrasena) {
-        const connection = await db()
+        const connection = await db();
         try {
-            await connection.beginTransaction()
+            await connection.beginTransaction();
     
             const [rows] = await connection.execute(`
-                SELECT * FROM administrador WHERE Usuario = ? AND Contrasenia = ?`,
+                SELECT * FROM administrador 
+                WHERE Usuario = ? AND Contrasenia = ?`, 
                 [correo, contrasena]
-            )
+            );
     
-            const realResult = rows[0]
+            const realResult = rows[0];
             
-            await connection.commit()
-            return realResult
+            await connection.commit();
+            return realResult;
         } catch (e) {
-            await connection.rollback()
-            throw e
+            await connection.rollback();
+            throw e;
         } finally {
-            await connection.release()
+            await connection.release();
         }
     }
-    // funcion para obtener los datos de los trabajadores
-    static async getTrabajador(){
+
+    // Obtener los datos de los trabajadores
+    static async getTrabajador() {
         try {
-            const connection = await db()
-            const result = await connection.execute(`
-            SELECT * FROM empleado`)
-            await connection.release()
-            const realResult = result[0]
-            return realResult
+            const connection = await db();
+            const [result] = await connection.execute(`
+                SELECT * FROM empleado
+            `);
+            await connection.release();
+            return result;
         } catch (e) {
-            throw e
+            throw e;
         }
     }
 
-    // obtener datos de clientes
-    static async getCliente(){
+    // Obtener los datos de los clientes
+    static async getCliente() {
         try {
-            const connection = await db()
-            const result = await connection.execute(`
-            SELECT * FROM cliente`)
-            await connection.release()
-            const realResult = result[0]
-            return realResult
+            const connection = await db();
+            const [result] = await connection.execute(`
+                SELECT * FROM cliente
+            `);
+            await connection.release();
+            return result;
         } catch (e) {
-            throw e
+            throw e;
         }
     }
-
-    
-}
+};
 
 
+// Obtener todas las tarjetas con la información de los clientes y establecimientos
+exports.getTarjetasConClientes = async () => {
+    try {
+        const connection = await db();
+        const [result] = await connection.execute(`
+            SELECT tarjeta.ID_Tarjeta, tarjeta.ID_Establecimiento, cliente.Nombre_Cliente, establecimiento.Nombre_Establecimiento
+            FROM tarjeta
+            INNER JOIN cliente ON tarjeta.ID_Cliente = cliente.ID_Cliente
+            INNER JOIN establecimiento ON tarjeta.ID_Establecimiento = establecimiento.ID_Establecimiento;
+        `);
+        await connection.release();
+        return result;
+    } catch (error) {
+        console.error('Error al obtener las tarjetas:', error);
+        throw error;
+    }
+};
+
+// Obtener todos los establecimientos
+exports.getEstablecimientos = async () => {
+    try {
+        const connection = await db();
+        const [result] = await connection.execute(`
+            SELECT * FROM establecimiento;
+        `);
+        await connection.release();
+        return result;
+    } catch (error) {
+        console.error('Error al obtener los establecimientos:', error);
+        throw error;
+    }
+};
+
+// Obtener tarjetas por sucursal específica
+exports.getTarjetasPorSucursal = async (sucursalID) => {
+    try {
+        const connection = await db();
+        const [result] = await connection.execute(`
+            SELECT tarjeta.ID_Tarjeta, tarjeta.ID_Establecimiento, cliente.Nombre_Cliente, establecimiento.Nombre_Establecimiento
+            FROM tarjeta
+            INNER JOIN cliente ON tarjeta.ID_Cliente = cliente.ID_Cliente
+            INNER JOIN establecimiento ON tarjeta.ID_Establecimiento = establecimiento.ID_Establecimiento
+            WHERE tarjeta.ID_Establecimiento = ?;
+        `, [sucursalID]);
+        await connection.release();
+        return result;
+    } catch (error) {
+        console.error('Error al obtener las tarjetas por sucursal:', error);
+        throw error;
+    }
+};

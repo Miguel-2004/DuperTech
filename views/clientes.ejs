@@ -45,7 +45,7 @@
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    max-width: 300px;
+    max-width: 500px;
     width: 200%;
 }
 
@@ -87,8 +87,7 @@
                             <span class="worker-name"><%= Clientes[i].Nombre_Cliente %></span>
                             <button class="button is-small is-link is-light edit-button" 
                                     onclick="mostrarPopup('<%= Clientes[i].Nombre_Cliente %>', '<%= Clientes[i].ID_Cliente %>', '<%= Clientes[i].Telefono_Cliente %>',
-                                     '<%= Clientes[i].Fecha_Nac %>', '<%= Clientes[i].Sexo %>', '<%= Clientes[i].Tarjeta %>', '<%= Clientes[i].Sellos %>',
-                                      '<%= Clientes[i].Recompensas %>')">más información</button>
+                                     '<%= Clientes[i].Fecha_Nac %>', '<%= Clientes[i].Sexo %>', '<%= Clientes[i].ID_Tarjeta %>', '<%= Clientes[i].Version %>', '<%= Clientes[i].Numero_Sellos %>')">más información</button>
                         </div>
                     <% } %>
                 </div>
@@ -108,22 +107,26 @@
         <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
         <p><strong>ID:</strong> <span id="popupID"></span></p>
         <p><strong>Teléfono:</strong> <span id="popupTelefono"></span></p>
-        <p><strong>Tarjeta relacionada:</strong> <span id="popupTarjeta"></span></p>
+        <p><strong>Fecha de nacimiento:</strong> <span id="popupFecha"></span></p>
+        <p><strong>Sexo:</strong> <span id="popupSexo"></span></p>
+        <p><strong>ID Tarjeta:</strong> <span id="popupTarjeta"></span></p>
+        <p><strong>version:</strong> <span id="popupVersion"></span></p>
         <p><strong>Sellos totales:</strong> <span id="popupSellos"></span></p>
-        <p><strong>Recompensas reclamadas:</strong> <span id="popupRecompensas"></span></p>
         <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
     </div>
 
     <script>
         // Función para mostrar el pop-up y actualizar la información del cliente
-        function mostrarPopup(nombre, id, telefono, tarjeta, sellos, recompensas) {
+        function mostrarPopup(nombre, id, telefono, fecha, sexo, tarjeta, version, sellos) {
             // Asignar los valores del cliente al pop-up
             document.getElementById('popupNombre').textContent = nombre;
             document.getElementById('popupID').textContent = id;
             document.getElementById('popupTelefono').textContent = telefono;
+            document.getElementById('popupFecha').textContent = fecha;
+            document.getElementById('popupSexo').textContent = sexo;
             document.getElementById('popupTarjeta').textContent = tarjeta;
+            document.getElementById('popupVersion').textContent = version;
             document.getElementById('popupSellos').textContent = sellos;
-            document.getElementById('popupRecompensas').textContent = recompensas;
 
             // Mostrar el pop-up
             document.getElementById('miPopup').style.display = 'block';

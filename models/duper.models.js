@@ -54,7 +54,7 @@ exports.usuarios = class {
         try {
             const connection = await db();
             const [result] = await connection.execute(`
-                SELECT * FROM cliente
+                SELECT * FROM cliente c JOIN tarjeta t ON c.ID_Cliente = t.ID_Cliente
             `);
             await connection.release();
             return result;

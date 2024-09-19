@@ -6,7 +6,7 @@ const DuperModel = require('../models/duper.models');
 exports.getAllTrabajadores = async (req, res, next) => {
     try{
         const Trabajadores = await DuperModel.usuarios.getTrabajador();
-        console.log(Trabajadores)
+        //console.log(Trabajadores)
 
         const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
         res.render('empleados', { Trabajadores: TrabajadoresArray });
@@ -21,7 +21,7 @@ exports.getAllTrabajadores = async (req, res, next) => {
 exports.getAllClientes = async (req, res, next) => {
     try{
         const Clientes = await DuperModel.usuarios.getCliente();
-        console.log(Clientes)
+        //console.log(Clientes)
 
         const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
         res.render('clientes', { Clientes: ClientesArray });

@@ -13,18 +13,11 @@ const isAuthenticated = (req, res, next) => {
 // Rutas para manejar GET y POST
 router.get('/main', isAuthenticated, duperController.getDuper); // Aplica autenticación solo si es necesario
 router.post('/main', isAuthenticated, duperController.postDuper);
-
-router.get('/login', duperController.verificarUser);
-router.post('/login', duperController.verificarUser);
-
-// Rutas para empleados, clientes, tarjetas y promociones
-router.get('/empleados', duperController.getAllTrabajadores);
-router.get('/clientes', duperController.getAllClientes);
+router.get('/login',duperController.verificarUser);
+router.post('/login',duperController.verificarUser);
+router.get('/empleados',duperController.getAllTrabajadores);
+router.get('/clientes',duperController.getAllClientes);
+router.get('/promociones', duperController.getAllPromociones);
 router.get('/tarjetas', duperController.listarTarjetas);
-router.get('/promociones', duperController.listarPromociones);  // Ruta de promociones
-router.post('/promociones/añadir', duperController.registrarPromocion);
-router.post('/promociones/eliminar', duperController.eliminarPromocion);
 
-
-// Exportar las rutas para que sean usadas en server.js
 module.exports = router;

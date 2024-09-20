@@ -122,7 +122,15 @@
             document.getElementById('popupNombre').textContent = nombre;
             document.getElementById('popupID').textContent = id;
             document.getElementById('popupTelefono').textContent = telefono;
-            document.getElementById('popupFecha').textContent = fecha;
+            
+            let fechaObj = new Date(fecha);
+            let dia = fechaObj.getDate();
+            let mes = fechaObj.getMonth() + 1; 
+            let año = fechaObj.getFullYear();
+            let fechaFormateada = `${dia}/${mes}/${año}`;
+
+            document.getElementById('popupFecha').textContent = fechaFormateada;
+
             document.getElementById('popupSexo').textContent = sexo;
             document.getElementById('popupTarjeta').textContent = tarjeta;
             document.getElementById('popupVersion').textContent = version;

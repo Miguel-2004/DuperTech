@@ -96,70 +96,31 @@
         </section>
     </div>
 
-    <!-- Pop-up para añadir una nueva promoción -->
-    <div class="form-popup" id="formPopup">
-        <button id="cerrarFormPopup" class="delete"></button>
-        <h2 class="title is-4 has-text-link">Registrar Nueva Promoción</h2>
-        <form action="/promociones/añadir" method="POST">
-            <div class="field">
-                <label for="nombreRecompensa" class="label">Nombre Recompensa:</label>
-                <div class="control">
-                    <input type="text" id="nombreRecompensa" name="nombreRecompensa" class="input" required>
-                </div>
-            </div>
-            <div class="field">
-                <label for="fechaInicio" class="label">Fecha Inicio:</label>
-                <div class="control">
-                    <input type="date" id="fechaInicio" name="fechaInicio" class="input" required>
-                </div>
-            </div>
-            <div class="field">
-                <label for="fechaFinal" class="label">Fecha Final:</label>
-                <div class="control">
-                    <input type="date" id="fechaFinal" name="fechaFinal" class="input" required>
-                </div>
-            </div>
-            <div class="field">
-                <label for="descripcionRegalo" class="label">Descripción Regalo:</label>
-                <div class="control">
-                    <textarea id="descripcionRegalo" name="descripcionRegalo" class="textarea" required></textarea>
-                </div>
-            </div>
-            <button type="submit" class="button is-link is-fullwidth mt-4">Registrar</button>
-        </form>
-        
-        
-    </div>
-
-    <!-- Pop-up de éxito -->
-    <div class="popup" id="successPopup" style="display:none;">
-        <h2 class="title is-4 has-text-link">¡Éxito!</h2>
-        <p>La promoción fue guardada con éxito.</p>
-        <button id="cerrarSuccessPopup" class="button is-success">Cerrar</button>
+    <!-- Pop-up -->
+    <div class="popup" id="miPopup" style="display:none;">
+        <button id="cerrarPopup" class="delete"></button>
+        <h2 class="title is-4 has-text-link">Detalles de la Promoción</h2>
+        <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
+        <p><strong>Descripción:</strong> <span id="popupDescripcion"></span></p>
+        <p><strong>Fecha de Inicio:</strong> <span id="popupFechaInicio"></span></p>
+        <p><strong>Fecha Final:</strong> <span id="popupFechaFinal"></span></p>
+        <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
     </div>
 
     <%- include('includes/footer') %>
 
     <script>
-        // Mostrar el formulario para añadir promoción
-        function showFormPopup() {
-            document.getElementById('formPopup').style.display = 'block';
+        function showPopup(nombre, descripcion, fechaInicio, fechaFinal) {
+            document.getElementById('popupNombre').innerText = nombre;
+            document.getElementById('popupDescripcion').innerText = descripcion;
+            document.getElementById('popupFechaInicio').innerText = fechaInicio;
+            document.getElementById('popupFechaFinal').innerText = fechaFinal;
+            document.getElementById('miPopup').style.display = 'block';
         }
 
-        document.getElementById('cerrarFormPopup').addEventListener('click', function() {
-            document.getElementById('formPopup').style.display = 'none';
+        document.getElementById('cerrarPopup').addEventListener('click', function() {
+            document.getElementById('miPopup').style.display = 'none';
         });
-
-        // Cerrar el popup de éxito
-        document.getElementById('cerrarSuccessPopup').addEventListener('click', function() {
-            document.getElementById('successPopup').style.display = 'none';
-            location.reload();  // Recargar la página para actualizar la lista de promociones
-        });
-
-        // Mostrar popup de éxito si la promoción fue guardada
-        <% if (success) { %>
-            document.getElementById('successPopup').style.display = 'block';
-        <% } %>
     </script>
 
 </body>

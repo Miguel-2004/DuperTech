@@ -65,10 +65,16 @@
                                     <tr>
                                         <td><%= promociones[i].ID_Recompensa %></td>
                                         <td><%= promociones[i].Nombre_Recompensa %></td>
-                                        <td><%= promociones[i].Fecha_Inicio %></td>
-                                        <td><%= promociones[i].Fecha_Final %></td>
+                                        <td><%= promociones[i].Fecha_Inicio.toISOString().split('T')[0] %></td>
+                                        <td><%= promociones[i].Fecha_Final.toISOString().split('T')[0] %></td>
                                         <td>
                                             <button class="button is-small is-link" onclick="showEditPopup('<%= promociones[i].ID_Recompensa %>', '<%= promociones[i].Nombre_Recompensa %>', '<%= promociones[i].Fecha_Inicio %>', '<%= promociones[i].Fecha_Final %>', '<%= promociones[i].Descripcion_Regalo %>')">Editar</button>
+                                            
+                                            <!-- Botón de Eliminar -->
+                                            <form action="/promociones/eliminar" method="POST" style="display:inline;">
+                                                <input type="hidden" name="ID_Recompensa" value="<%= promociones[i].ID_Recompensa %>">
+                                                <button type="submit" class="button is-small is-danger">Eliminar</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <% } %>
@@ -78,6 +84,7 @@
                                 </tr>
                             <% } %>
                         </tbody>
+                        
                     </table>
                 </div>
 
@@ -120,40 +127,15 @@
             </div>
             <button type="submit" class="button is-link is-fullwidth mt-4">Registrar</button>
         </form>
+        
+        
     </div>
 
-    <!-- Pop-up para editar promoción -->
-    <div class="form-popup" id="editFormPopup">
-        <button id="cerrarEditFormPopup" class="delete"></button>
-        <h2 class="title is-4 has-text-link">Editar Promoción</h2>
-        <form id="editForm" action="/promociones/editar" method="POST">
-            <input type="hidden" id="editIdRecompensa" name="idRecompensa">
-            <div class="field">
-                <label for="editNombreRecompensa" class="label">Nombre Recompensa:</label>
-                <div class="control">
-                    <input type="text" id="editNombreRecompensa" name="nombreRecompensa" class="input" required>
-                </div>
-            </div>
-            <div class="field">
-                <label for="editFechaInicio" class="label">Fecha Inicio:</label>
-                <div class="control">
-                    <input type="date" id="editFechaInicio" name="fechaInicio" class="input" required>
-                </div>
-            </div>
-            <div class="field">
-                <label for="editFechaFinal" class="label">Fecha Final:</label>
-                <div class="control">
-                    <input type="date" id="editFechaFinal" name="fechaFinal" class="input" required>
-                </div>
-            </div>
-            <div class="field">
-                <label for="editDescripcionRegalo" class="label">Descripción Regalo:</label>
-                <div class="control">
-                    <textarea id="editDescripcionRegalo" name="descripcionRegalo" class="textarea" required></textarea>
-                </div>
-            </div>
-            <button type="submit" class="button is-link is-fullwidth mt-4">Guardar Cambios</button>
-        </form>
+    <!-- Pop-up de éxito -->
+    <div class="popup" id="successPopup" style="display:none;">
+        <h2 class="title is-4 has-text-link">¡Éxito!</h2>
+        <p>La promoción fue guardada con éxito.</p>
+        <button id="cerrarSuccessPopup" class="button is-success">Cerrar</button>
     </div>
 
     <%- include('includes/footer') %>
@@ -168,19 +150,16 @@
             document.getElementById('formPopup').style.display = 'none';
         });
 
-        // Mostrar el formulario de edición
-        function showEditPopup(idRecompensa, nombre, fechaInicio, fechaFinal, descripcion) {
-            document.getElementById('editIdRecompensa').value = idRecompensa;
-            document.getElementById('editNombreRecompensa').value = nombre;
-            document.getElementById('editFechaInicio').value = fechaInicio;
-            document.getElementById('editFechaFinal').value = fechaFinal;
-            document.getElementById('editDescripcionRegalo').value = descripcion;
-            document.getElementById('editFormPopup').style.display = 'block';
-        }
-
-        document.getElementById('cerrarEditFormPopup').addEventListener('click', function() {
-            document.getElementById('editFormPopup').style.display = 'none';
+        // Cerrar el popup de éxito
+        document.getElementById('cerrarSuccessPopup').addEventListener('click', function() {
+            document.getElementById('successPopup').style.display = 'none';
+            location.reload();  // Recargar la página para actualizar la lista de promociones
         });
+
+        // Mostrar popup de éxito si la promoción fue guardada
+        <% if (success) { %>
+            document.getElementById('successPopup').style.display = 'block';
+        <% } %>
     </script>
 
 </body>

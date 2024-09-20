@@ -120,31 +120,35 @@ exports.listarTarjetas = async (req, res) => {
 exports.listarPromociones = async (req, res) => {
     try {
         const promociones = await DuperModel.obtenerPromociones();
-        if (!promociones || promociones.length === 0) {
-            console.log('No se encontraron promociones');
-            return res.render('promocion', { promociones: [] });  // Envía un array vacío
-        }
+        console.log('Promociones obtenidas en el controlador:', promociones); // Depuración
 
-        console.log('Promociones obtenidas en el controlador:', promociones);
-        res.render('promocion', { promociones });
+        // Pasar la variable success, por defecto será false
+        res.render('promocion', { promociones, success: req.query.success || false });
     } catch (error) {
         console.error('Error al listar las promociones:', error);
         res.status(500).send('Error al listar las promociones.');
     }
 };
 
+
 exports.registrarPromocion = async (req, res) => {
-    const { nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
-
-    // Validar campos
-    if (!nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
-        console.log('Campos incompletos para registrar la promoción');
-        return res.status(400).send('Todos los campos son obligatorios.');
-    }
-
     try {
+        // Verificar si los datos llegan correctamente
+        console.log('Datos recibidos del formulario:', req.body);
+
+        const { nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
+
+        if (!nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
+            console.log('Datos incompletos para registrar la promoción');
+            return res.status(400).send('Faltan datos para registrar la promoción');
+        }
+
+        // Llamar al modelo para insertar la promoción
         await DuperModel.insertarPromocion(nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
-        res.redirect('/promociones');
+        console.log('Promoción registrada con éxito');
+        
+        // Redirigir al usuario a la página de promociones con un parámetro de éxito
+        res.redirect('/promociones?success=true');
     } catch (error) {
         console.error('Error al registrar la promoción:', error);
         res.status(500).send('Error al registrar la promoción.');
@@ -152,19 +156,35 @@ exports.registrarPromocion = async (req, res) => {
 };
 
 exports.editarPromocion = async (req, res) => {
-    const { idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
-
-    // Validar campos
-    if (!idRecompensa || !nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
-        console.log('Campos incompletos para editar la promoción');
-        return res.status(400).send('Todos los campos son obligatorios.');
-    }
-
     try {
+        const { idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
         await DuperModel.actualizarPromocion(idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
-        res.redirect('/promociones');
+        res.redirect('/promociones?success=true');
     } catch (error) {
         console.error('Error al editar la promoción:', error);
         res.status(500).send('Error al editar la promoción.');
+    }
+};
+
+exports.eliminarPromocion = async (req, res) => {
+    const { ID_Recompensa } = req.body;
+
+    try {
+        const connection = await db();
+
+        // Eliminar los registros de la tabla `regalo` relacionados con la recompensa
+        await connection.execute('DELETE FROM regalo WHERE ID_Recompensa = ?', [ID_Recompensa]);
+
+        // Eliminar el registro de la tabla `recompensa`
+        await connection.execute('DELETE FROM recompensa WHERE ID_Recompensa = ?', [ID_Recompensa]);
+
+        // Cerrar la conexión
+        await connection.release();
+
+        // Redireccionar de nuevo a la página de promociones con éxito
+        res.redirect('/promociones');
+    } catch (error) {
+        console.error('Error al eliminar la promoción:', error);
+        res.status(500).send('Error al eliminar la promoción');
     }
 };

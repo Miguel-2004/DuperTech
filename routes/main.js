@@ -22,6 +22,9 @@ router.get('/empleados', duperController.getAllTrabajadores);
 router.get('/clientes', duperController.getAllClientes);
 router.get('/tarjetas', duperController.listarTarjetas);
 router.get('/promociones', duperController.listarPromociones);  // Ruta de promociones
+router.post('/promociones/añadir', duperController.registrarPromocion);
+router.post('/promociones/eliminar', duperController.eliminarPromocion);
+
 
 // Exportar las rutas para que sean usadas en server.js
 module.exports = router;

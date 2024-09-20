@@ -118,11 +118,17 @@ exports.getTarjetasPorSucursal = async (sucursalID) => {
 exports.obtenerPromociones = async () => {
     try {
         const connection = await db();
-        const [result] = await connection.execute(`SELECT ID_Recompensa, Nombre_Recompensa, Fecha_Inicio, Fecha_Final FROM recompensa`);
-        
-        // Depuración: Asegúrate de que los datos están llegando
-        console.log('Promociones obtenidas en el modelo:', result); 
-        
+        const [result] = await connection.execute(`
+            SELECT 
+                recompensa.ID_Recompensa AS ID_Recompensa, 
+                recompensa.Nombre_Recompensa AS Nombre_Recompensa, 
+                recompensa.Fecha_Inicio AS Fecha_Inicio, 
+                recompensa.Fecha_Final AS Fecha_Final, 
+                regalo.Descripcion_Regalo AS Descripcion_Regalo
+            FROM recompensa
+            LEFT JOIN regalo ON recompensa.ID_Recompensa = regalo.ID_Recompensa
+        `);
+        console.log('Promociones obtenidas en el modelo:', result);
         await connection.release();
         return result;
     } catch (error) {
@@ -131,54 +137,25 @@ exports.obtenerPromociones = async () => {
     }
 };
 
-// Insertar una nueva promoción y regalo
 exports.insertarPromocion = async (nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {
     try {
         const connection = await db();
-
-        // Insertar en la tabla recompensa
-        await connection.execute(
+        console.log('Conexión a la base de datos exitosa');
+        const [result] = await connection.execute(
             `INSERT INTO recompensa (Nombre_Recompensa, Fecha_Inicio, Fecha_Final) VALUES (?, ?, ?)`,
             [nombreRecompensa, fechaInicio, fechaFinal]
         );
+        const idRecompensa = result.insertId;
+        console.log('Promoción insertada con ID:', idRecompensa);
 
-        // Obtener el ID generado para insertar en la tabla regalo
-        const [rows] = await connection.execute(`SELECT LAST_INSERT_ID() as ID_Recompensa`);
-        const idRecompensa = rows[0].ID_Recompensa;
-
-        // Insertar en la tabla regalo usando el ID_Recompensa generado
         await connection.execute(
             `INSERT INTO regalo (ID_Recompensa, Nombre_Regalo, Descripcion_Regalo) VALUES (?, ?, ?)`,
             [idRecompensa, nombreRecompensa, descripcionRegalo]
         );
-
+        console.log('Regalo insertado con éxito');
         await connection.release();
     } catch (error) {
         console.error('Error al insertar la promoción:', error);
-        throw error;
-    }
-};
-
-// Actualizar una promoción y su regalo
-exports.actualizarPromocion = async (idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {
-    try {
-        const connection = await db();
-
-        // Actualizar la tabla recompensa
-        await connection.execute(
-            `UPDATE recompensa SET Nombre_Recompensa = ?, Fecha_Inicio = ?, Fecha_Final = ? WHERE ID_Recompensa = ?`,
-            [nombreRecompensa, fechaInicio, fechaFinal, idRecompensa]
-        );
-
-        // Actualizar la tabla regalo vinculada al ID_Recompensa
-        await connection.execute(
-            `UPDATE regalo SET Nombre_Regalo = ?, Descripcion_Regalo = ? WHERE ID_Recompensa = ?`,
-            [nombreRecompensa, descripcionRegalo, idRecompensa]
-        );
-
-        await connection.release();
-    } catch (error) {
-        console.error('Error al actualizar la promoción:', error);
         throw error;
     }
 };

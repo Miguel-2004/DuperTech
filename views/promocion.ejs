@@ -60,32 +60,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (typeof promociones !== 'undefined' && Array.isArray(promociones) && promociones.length > 0) { %>
-                                <% for (let i = 0; i < promociones.length; i++) { %>
+                            <% if (promociones && promociones.length > 0) { %>
+                                <% promociones.forEach(function(promocion) { %>
                                     <tr>
-                                        <td><%= promociones[i].ID_Recompensa %></td>
-                                        <td><%= promociones[i].Nombre_Recompensa %></td>
-                                        <td><%= promociones[i].Fecha_Inicio.toISOString().split('T')[0] %></td>
-                                        <td><%= promociones[i].Fecha_Final.toISOString().split('T')[0] %></td>
+                                        <td><%= promocion.ID_Recompensa %></td>
+                                        <td><%= promocion.Nombre_Recompensa %></td>
+                                        <td><%= new Date(promocion.Fecha_Inicio).toISOString().split('T')[0] %></td>
+                                        <td><%= new Date(promocion.Fecha_Final).toISOString().split('T')[0] %></td>
                                         <td>
-                                            <button class="button is-small is-link" onclick="showEditPopup('<%= promociones[i].ID_Recompensa %>', '<%= promociones[i].Nombre_Recompensa %>', '<%= promociones[i].Fecha_Inicio %>', '<%= promociones[i].Fecha_Final %>', '<%= promociones[i].Descripcion_Regalo %>')">Editar</button>
-                                            
-                                            <!-- Botón de Eliminar -->
+                                            <button class="button is-small is-link">Editar</button>
                                             <form action="/promociones/eliminar" method="POST" style="display:inline;">
-                                                <input type="hidden" name="ID_Recompensa" value="<%= promociones[i].ID_Recompensa %>">
+                                                <input type="hidden" name="ID_Recompensa" value="<%= promocion.ID_Recompensa %>">
                                                 <button type="submit" class="button is-small is-danger">Eliminar</button>
                                             </form>
                                         </td>
                                     </tr>
-                                <% } %>
+                                <% }); %>
                             <% } else { %>
                                 <tr>
                                     <td colspan="5" class="has-text-centered">No hay promociones disponibles.</td>
                                 </tr>
                             <% } %>
                         </tbody>
-                        
                     </table>
+                    
                 </div>
 
                 <!-- Añadir nueva promoción -->

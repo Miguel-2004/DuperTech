@@ -10,7 +10,6 @@ const duperController = require('./controllers/duper.controller');
 
 // Middleware para procesar formularios
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());  // Para procesar JSON si es necesario
 
 // Configurar EJS como motor de vistas
 app.set('view engine', 'ejs');
@@ -28,7 +27,7 @@ app.use('/empleados', rutaUsers);
 app.use('/clientes', rutaUsers);
 
 // Rutas para promociones
-app.get('/promociones', duperController.listarPromociones);
+app.get('/promociones', duperController.getAllPromociones);
 app.post('/promociones/añadir', duperController.registrarPromocion);
 app.post('/promociones/editar', duperController.editarPromocion);
 
@@ -55,7 +54,7 @@ app.get('/reportes', (req, res) => {
     res.render('reportes', { pageTitle: 'reportes' });
 });
 
-// Manejo de rutas no encontradas (404)
+// Manejo de rutas no encontradas
 app.use((req, res, next) => {
     res.status(404).render('404');
 });
@@ -64,3 +63,6 @@ app.use((req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+// Servir archivos estáticos
+app.use(express.static('public'));

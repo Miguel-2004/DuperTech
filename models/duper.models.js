@@ -139,3 +139,18 @@ exports.getPromocionesReclamadasPorMes = async () => {
         throw error;
     }
 };
+
+exports.createEmpleado = async function (nombre, telefono, usuario, contrasena) {
+    try {
+        const connection = await db()
+        const result = await connection.execute(`
+        INSERT INTO empleado (Nombre_Empleado, Telefono_Empleado, Usuario, Contrasenia)
+        VALUES (?,?,?,?, NOW())
+        `, [nombre, telefono, usuario, contrasena])
+        await connection.release()
+        const realResult = result[0]
+        return "yes"
+    } catch (error) {
+       throw error;
+    }
+}

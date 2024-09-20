@@ -134,3 +134,16 @@ exports.getReporte = async (req, res) => {
         res.status(500).json({ error: 'Error al obtener los datos' });
     }
 };
+
+module.exports.registrar_empleado = async (req, res) => {
+    try {
+        const {nombre, telefono, usuario, contrasena} = req.body
+
+        const newEmpleado = await model.createEmpleado(nombre, telefono, usuario, contrasena)
+
+        res.status(201).redirect("/empleados/empleados")
+
+    } catch (error) {
+        throw error;
+    }
+};

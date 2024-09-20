@@ -18,6 +18,7 @@ router.post('/main', isAuthenticated, duperController.postDuper);
 router.get('/login',duperController.verificarUser);
 router.post('/login',duperController.verificarUser);
 router.get('/empleados',duperController.getAllTrabajadores);
+router.post('/empleados',duperController.registrar_empleado);
 router.get('/clientes',duperController.getAllClientes);
 router.get('/promociones', duperController.getAllPromociones);
 router.get('/tarjetas', duperController.listarTarjetas);

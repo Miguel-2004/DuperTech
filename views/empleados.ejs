@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Empleados</title>
+    <%- include('includes/head') %> 
+    <style>
+        /* Estilo para centrar y agrandar el recuadro */
+        .box-centered {
+            width: 80%; /* Ajusta el tamaño del recuadro, aquí está al 80% del ancho de la página */
+            max-width: 1200px; /* Ancho máximo del recuadro */
+            margin: 50px auto; /* Centrar horizontalmente y dar espacio desde la parte superior */
+            padding: 20px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0; /* Añadir espacio entre las líneas */
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .worker-name {
+            flex-grow: 1; /* Permitir que el nombre ocupe el espacio disponible */
+            margin-right: 20px; /* Espacio entre el nombre y el botón */
+        }
+
+        .edit-button {
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('includes/sidebar') %>
+
+    <div class="container">
+        <section class="section">
+            <div class="box box-centered"> 
+                <h1 class="title">Trabajadores</h1>
+
+                <!-- Search -->
+                <div class="field has-addons">
+                    <div class="control has-icons-left is-expanded">
+                        <input class="input" type="text" placeholder="Buscar">
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Worker List with Edit Button -->
+                <div class="list">
+                    <% for (let i = 0; i < Trabajadores.length; i++) { %>
+                        <div class="list-item">
+                            <span class="worker-name"><%= Trabajadores[i].Nombre_Empleado %></span>
+                            <button class="button is-small is-link is-light edit-button">Editar</button>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Boton para añadir trabajador -->
+                <div class="has-text-centered mt-5">
+                    <button class="button is-success is-medium">Añadir</button>
+                </div>
+            </div>
+
+            <!-- Modal para añadir trabajador -->
+            <div class="modal" id="addWorkerModal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Añadir Trabajador</p>
+                        <button class="delete" aria-label="close" id="closeModalBtn"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <!-- Contenido del formulario para añadir trabajador -->
+                        <form>
+                            <div class="field">
+                                <label class="label">Nombre del Trabajador</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="Nombre">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Puesto</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="Puesto">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Correo Electrónico</label>
+                                <div class="control">
+                                    <input class="input" type="email" placeholder="Correo Electrónico">
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success">Guardar</button>
+                        <button class="button" id="cancelBtn">Cancelar</button>
+                    </footer>
+                </div>
+            </div>
+
+            <!-- Modal para editar trabajador -->
+            <div class="modal" id="editWorkerModal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Editar Trabajador</p>
+                        <button class="delete" aria-label="close" id="closeEditModalBtn"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <!-- Contenido del formulario para editar trabajador -->
+                        <form>
+                            <div class="field">
+                                <label class="label">Nombre del Trabajador</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="editNombre" placeholder="Nombre">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Puesto</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="editPuesto" placeholder="Puesto">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label class="label">Correo Electrónico</label>
+                                <div class="control">
+                                    <input class="input" type="email" id="editCorreo" placeholder="Correo Electrónico">
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success" id="saveEditBtn">Guardar</button>
+                        <button class="button" id="deleteWorkerBtn">Eliminar</button>
+                        <button class="button" id="cancelEditBtn">Cancelar</button>
+                    </footer>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+        // Seleccionar los elementos del DOM
+        const addWorkerBtn = document.querySelector('.button.is-success.is-medium');
+        const addWorkerModal = document.getElementById('addWorkerModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+    
+        // Abrir el modal al hacer clic en el botón 'Añadir'
+        addWorkerBtn.addEventListener('click', function() {
+            addWorkerModal.classList.add('is-active');
+        });
+    
+        // Cerrar el modal al hacer clic en la 'X' o en el botón 'Cancelar'
+        closeModalBtn.addEventListener('click', function() {
+            addWorkerModal.classList.remove('is-active');
+        });
+    
+        cancelBtn.addEventListener('click', function() {
+            addWorkerModal.classList.remove('is-active');
+        });
+
+        // Selección de elementos del DOM para el modal de edición
+        const editWorkerModal = document.getElementById('editWorkerModal');
+        const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const saveEditBtn = document.getElementById('saveEditBtn');
+        const deleteWorkerBtn = document.getElementById('deleteWorkerBtn');
+    
+        // Inputs del modal de edición
+        const editNombre = document.getElementById('editNombre');
+        const editPuesto = document.getElementById('editPuesto');
+        const editCorreo = document.getElementById('editCorreo');
+
+        // Añadir eventos a los botones de editar
+        const editButtons = document.querySelectorAll('.edit-button');
+        editButtons.forEach((button, index) => {
+            button.addEventListener('click', function() {
+                // Abrir el modal de edición
+                editWorkerModal.classList.add('is-active');
+
+                // Cargar los datos del trabajador seleccionado en los inputs del modal
+                const nombre = document.querySelectorAll('.worker-name')[index].textContent;
+                // Aquí puedes obtener más datos si están disponibles, por ejemplo:
+                // const puesto = Trabajadores[index].Puesto; 
+                // const correo = Trabajadores[index].Correo;
+
+                editNombre.value = nombre;
+                // editPuesto.value = puesto; // Cargar puesto si lo tienes
+                // editCorreo.value = correo; // Cargar correo si lo tienes
+            });
+        });
+
+        // Cerrar el modal de edición al hacer clic en la 'X' o en 'Cancelar'
+        closeEditModalBtn.addEventListener('click', function() {
+            editWorkerModal.classList.remove('is-active');
+        });
+
+        cancelEditBtn.addEventListener('click', function() {
+            editWorkerModal.classList.remove('is-active');
+        });
+
+        // Guardar cambios al hacer clic en 'Guardar'
+        saveEditBtn.addEventListener('click', function() {
+            // Aquí puedes realizar una operación de guardado, por ejemplo, enviar los datos actualizados al servidor
+            alert('Datos guardados exitosamente');
+            editWorkerModal.classList.remove('is-active');
+        });
+
+        // Eliminar trabajador al hacer clic en 'Eliminar'
+        deleteWorkerBtn.addEventListener('click', function() {
+            // Aquí puedes realizar una operación de eliminación, por ejemplo, enviar una solicitud para eliminar el trabajador del servidor
+            const confirmation = confirm("¿Estás seguro de que deseas eliminar este trabajador?");
+            if (confirmation) {
+                alert('Trabajador eliminado exitosamente');
+                editWorkerModal.classList.remove('is-active');
+                // Lógica para eliminar al trabajador de la lista
+            }
+        });
+    </script>
+
+    <%- include('includes/footer') %>
+
+</body>
+</html>

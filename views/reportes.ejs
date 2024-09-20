@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Dinámicos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <%- include('includes/head') %> <!-- Mantener el head -->
+  </head>
+  <body>
+    <%- include('includes/sidebar') %> <!-- Mantener el sidebar -->
+
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="box">
+          <canvas id="graficoReporte"></canvas>
+          <div class="field">
+            <label class="label">Seleccionar Reporte</label>
+            <div class="control">
+              <div class="select">
+                <select id="dropdownReporte">
+                  <option value="promociones_reclamadas">Promociones Reclamadas</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Inicializar Chart.js
+      const ctx = document.getElementById('graficoReporte').getContext('2d');
+      let grafico = new Chart(ctx, {
+        type: 'line', 
+        data: {
+          labels: [], // Fechas (X)
+          datasets: [{
+            label: 'Promociones Reclamadas',
+            data: [], // Total reclamaciones (Y)
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Función para obtener los datos desde el servidor
+      async function obtenerDatosPromociones() {
+        try {
+          const response = await fetch(`/reportes?category=promociones_reclamadas`);
+          const data = await response.json();
+
+          // Mostrar los datos en la consola
+          console.log("Datos devueltos por el servidor:", data);
+
+          if (!data || data.length === 0) {
+            console.error('No hay datos disponibles para mostrar.');
+            return;
+          }
+
+          // Mapear las fechas y totales
+          const fechas = data.map(item => item.Mes); // Etiquetas del eje X
+          const totales = data.map(item => item.Total_Reclamaciones); // Valores del eje Y
+
+          // Actualizar la gráfica
+          grafico.data.labels = fechas; // Asignar las fechas en el eje X
+          grafico.data.datasets[0].data = totales; // Asignar los totales en el eje Y
+          grafico.update(); // Refrescar la gráfica
+        } catch (error) {
+          console.error('Error al obtener los datos del reporte:', error);
+        }
+      }
+
+      // Llamar a la función para cargar los datos al iniciar la página
+      obtenerDatosPromociones();
+    </script>
+
+    <%- include('includes/footer') %> <!-- Mantener el footer -->
+  </body>
+</html>

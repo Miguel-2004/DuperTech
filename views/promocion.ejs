@@ -4,7 +4,7 @@
     <title>Promociones</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <%- include('includes/head') %> 
+    <%- include('includes/head') %>
     <style>
         .box-centered {
             width: 80%;
@@ -46,7 +46,7 @@
             <div class="box box-centered"> 
                 <h1 class="title">Promociones</h1>
 
-                <!-- Lista de promociones con botón "Editar" -->
+                <!-- Lista de promociones con botón "Editar" y "Eliminar" -->
                 <div class="promociones-lista">
                     <h2 class="title is-4">Promociones Existentes</h2>
                     <table class="table is-fullwidth">
@@ -96,31 +96,70 @@
         </section>
     </div>
 
-    <!-- Pop-up -->
-    <div class="popup" id="miPopup" style="display:none;">
-        <button id="cerrarPopup" class="delete"></button>
-        <h2 class="title is-4 has-text-link">Detalles de la Promoción</h2>
-        <p><strong>Nombre:</strong> <span id="popupNombre"></span></p>
-        <p><strong>Descripción:</strong> <span id="popupDescripcion"></span></p>
-        <p><strong>Fecha de Inicio:</strong> <span id="popupFechaInicio"></span></p>
-        <p><strong>Fecha Final:</strong> <span id="popupFechaFinal"></span></p>
-        <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
+    <!-- Pop-up para añadir una nueva promoción -->
+    <div class="form-popup" id="formPopup">
+        <button id="cerrarFormPopup" class="delete"></button>
+        <h2 class="title is-4 has-text-link">Registrar Nueva Promoción</h2>
+        <form action="/promociones/añadir" method="POST">
+            <div class="field">
+                <label for="nombreRecompensa" class="label">Nombre Recompensa:</label>
+                <div class="control">
+                    <input type="text" id="nombreRecompensa" name="nombreRecompensa" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="fechaInicio" class="label">Fecha Inicio:</label>
+                <div class="control">
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="fechaFinal" class="label">Fecha Final:</label>
+                <div class="control">
+                    <input type="date" id="fechaFinal" name="fechaFinal" class="input" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="descripcionRegalo" class="label">Descripción Regalo:</label>
+                <div class="control">
+                    <textarea id="descripcionRegalo" name="descripcionRegalo" class="textarea" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="button is-link is-fullwidth mt-4">Registrar</button>
+        </form>
+        
+        
+    </div>
+
+    <!-- Pop-up de éxito -->
+    <div class="popup" id="successPopup" style="display:none;">
+        <h2 class="title is-4 has-text-link">¡Éxito!</h2>
+        <p>La promoción fue guardada con éxito.</p>
+        <button id="cerrarSuccessPopup" class="button is-success">Cerrar</button>
     </div>
 
     <%- include('includes/footer') %>
 
     <script>
-        function showPopup(nombre, descripcion, fechaInicio, fechaFinal) {
-            document.getElementById('popupNombre').innerText = nombre;
-            document.getElementById('popupDescripcion').innerText = descripcion;
-            document.getElementById('popupFechaInicio').innerText = fechaInicio;
-            document.getElementById('popupFechaFinal').innerText = fechaFinal;
-            document.getElementById('miPopup').style.display = 'block';
+        // Mostrar el formulario para añadir promoción
+        function showFormPopup() {
+            document.getElementById('formPopup').style.display = 'block';
         }
 
-        document.getElementById('cerrarPopup').addEventListener('click', function() {
-            document.getElementById('miPopup').style.display = 'none';
+        document.getElementById('cerrarFormPopup').addEventListener('click', function() {
+            document.getElementById('formPopup').style.display = 'none';
         });
+
+        // Cerrar el popup de éxito
+        document.getElementById('cerrarSuccessPopup').addEventListener('click', function() {
+            document.getElementById('successPopup').style.display = 'none';
+            location.reload();  // Recargar la página para actualizar la lista de promociones
+        });
+
+        // Mostrar popup de éxito si la promoción fue guardada
+        <% if (typeof success !== 'undefined' && success) { %>
+            document.getElementById('successPopup').style.display = 'block';
+        <% } %>
     </script>
 
 </body>

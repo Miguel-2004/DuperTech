@@ -20,11 +20,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Importar las rutas principales desde el archivo de rutas
 const rutaUsers = require('./routes/main');
+const rutaEmpleados = require('./routes/empleado');
 
 // Usar las rutas correctas
 app.use('/users', rutaUsers);
-app.use('/empleados', rutaUsers);
-app.use('/clientes', rutaUsers);
+app.use('/empleado', rutaEmpleados);
 
 // Rutas para promociones
 app.get('/promociones', duperController.getAllPromociones);
@@ -33,7 +33,7 @@ app.post('/promociones/editar', duperController.editarPromocion);
 
 // Página principal
 app.get('/', (req, res) => {
-    res.render('Login');
+    res.redirect('/users/Login');
 });
 
 // Otras rutas que ya funcionan bien

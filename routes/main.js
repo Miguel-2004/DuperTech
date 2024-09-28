@@ -11,16 +11,14 @@ const isAuthenticated = (req, res, next) => {
 };
 
 // Rutas para manejar GET y POST
-router.get('/main', isAuthenticated, duperController.getDuper); // Aplica autenticación solo si es necesario
-router.post('/main', isAuthenticated, duperController.postDuper);
+router.get('/main');
+router.post('/main');
 
 // Rutas para manejo de usuarios
 router.get('/login', duperController.verificarUser);
 router.post('/login', duperController.verificarUser);
 
 // Rutas para empleados
-router.post('/empleados', duperController.registrar_empleado);
-router.get('/empleados', duperController.getAllTrabajadores);
 
 // Rutas para clientes
 router.get('/clientes', duperController.getAllClientes);

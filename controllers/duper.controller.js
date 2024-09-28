@@ -2,21 +2,6 @@
 const DuperModel = require('../models/duper.models');
 
 
-exports.getAllTrabajadores = async (req, res, next) => {
-    try{
-        const Trabajadores = await DuperModel.usuarios.getTrabajador();
-        //console.log(Trabajadores)
-
-        const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
-        res.render('empleados', { Trabajadores: TrabajadoresArray });
-
-        //res.render('empleados', {Trabajadores});
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error al cargar la página principal');
-    }
-};
-
 exports.getAllClientes = async (req, res, next) => {
     try{
         const Clientes = await DuperModel.usuarios.getCliente();

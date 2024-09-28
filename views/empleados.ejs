@@ -74,32 +74,52 @@
                         <button class="delete" aria-label="close" id="closeModalBtn"></button>
                     </header>
                     <section class="modal-card-body">
+
                         <!-- Contenido del formulario para añadir trabajador -->
-                        <form>
+                        <form id="formularioEmpleado" action="/empleado/nuevo" method="POST">
                             <div class="field">
                                 <label class="label">Nombre del Trabajador</label>
                                 <div class="control">
-                                    <input class="input" type="text" placeholder="Nombre">
+                                    <input class="input" type="text" name="nombre" placeholder="Nombre" required>
                                 </div>
                             </div>
                             <div class="field">
-                                <label class="label">Puesto</label>
+                                <label class="label">Telefono</label>
                                 <div class="control">
-                                    <input class="input" type="text" placeholder="Puesto">
+                                    <input class="input" type="text" name="telefono" placeholder="telefono" required>
                                 </div>
                             </div>
                             <div class="field">
-                                <label class="label">Correo Electrónico</label>
+                                <label class="label">Usuario</label>
                                 <div class="control">
-                                    <input class="input" type="email" placeholder="Correo Electrónico">
+                                    <input class="input" type="email" name="usuario" placeholder="usuario" required>
                                 </div>
                             </div>
-                        </form>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button is-success">Guardar</button>
-                        <button class="button" id="cancelBtn">Cancelar</button>
-                    </footer>
+                            <div class="field"></div>
+                                <label class="label">password</label>
+                                <div class="control">
+                                    <input class="input" type="text" name="password" placeholder="password" required>
+                                </div>
+                            </div>
+
+                             <!-- Menú desplegable para seleccionar el establecimiento -->
+                            <div class="field">
+                                <label class="label">Establecimiento:</label>
+                                <div class="select">
+                                    <select name="id_Establecimiento" required>
+                                        <% Usuario.forEach((Establecimiento) => { %>
+                                            <option value="<%= Establecimiento.id_Establecimiento %>"><%= Establecimiento.nombre_Establecimeinto %></option>
+                                        <% }); %>
+                                    </select>                                
+                                </div>   
+                            </div>
+                            </section>
+                        <footer class="modal-card-foot">
+                            <button class="button is-success">Guardar</button>
+                            <button class="button" id="cancelBtn">Cancelar</button>
+                        </footer>
+                    </form>  <!-- Fin del form -->
+
                 </div>
             </div>
 

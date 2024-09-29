@@ -107,8 +107,8 @@
                                 <label class="label">Establecimiento:</label>
                                 <div class="select">
                                     <select name="id_Establecimiento" required>
-                                        <% Usuario.forEach((Establecimiento) => { %>
-                                            <option value="<%= Establecimiento.id_Establecimiento %>"><%= Establecimiento.nombre_Establecimeinto %></option>
+                                        <% Establecimiento.forEach((establecimiento) => { %>
+                                            <option value="<%= establecimiento.id_Establecimiento %>"><%= establecimiento.nombre_Establecimeinto %></option>
                                         <% }); %>
                                     </select>                                
                                 </div>   

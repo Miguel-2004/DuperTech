@@ -1,3 +1,4 @@
+const db = require('../utils/database');
 
 exports.usuarios = class {
     static async getTrabajador() {
@@ -26,7 +27,7 @@ exports.usuarios = class {
         }
     }
 
-    static async createEmpleado (nombre, telefono, usuario, contrasena) {
+    static async createEmpleado (nombre, telefono, usuario, contrasena, ID_Es, id_Admin) {
         const connection = await db();
         try {
             await connection.beginTransaction();
@@ -34,7 +35,7 @@ exports.usuarios = class {
             const [result] = await connection.execute(`
                 INSERT INTO empleado (Nombre_Empleado, Telefono_Empleado, Usuario, Contrasenia, ID_Establecimiento, ID_Admin)
                 VALUES (?, ?, ?, ?, ?, ?)`,
-                [nombre, telefono, usuario, password, ID_Es, id_Admin]
+                [nombre, telefono, usuario, contrasena, ID_Es, id_Admin]
         );
             await connection.commit();
             return "yes";

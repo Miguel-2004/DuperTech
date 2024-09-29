@@ -18,23 +18,23 @@ exports.getAllTrabajadores = async (req, res, next) => {
 
 exports.nuevoEmpleado = async (req, res, next) => {
     try {
-        const Establecimiento = await model.establecimiento.getEstablecimientos();
-        const admin = await model.usuarios.getAdmin();
+        const Establecimiento = await Model.establecimiento.getEstablecimientos();
+        const admin = await Model.usuarios.getAdmin();
 
         const nombre = req.body.nombre;
         const telefono = req.body.telefono;
         const usuario = req.body.usuario;
-        const password = req.body.password;
+        const contrasena = req.body.password;
         const ID_Es = req.body.id_Establecimiento;
         const id_Admin = req.body.id_Admin;
-        const empleado = await model.usuarios.createEmpleado()
+        const empleado = await Model.usuarios.createEmpleado(nombre, telefono, usuario, contrasena, ID_Es, id_Admin)
 
         if (!empleado) {
             return res.render('empleados', { mensaje: 'Error al crear el empleado' });
+        }
+        res.render('empleados', { Establecimiento });
+    } catch (e) {
+        console.error(e);
+        res.status(500).render('empleados', { mensaje: 'Error al cargar los datos', Establecimiento });
     }
-    res.render('empleados', { Establecimiento });
-} catch (e) {
-    console.error(e);
-    res.status(500).render('empleados', { mensaje: 'Error al cargar los datos', Establecimiento });
-}
-}
+};

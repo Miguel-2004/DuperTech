@@ -1,6 +1,6 @@
 const db = require('../utils/database');
 
-exports.usuarios = class {
+module.exports = class Usuario {
     static async getTrabajador() {
         try {
             const connection = await db();
@@ -45,22 +45,4 @@ exports.usuarios = class {
             await connection.release();
         }
     };
-};
-
-exports.establecimiento = class {
-
-
-    static async getEstablecimientos() {
-        try {
-            const connection = await db();
-            const [result] = await connection.execute(`
-                SELECT * FROM establecimiento;
-            `);
-            await connection.release();
-            return result;
-        } catch (error) {
-            console.error('Error al obtener los establecimientos:', error);
-            throw error;
-        }
-    }
 };

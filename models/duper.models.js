@@ -156,10 +156,12 @@ exports.getTarjetasConClientes = async () => {
     try {
         const connection = await db();
         const [result] = await connection.execute(`
-            SELECT tarjeta.ID_Tarjeta, tarjeta.ID_Establecimiento, cliente.Nombre_Cliente, establecimiento.Nombre_Establecimiento
-            FROM tarjeta
-            INNER JOIN cliente ON tarjeta.ID_Cliente = cliente.ID_Cliente
-            INNER JOIN establecimiento ON tarjeta.ID_Establecimiento = establecimiento.ID_Establecimiento;
+            SELECT tarjeta.ID_Tarjeta, tarjeta.ID_Establecimiento, cliente.Nombre_Cliente, establecimiento.Nombre_Establecimiento, tarjeta.Numero_Sellos 
+            FROM tarjeta 
+            INNER JOIN cliente ON tarjeta.ID_Cliente = cliente.ID_Cliente 
+            INNER JOIN establecimiento ON tarjeta.ID_Establecimiento = establecimiento.ID_Establecimiento 
+            LEFT JOIN sello ON tarjeta.ID_Tarjeta = sello.ID_Tarjeta 
+            GROUP BY tarjeta.ID_Tarjeta, tarjeta.ID_Establecimiento, cliente.Nombre_Cliente, establecimiento.Nombre_Establecimiento; 
         `);
         await connection.release();
         return result;

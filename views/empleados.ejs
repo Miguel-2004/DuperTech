@@ -51,12 +51,12 @@
 
                 <!-- Worker List with Edit Button -->
                 <div class="list">
-                    <% for (let i = 0; i < Trabajadores.length; i++) { %>
+                    <% Trabajadores.forEach((Trabajadores) => { %>
                         <div class="list-item">
-                            <span class="worker-name"><%= Trabajadores[i].Nombre_Empleado %></span>
+                            <span class="worker-name"><%= Trabajadores.Nombre_Empleado %></span>
                             <button class="button is-small is-link is-light edit-button">Editar</button>
                         </div>
-                    <% } %>
+                    <% }) %>
                 </div>
         </section>
 
@@ -102,20 +102,21 @@
                                     <input class="input" type="password" name="password" placeholder="Contraseña" required>
                                 </div>
                             </div>
-
+                    
                             <!-- Menú desplegable para seleccionar el establecimiento -->
                             <div class="field">
                                 <label class="label">Establecimiento:</label>
                                 <div class="select">
-                                    <select name="id_Establecimiento" required>
+                                    <select name="ID_Establecimiento" required>
                                         <% establecimiento.forEach((establecimiento) => { %>
-                                            <option value="<%= establecimiento.id_Establecimiento %>">
-                                                <%= establecimiento.nombre_Establecimeinto %>
+                                            <option value="<%= establecimiento.ID_Establecimiento %>">
+                                                <%= establecimiento.Nombre_Establecimiento %>
                                             </option>
                                         <% }); %>
                                     </select>
-                                </div>
+                                </div>
                             </div>
+
                             <footer class="modal-card-foot">
                                 <button class="button is-success">Guardar</button>
                             </footer>

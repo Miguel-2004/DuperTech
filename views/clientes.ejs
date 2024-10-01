@@ -158,8 +158,39 @@
         <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
     </div>
 
+    <!-- Popup de Edición -->
+    <div class="popup box" id="editarMiPopup" style="display:none;">
+        <button id="cerrarEditarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
+        <h2 class="title is-4 has-text-link">Editar detalles</h2>
+        <div class="field">
+            <label class="label">Nombre</label>
+            <div class="control">
+                <input id="editarNombre" class="input" type="text" value="">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Teléfono</label>
+            <div class="control">
+                <input id="editarTelefono" class="input" type="text" value="">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Fecha de nacimiento</label>
+            <div class="control">
+                <input id="editarFecha" class="input" type="date" value="">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Sexo</label>
+            <div class="control">
+                <input id="editarSexo" class="input" type="text" value="">
+            </div>
+        </div>
+        <button id="guardarCambios" class="button is-success is-fullwidth mt-4">Guardar Cambios</button>
+    </div>
+
     <script>
-        // Función para mostrar el pop-up
+        
         function mostrarPopup(nombre, id, telefono, fecha, sexo, tarjeta, version, sellos) {
             document.getElementById('popupNombre').textContent = nombre;
             document.getElementById('popupID').textContent = id;
@@ -183,6 +214,29 @@
         // Cerrar el pop-up
         document.getElementById('cerrarPopup').addEventListener('click', function() {
             document.getElementById('miPopup').style.display = 'none';
+        });
+
+        // Abrir el popup de edición
+        document.getElementById("editarPopup").addEventListener("click", function() {
+            document.getElementById("editarMiPopup").style.display = "block";
+            document.getElementById("editarNombre").value = document.getElementById("popupNombre").innerText;
+            document.getElementById("editarTelefono").value = document.getElementById("popupTelefono").innerText;
+            document.getElementById("editarFecha").value = document.getElementById("popupFecha").innerText;
+            document.getElementById("editarSexo").value = document.getElementById("popupSexo").innerText;
+        });
+
+        // Cerrar popup de edición
+        document.getElementById("cerrarEditarPopup").addEventListener("click", function() {
+            document.getElementById("editarMiPopup").style.display = "none";
+        });
+
+        // Guardar cambios
+        document.getElementById("guardarCambios").addEventListener("click", function() {
+            document.getElementById("popupNombre").innerText = document.getElementById("editarNombre").value;
+            document.getElementById("popupTelefono").innerText = document.getElementById("editarTelefono").value;
+            document.getElementById("popupFecha").innerText = document.getElementById("editarFecha").value;
+            document.getElementById("popupSexo").innerText = document.getElementById("editarSexo").value;
+            document.getElementById("editarMiPopup").style.display = "none";
         });
 
         // Funcionalidad para añadir clientes

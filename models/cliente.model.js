@@ -34,4 +34,27 @@ module.exports = class Cliente {
             await connection.release();
         }
     };
+
+    static async editCliente (nombre, telefono, FechaNac, sexo, id) {
+        const connection = await db();
+        try {
+            await connection.beginTransaction();
+
+            const [result] = await connection.execute(`
+                UPDATE cliente
+                SET Nombre_Cliente = ?, Telefono_Cliente = ?, Fecha_Nac = ?, Sexo = ?
+                WHERE ID_Cliente = ?`,
+                [nombre, telefono, FechaNac, sexo, id]
+            );
+            
+            await connection.commit();
+            return "yes";
+            } 
+            catch (error) {
+            throw error;
+            } 
+            finally {
+            await connection.release();
+            }
+    };
 };

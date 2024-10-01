@@ -159,38 +159,48 @@
     </div>
 
     <!-- Popup de Edición -->
-    <div class="popup box" id="editarMiPopup" style="display:none;">
-        <button id="cerrarEditarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
-        <h2 class="title is-4 has-text-link">Editar detalles</h2>
-        <div class="field">
-            <label class="label">Nombre</label>
-            <div class="control">
-                <input id="editarNombre" class="input" type="text" value="">
+    <form id="editar_info" action="/cliente/clientes/editar" method="POST">
+        <div class="popup box" id="editarMiPopup" style="display:none;">
+            <button id="cerrarEditarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
+            <h2 class="title is-4 has-text-link">Editar detalles</h2>
+
+            <!-- Campo ID no editable -->
+            <div class="field">
+                <label class="label">ID</label>
+                <div class="control">
+                    <input id="editarID" name="ID_Cliente" class="input" type="text" value="" readonly>
+                </div>
             </div>
-        </div>
-        <div class="field">
-            <label class="label">Teléfono</label>
-            <div class="control">
-                <input id="editarTelefono" class="input" type="text" value="">
+
+            <div class="field">
+                <label class="label">Nombre</label>
+                <div class="control">
+                    <input id="editarNombre" name="Nombre_Cliente" class="input" type="text" value="">
+                </div>
             </div>
-        </div>
-        <div class="field">
-            <label class="label">Fecha de nacimiento</label>
-            <div class="control">
-                <input id="editarFecha" class="input" type="date" value="">
+            <div class="field">
+                <label class="label">Teléfono</label>
+                <div class="control">
+                    <input id="editarTelefono" name="Telefono_Cliente" class="input" type="text" value="">
+                </div>
             </div>
-        </div>
-        <div class="field">
-            <label class="label">Sexo</label>
-            <div class="control">
-                <input id="editarSexo" class="input" type="text" value="">
+            <div class="field">
+                <label class="label">Fecha de nacimiento</label>
+                <div class="control">
+                    <input id="editarFecha" name="Fecha_Cliente" class="input" type="date" value="">
+                </div>
             </div>
+            <div class="field">
+                <label class="label">Sexo</label>
+                <div class="control">
+                    <input id="editarSexo" name="Sexo_Cliente" class="input" type="text" value="">
+                </div>
+            </div>
+            <button id="guardarCambios" class="button is-success is-fullwidth mt-4">Guardar Cambios</button>
         </div>
-        <button id="guardarCambios" class="button is-success is-fullwidth mt-4">Guardar Cambios</button>
-    </div>
+    </form>
 
     <script>
-        
         function mostrarPopup(nombre, id, telefono, fecha, sexo, tarjeta, version, sellos) {
             document.getElementById('popupNombre').textContent = nombre;
             document.getElementById('popupID').textContent = id;
@@ -216,9 +226,10 @@
             document.getElementById('miPopup').style.display = 'none';
         });
 
-        // Abrir el popup de edición
+        // Abrir el popup de edición y prellenar los campos, incluyendo el ID
         document.getElementById("editarPopup").addEventListener("click", function() {
             document.getElementById("editarMiPopup").style.display = "block";
+            document.getElementById("editarID").value = document.getElementById("popupID").innerText; // ID del cliente
             document.getElementById("editarNombre").value = document.getElementById("popupNombre").innerText;
             document.getElementById("editarTelefono").value = document.getElementById("popupTelefono").innerText;
             document.getElementById("editarFecha").value = document.getElementById("popupFecha").innerText;

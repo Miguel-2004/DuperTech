@@ -21,10 +21,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Importar las rutas principales desde el archivo de rutas
 const rutaUsers = require('./routes/main');
 const rutaEmpleados = require('./routes/empleado');
+const rutaClientes = require('./routes/cliente');
 
 // Usar las rutas correctas
 app.use('/users', rutaUsers);
 app.use('/empleado', rutaEmpleados);
+app.use('/cliente', rutaClientes);
 
 // Rutas para promociones
 app.get('/promociones', duperController.getAllPromociones);

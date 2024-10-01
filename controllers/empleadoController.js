@@ -22,7 +22,7 @@ exports.getAllTrabajadores = async (req, res, next) => {
 exports.nuevoEmpleado = async (req, res, next) => {
     try {
         const establecimiento = await Establecimiento.getEstablecimientos();
-        console.log(establecimiento);
+        //console.log(establecimiento);
         const admin = await Model.getAdmin();
 
         const Trabajadores = await Model.getTrabajador();

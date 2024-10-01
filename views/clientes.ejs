@@ -3,14 +3,12 @@
 <head>
     <%- include('includes/head') %> 
     <title>Lista de Clientes</title>
-
 </head>
 <body>
 
     <%- include('includes/sidebar') %>
 
     <style>
-        /* Estilo para centrar y agrandar el recuadro */
         .box-centered {
             width: 80%; 
             max-width: 1200px; 
@@ -27,8 +25,8 @@
         }
 
         .worker-name {
-            flex-grow: 1; /* Permitir que el nombre ocupe el espacio disponible */
-            margin-right: 20px; /* Espacio entre el nombre y el botón */
+            flex-grow: 1;
+            margin-right: 20px;
         }
 
         .edit-button {
@@ -36,33 +34,30 @@
         }
 
         .popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    max-width: 500px;
-    width: 200%;
-}
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 500px;
+            width: 200%;
+        }
 
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none;
-}
-
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
     </style>
-</head>
-<body>
 
     <!-- contenedor principal -->
     <div class="container">
@@ -91,15 +86,63 @@
                         </div>
                     <% } %>
                 </div>
-
-                <!-- boton nuevo cliente -->
-                <div class="has-text-centered mt-5">
-                    <button class="button is-success is-medium">Añadir</button>
-                </div>
             </div>
         </section>
     </div>
     
+    <!-- Boton para añadir Clientes -->
+    <div class="has-text-centered mt-5">
+        <button class="button is-success is-medium" id="addClientBtn">Añadir</button>
+    </div>
+
+    <!-- Modal para añadir clientes -->
+    <div class="modal" id="addcliente">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Añadir Clientes</p>
+                <button class="delete" aria-label="close" id="closeModalBtn"></button>
+            </header>
+            <section class="modal-card-body">
+                <form id="formularioCliente" action="/cliente/clientes/nuevo" method="POST">
+                    <div class="field">
+                        <label class="label">Nombre del cliente</label>
+                        <div class="control">
+                            <input class="input" type="text" name="nombre" placeholder="Nombre" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Teléfono</label>
+                        <div class="control">
+                            <input class="input" type="tel" name="telefono" placeholder="Teléfono" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Fecha de nacimiento</label>
+                        <div class="control">
+                            <input class="input" type="date" name="FechaNac" placeholder="Fecha de nacimiento" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Sexo</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="sexo" required>
+                                    <option value="">Seleccione una opción</option>
+                                    <option value="M">M</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success">Guardar</button>
+                    </footer>
+                </form>
+            </section>
+        </div>
+    </div>
+
     <!-- Pop-up -->
     <div class="popup box" id="miPopup" style="display:none;">
         <button id="cerrarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
@@ -116,19 +159,17 @@
     </div>
 
     <script>
-        // Función para mostrar el pop-up y actualizar la información del cliente
+        // Función para mostrar el pop-up
         function mostrarPopup(nombre, id, telefono, fecha, sexo, tarjeta, version, sellos) {
-            // Asignar los valores del cliente al pop-up
             document.getElementById('popupNombre').textContent = nombre;
             document.getElementById('popupID').textContent = id;
             document.getElementById('popupTelefono').textContent = telefono;
-            
+
             let fechaObj = new Date(fecha);
             let dia = fechaObj.getDate();
             let mes = fechaObj.getMonth() + 1; 
             let año = fechaObj.getFullYear();
             let fechaFormateada = `${dia}/${mes}/${año}`;
-
             document.getElementById('popupFecha').textContent = fechaFormateada;
 
             document.getElementById('popupSexo').textContent = sexo;
@@ -136,17 +177,27 @@
             document.getElementById('popupVersion').textContent = version;
             document.getElementById('popupSellos').textContent = sellos;
 
-            // Mostrar el pop-up
             document.getElementById('miPopup').style.display = 'block';
         }
 
-        // Función para cerrar el pop-up
+        // Cerrar el pop-up
         document.getElementById('cerrarPopup').addEventListener('click', function() {
             document.getElementById('miPopup').style.display = 'none';
         });
+
+        // Funcionalidad para añadir clientes
+        const addClientBtn = document.getElementById('addClientBtn');
+        const addClientModal = document.getElementById('addcliente');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        addClientBtn.addEventListener('click', () => {
+            addClientModal.classList.add('is-active');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            addClientModal.classList.remove('is-active');
+        });
     </script>
-    
-    
     <%- include('includes/footer') %>
 </body>
 </html>

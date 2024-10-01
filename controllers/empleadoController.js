@@ -7,9 +7,10 @@ exports.getAllTrabajadores = async (req, res, next) => {
         const Trabajadores = await Model.getTrabajador();
         //console.log(Trabajadores)
         const establecimiento = await Establecimiento.getEstablecimientos();
+        const admin = await Model.getAdmin();
 
         const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
-        res.render('empleados', { Trabajadores: TrabajadoresArray, establecimiento:establecimiento });
+        res.render('empleados', { Trabajadores: TrabajadoresArray, establecimiento:establecimiento, admin: admin });
 
         //res.render('empleados', {Trabajadores});
     } catch (err) {
@@ -24,8 +25,8 @@ exports.nuevoEmpleado = async (req, res, next) => {
         console.log(establecimiento);
         const admin = await Model.getAdmin();
 
-        //const Trabajadores = await Model.getTrabajador();
-        //const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
+        const Trabajadores = await Model.getTrabajador();
+        const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
         
         // console.log(Trabajadores);
 
@@ -41,7 +42,7 @@ exports.nuevoEmpleado = async (req, res, next) => {
         if (!empleado) {
             return res.render('empleados', { mensaje: 'Error al crear el empleado' });
         }
-        res.render('empleados', { establecimiento: establecimiento, Trabajadores: TrabajadoresArray });
+        res.render('empleados', { establecimiento: establecimiento, Trabajadores: TrabajadoresArray, admin: admin });
     } catch (e) {
         console.error(e);
         res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });
@@ -53,9 +54,10 @@ exports.editarEmpleado = async (req, res, next) => {
         const Trabajadores = await Model.getTrabajador();
         //console.log(Trabajadores)
         const establecimiento = await Establecimiento.getEstablecimientos();
+        const admin = await Model.getAdmin();
 
         const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
-        res.render('empleados', { Trabajadores: TrabajadoresArray, establecimiento:establecimiento });
+        res.render('empleados', { Trabajadores: TrabajadoresArray, establecimiento:establecimiento, admin: admin });
 
         //res.render('empleados', {Trabajadores});
     } catch (err) {

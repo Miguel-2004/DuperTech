@@ -77,7 +77,7 @@
                     <section class="modal-card-body">
 
                         <!-- Contenido del formulario para añadir trabajador -->
-                        <form id="formularioEmpleado" action="/empleado/nuevo" method="POST">
+                        <form id="formularioEmpleado" action="/empleado/empleados/nuevo" method="POST">
                             <div class="field">
                                 <label class="label">Nombre del Trabajador</label>
                                 <div class="control">
@@ -111,6 +111,20 @@
                                         <% establecimiento.forEach((establecimiento) => { %>
                                             <option value="<%= establecimiento.ID_Establecimiento %>">
                                                 <%= establecimiento.Nombre_Establecimiento %>
+                                            </option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Menú desplegable para seleccionar el administrador -->
+                            <div class="field">
+                                <label class="label">Administrador:</label>
+                                <div class="select">
+                                    <select name="id_Admin" required>
+                                        <% admin.forEach((admin) => { %>
+                                            <option value="<%= admin.ID_Admin %>">
+                                                <%= admin.Nombre %>
                                             </option>
                                         <% }); %>
                                     </select>

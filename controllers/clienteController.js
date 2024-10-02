@@ -18,28 +18,32 @@ exports.getAllClientes = async (req, res, next) => {
 
 exports.nuevoCliente = async (req, res, next) => {
     try {
-
-        const Clientes = await cliente.getCliente();
-        //console.log(Clientes)
-
-        const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
-        res.render('clientes', { Clientes: ClientesArray });
-
+        // Extraer los datos del cuerpo de la solicitud
         const nombre = req.body.nombre;
         const telefono = req.body.telefono;
         const FechaNac = req.body.FechaNac;
         const sexo = req.body.sexo;
-        const cliente = await cliente.crearCliente(nombre, telefono, FechaNac, sexo)
 
-        if (!cliente) {
+        // Crear un nuevo cliente
+        const nuevoCliente = await cliente.crearCliente(nombre, telefono, FechaNac, sexo);
+
+        if (!nuevoCliente) {
             return res.render('clientes', { mensaje: 'Error al crear el cliente' });
         }
-        res.render('clientes', {Clientes: ClientesArray });
+
+        // Obtener la lista actualizada de clientes después de crear el nuevo cliente
+        const Clientes = await cliente.getCliente();
+        const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
+
+        // Renderizar la vista con la lista actualizada de clientes
+        res.render('clientes', { Clientes: ClientesArray });
+
     } catch (e) {
         console.error(e);
         res.status(500).render('clientes', { mensaje: 'Error al cargar los datos' });
     }
 };
+
 
 exports.editarCliente = async (req, res, next) => {
     try {

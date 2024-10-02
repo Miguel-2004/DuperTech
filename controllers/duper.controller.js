@@ -1,3 +1,5 @@
+const DuperModel = require('../models/duper.models');
+
 exports.mainPage = (req, res) => {
     res.render('main', { pageTitle: 'Página Principal' });
 };

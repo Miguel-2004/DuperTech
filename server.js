@@ -22,11 +22,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 const rutaUsers = require('./routes/main');
 const rutaEmpleados = require('./routes/empleado');
 const rutaClientes = require('./routes/cliente');
+const rutaTarjetas = require('./routes/tarjetas')
 
 // Usar las rutas correctas
 app.use('/users', rutaUsers);
 app.use('/empleado', rutaEmpleados);
 app.use('/cliente', rutaClientes);
+app.use('/tarjetas', rutaTarjetas);
 
 // Página principal
 app.get('/', (req, res) => {
@@ -39,7 +41,7 @@ app.get('/main', (req, res) => {
 });
 
 // Ruta para tarjetas
-app.get('/tarjetas', duperController.listarTarjetas);
+
 
 // Ruta para clientes
 app.get('/clientes', (req, res) => {

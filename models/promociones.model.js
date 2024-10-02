@@ -1,7 +1,6 @@
-// Funciones relacionadas con promociones
+const db = require('../utils/database');
 
 // Obtener todas las promociones
-// Obtener todas las promociones desde la base de datos
 exports.getAllPromociones = async () => {
     try {
         const connection = await db();
@@ -15,7 +14,6 @@ exports.getAllPromociones = async () => {
         throw error;
     }
 };
-
 
 // Registrar una nueva promoción
 exports.registrarPromocion = async (nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {

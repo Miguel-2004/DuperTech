@@ -29,9 +29,9 @@ exports.nuevoCliente = async (req, res, next) => {
         const telefono = req.body.telefono;
         const FechaNac = req.body.FechaNac;
         const sexo = req.body.sexo;
-        const empleado = await Model.createEmpleado(nombre, telefono, FechaNac, sexo)
+        const cliente = await cliente.crearCliente(nombre, telefono, FechaNac, sexo)
 
-        if (!empleado) {
+        if (!cliente) {
             return res.render('clientes', { mensaje: 'Error al crear el cliente' });
         }
         res.render('clientes', {Clientes: ClientesArray });

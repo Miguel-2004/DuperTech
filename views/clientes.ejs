@@ -193,7 +193,11 @@
             <div class="field">
                 <label class="label">Sexo</label>
                 <div class="control">
-                    <input id="editarSexo" name="Sexo_Cliente" class="input" type="text" value="">
+                    <select name="sexo" required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="M">M</option>
+                        <option value="F">F</option>
+                    </select>
                 </div>
             </div>
             <button id="guardarCambios" class="button is-success is-fullwidth mt-4">Guardar Cambios</button>

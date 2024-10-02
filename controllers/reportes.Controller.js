@@ -3,7 +3,7 @@ const ReporteModel = require('../models/reportes.model');
 // Controlador para obtener el reporte de recompensas por año y mes
 exports.getReporteRecompensas = async (req, res, next) => {
     try {
-        console.log('Iniciando obtención de datos desde el modelo...');
+        //console.log('Iniciando obtención de datos desde el modelo...');
 
         // Obtener los datos desde el modelo
         const recompensasPorMes = await ReporteModel.getRecompensasPorMes();
@@ -11,7 +11,7 @@ exports.getReporteRecompensas = async (req, res, next) => {
         // Verificar si se obtuvieron datos y convertir a array si es necesario
         const recompensasArray = Array.isArray(recompensasPorMes) ? recompensasPorMes : [];
 
-        console.log('Datos obtenidos del modelo:', recompensasArray);
+        //console.log('Datos obtenidos del modelo:', recompensasArray);
 
         // Enviar los datos a la vista
         res.render('reportes', { 

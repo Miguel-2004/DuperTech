@@ -23,26 +23,18 @@ const rutaUsers = require('./routes/main');
 const rutaEmpleados = require('./routes/empleado');
 const rutaClientes = require('./routes/cliente');
 const rutaTarjetas = require('./routes/tarjetas');
-<<<<<<< HEAD
 const rutaPromociones = require ('./routes/promociones');
 const rutaEstablecimientos = require ('./routes/establecimientos');
-
-=======
-const rutaPromociones = require('./routes/promociones');
 const rutaReportes = require('./routes/reportes');
->>>>>>> 02afa5fc02c0af850a0004b6f810278226dea38d
+
 // Usar las rutas correctas
 app.use('/users', rutaUsers);
 app.use('/empleado', rutaEmpleados);
 app.use('/cliente', rutaClientes);
 app.use('/tarjetas', rutaTarjetas);
 app.use('/promociones', rutaPromociones);
-<<<<<<< HEAD
 app.use('/establecimientos', rutaEstablecimientos);
-
-=======
 app.use('/reportes',rutaReportes);
->>>>>>> 02afa5fc02c0af850a0004b6f810278226dea38d
 
 // Página principal
 app.get('/', (req, res) => {

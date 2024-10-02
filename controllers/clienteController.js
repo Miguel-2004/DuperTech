@@ -43,25 +43,30 @@ exports.nuevoCliente = async (req, res, next) => {
 
 exports.editarCliente = async (req, res, next) => {
     try {
-        const Clientes = await cliente.getCliente();  // Obtener clientes
+        // Obtener los clientes
+        const Clientes = await cliente.getCliente();
 
         const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
         res.render('clientes', { Clientes: ClientesArray });
 
+        // Extraer y validar los campos del cuerpo de la solicitud
         const id = req.body.ID_Cliente;
-        const nombre = req.body.Nombre_Cliente;  // Corrección aquí
-        const telefono = req.body.Telefono_Cliente;
-        const FechaNac = req.body.Fecha_Cliente;
-        const sexo = req.body.Sexo_Cliente;
+        const nombre = req.body.Nombre_Cliente || null;  // Si no está definido, asignar null
+        const telefono = req.body.Telefono_Cliente || null;
+        const FechaNac = req.body.Fecha_Cliente || null;
+        const sexo = req.body.sexo || null;
 
+        // Llamar al modelo para editar el cliente
         const Cliente = await cliente.editCliente(nombre, telefono, FechaNac, sexo, id);
 
         if (!Cliente) {
             return res.render('clientes', { mensaje: 'Error al editar el cliente' });
         }
+
         res.render('clientes', { Clientes: ClientesArray });
     } catch (e) {
         console.error(e);
         res.status(500).render('clientes', { mensaje: 'Error al cargar los datos' });
     }
 };
+

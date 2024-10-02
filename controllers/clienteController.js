@@ -60,7 +60,7 @@ exports.editarCliente = async (req, res, next) => {
         if (!Cliente) {
             return res.render('clientes', { mensaje: 'Error al editar el cliente' });
         }
-        res.render('clientes', {});
+        res.render('clientes', {Clientes: ClientesArray});
     } catch (e) {
         console.error(e);
         res.status(500).render('clientes', { mensaje: 'Error al cargar los datos' });

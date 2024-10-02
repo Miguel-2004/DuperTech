@@ -3,6 +3,6 @@ const router = express.Router();
 const tarjetasController = require('../controllers/tarjetasController');
 
 // Ruta para listar todas las tarjetas
-router.get('/ver', tarjetasController.listarTarjetas);
+router.get('/', tarjetasController.listarTarjetas);
 
 module.exports = router;

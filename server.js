@@ -23,12 +23,15 @@ const rutaUsers = require('./routes/main');
 const rutaEmpleados = require('./routes/empleado');
 const rutaClientes = require('./routes/cliente');
 const rutaTarjetas = require('./routes/tarjetas')
+const rutaPromociones = require ('./routes/promociones')
 
 // Usar las rutas correctas
 app.use('/users', rutaUsers);
 app.use('/empleado', rutaEmpleados);
 app.use('/cliente', rutaClientes);
 app.use('/tarjetas', rutaTarjetas);
+app.use('/promociones', rutaPromociones);
+
 
 // Página principal
 app.get('/', (req, res) => {

@@ -18,7 +18,5 @@ router.post('/main', duperController.mainPage); // Ruta POST para la página pri
 router.get('/login', duperController.verificarUser);
 router.post('/login', duperController.verificarUser);
 
-// Rutas para reportes
-router.get('/reportes', duperController.getReporte); 
 
 module.exports = router;

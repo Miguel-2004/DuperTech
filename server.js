@@ -28,11 +28,6 @@ app.use('/users', rutaUsers);
 app.use('/empleado', rutaEmpleados);
 app.use('/cliente', rutaClientes);
 
-// Rutas para promociones
-app.get('/promociones', duperController.getAllPromociones);
-app.post('/promociones/añadir', duperController.registrarPromocion);
-app.post('/promociones/editar', duperController.editarPromocion);
-
 // Página principal
 app.get('/', (req, res) => {
     res.redirect('/users/Login');

@@ -44,7 +44,7 @@ exports.nuevoCliente = async (req, res, next) => {
 exports.editarCliente = async (req, res, next) => {
     try {
 
-        //const Clientes = await cliente.getCliente();
+        const Clientes = await cliente.getCliente();
         //console.log(Clientes)
 
         const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];

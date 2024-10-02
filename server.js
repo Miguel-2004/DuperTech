@@ -22,38 +22,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 const rutaUsers = require('./routes/main');
 const rutaEmpleados = require('./routes/empleado');
 const rutaClientes = require('./routes/cliente');
-const rutaTarjetas = require('./routes/tarjetas')
-const rutaPromociones = require ('./routes/promociones')
-
+const rutaTarjetas = require('./routes/tarjetas');
+const rutaPromociones = require('./routes/promociones');
+const rutaReportes = require('./routes/reportes');
 // Usar las rutas correctas
 app.use('/users', rutaUsers);
 app.use('/empleado', rutaEmpleados);
 app.use('/cliente', rutaClientes);
 app.use('/tarjetas', rutaTarjetas);
 app.use('/promociones', rutaPromociones);
-
+app.use('/reportes',rutaReportes);
 
 // Página principal
 app.get('/', (req, res) => {
     res.redirect('/users/Login');
 });
 
-// Otras rutas que ya funcionan bien
 app.get('/main', (req, res) => {
     res.render('main', { pageTitle: 'Página Principal' });
 });
 
-// Ruta para tarjetas
-
-
-// Ruta para clientes
 app.get('/clientes', (req, res) => {
-    res.render('clientes', { pageTitle: 'clientes' });
-});
-
-// Ruta para reportes
-app.get('/reportes', (req, res) => {
-    res.render('reportes', { pageTitle: 'reportes' });
+    res.render('clientes', { pageTitle: 'Clientes' });
 });
 
 // Manejo de rutas no encontradas

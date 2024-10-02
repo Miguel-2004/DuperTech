@@ -13,8 +13,16 @@ exports.getAllPromociones = async (req, res) => {
 
 // Registrar una nueva promoción
 exports.registrarPromocion = async (req, res) => {
+    console.log(req.body);  // Verifica los datos que llegan
+    const { nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
+
+    // Verificación de campos requeridos
+    if (!nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
+        return res.status(400).send('Todos los campos son requeridos.');
+    }
+
     try {
-        const { nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
+        // Llamada al modelo para registrar la nueva promoción
         await PromocionesModel.registrarPromocion(nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
         res.redirect('/promociones');
     } catch (error) {
@@ -25,8 +33,13 @@ exports.registrarPromocion = async (req, res) => {
 
 // Editar una promoción existente
 exports.editarPromocion = async (req, res) => {
+    const { idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
+
+    if (!idRecompensa || !nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
+        return res.status(400).send('Todos los campos son requeridos.');
+    }
+
     try {
-        const { idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
         await PromocionesModel.editarPromocion(idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
         res.redirect('/promociones');
     } catch (error) {
@@ -37,8 +50,13 @@ exports.editarPromocion = async (req, res) => {
 
 // Eliminar una promoción
 exports.eliminarPromocion = async (req, res) => {
+    const { ID_Recompensa } = req.body;
+
+    if (!ID_Recompensa) {
+        return res.status(400).send('ID de la recompensa es requerido.');
+    }
+
     try {
-        const { ID_Recompensa } = req.body;
         await PromocionesModel.eliminarPromocion(ID_Recompensa);
         res.redirect('/promociones');
     } catch (error) {

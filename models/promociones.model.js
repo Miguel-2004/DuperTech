@@ -4,9 +4,7 @@ const db = require('../utils/database');
 exports.getAllPromociones = async () => {
     try {
         const connection = await db();
-        const [result] = await connection.execute(`
-            SELECT * FROM recompensa;
-        `);
+        const [result] = await connection.execute('SELECT * FROM recompensa');
         await connection.release();
         return result;
     } catch (error) {
@@ -20,22 +18,23 @@ exports.registrarPromocion = async (nombreRecompensa, fechaInicio, fechaFinal, d
     try {
         const connection = await db();
         await connection.beginTransaction();
-        
+
         const [result] = await connection.execute(`
             INSERT INTO recompensa (Nombre_Recompensa, Fecha_Inicio, Fecha_Final)
             VALUES (?, ?, ?)
         `, [nombreRecompensa, fechaInicio, fechaFinal]);
-        
+
         const idRecompensa = result.insertId;
         await connection.execute(`
             INSERT INTO regalo (ID_Recompensa, Descripcion_Regalo)
             VALUES (?, ?)
         `, [idRecompensa, descripcionRegalo]);
-        
+
         await connection.commit();
         await connection.release();
     } catch (error) {
         console.error('Error al registrar la promoción:', error);
+        if (connection) await connection.rollback();
         throw error;
     }
 };
@@ -51,7 +50,7 @@ exports.editarPromocion = async (id, nombreRecompensa, fechaInicio, fechaFinal, 
             SET Nombre_Recompensa = ?, Fecha_Inicio = ?, Fecha_Final = ?
             WHERE ID_Recompensa = ?
         `, [nombreRecompensa, fechaInicio, fechaFinal, id]);
-        
+
         await connection.execute(`
             UPDATE regalo
             SET Descripcion_Regalo = ?
@@ -62,6 +61,7 @@ exports.editarPromocion = async (id, nombreRecompensa, fechaInicio, fechaFinal, 
         await connection.release();
     } catch (error) {
         console.error('Error al editar la promoción:', error);
+        if (connection) await connection.rollback();
         throw error;
     }
 };
@@ -71,7 +71,7 @@ exports.eliminarPromocion = async (ID_Recompensa) => {
     try {
         const connection = await db();
         await connection.beginTransaction();
-        
+
         await connection.execute(`DELETE FROM regalo WHERE ID_Recompensa = ?`, [ID_Recompensa]);
         await connection.execute(`DELETE FROM recompensa WHERE ID_Recompensa = ?`, [ID_Recompensa]);
 
@@ -79,6 +79,7 @@ exports.eliminarPromocion = async (ID_Recompensa) => {
         await connection.release();
     } catch (error) {
         console.error('Error al eliminar la promoción:', error);
+        if (connection) await connection.rollback();
         throw error;
     }
 };

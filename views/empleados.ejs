@@ -143,25 +143,44 @@
                     <button class="delete" aria-label="close" id="closeEditModalBtn"></button>
                 </header>
                 <section class="modal-card-body">
-                    <form id="editar_info" action="/empleado/empleados/editar" method="post">
+                    <form id="editar_info" action="/empleados/editar" method="post">
+                        <!-- Hidden fields for ID_Empleado, ID_Establecimiento, and ID_Admin -->
+                        <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
+                        <input type="hidden" id="editIDEstablecimiento" name="ID_Establecimiento">
+                        <input type="hidden" id="editIDAdmin" name="id_Admin">
+        
+                        <!-- Nombre del trabajador -->
                         <div class="field">
                             <label class="label">Nombre del Trabajador</label>
                             <div class="control">
                                 <input class="input" type="text" id="editNombre" name="nombre" placeholder="Nombre" required>
                             </div>
                         </div>
+        
+                        <!-- Teléfono del trabajador -->
                         <div class="field">
-                            <label class="label">Puesto</label>
+                            <label class="label">Teléfono</label>
                             <div class="control">
-                                <input class="input" type="text" id="editPuesto" name="puesto" placeholder="Puesto" required>
+                                <input class="input" type="text" id="editTelefono" name="telefono" placeholder="Teléfono" required>
                             </div>
                         </div>
+        
+                        <!-- Usuario del trabajador -->
                         <div class="field">
-                            <label class="label">Correo Electrónico</label>
+                            <label class="label">Usuario</label>
                             <div class="control">
-                                <input class="input" type="email" id="editCorreo" name="correo" placeholder="Correo Electrónico" required>
+                                <input class="input" type="text" id="editUsuario" name="usuario" placeholder="Usuario" required>
                             </div>
                         </div>
+        
+                        <!-- Contraseña del trabajador -->
+                        <div class="field">
+                            <label class="label">Contraseña</label>
+                            <div class="control">
+                                <input class="input" type="password" id="editContrasena" name="password" placeholder="Contraseña" required>
+                            </div>
+                        </div>
+        
                         <footer class="modal-card-foot">
                             <button class="button is-success" type="submit" id="saveEditBtn">Guardar</button>
                             <button class="button" type="button" id="cancelEditBtn">Cancelar</button>
@@ -170,6 +189,7 @@
                 </section>
             </div>
         </div>
+        
 
     </div>
 

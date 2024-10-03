@@ -188,13 +188,13 @@
             <div class="field">
                 <label class="label">Fecha de nacimiento</label>
                 <div class="control">
-                    <input id="editarFecha" name="Fecha_Cliente" class="input" type="date" value="">
+                    <input id="editarFecha" name="Fecha_Cliente" class="input" type="date" value="">   
                 </div>
             </div>
             <div class="field">
                 <label class="label">Sexo</label>
                 <div class="control">
-                    <select name="sexo" type="text" required>
+                    <select id="editarSexo" name="sexo" type="text"  required>
                         <option value="">Seleccione una opción</option>
                         <option value="M">M</option>
                         <option value="F">F</option>
@@ -213,9 +213,16 @@
 
             let fechaObj = new Date(fecha);
             let dia = fechaObj.getDate();
+
             let mes = fechaObj.getMonth() + 1; 
             let año = fechaObj.getFullYear();
-            let fechaFormateada = `${dia}/${mes}/${año}`;
+            if (mes<10){
+                mes= '0'+mes;
+            }
+            if (dia<10){
+                dia= '0'+dia;
+            }
+            let fechaFormateada = `${año}-${mes}-${dia}`;
             document.getElementById('popupFecha').textContent = fechaFormateada;
 
             document.getElementById('popupSexo').textContent = sexo;

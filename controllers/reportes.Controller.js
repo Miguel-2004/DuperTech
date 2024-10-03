@@ -12,6 +12,7 @@ exports.getReporteRecompensas = async (req, res, next) => {
         const recompensasArray = Array.isArray(recompensasPorMes) ? recompensasPorMes : [];
 
         //console.log('Datos obtenidos del modelo:', recompensasArray);
+        
 
         // Enviar los datos a la vista
         res.render('reportes', { 

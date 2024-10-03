@@ -54,138 +54,150 @@
                     <% Trabajadores.forEach((Trabajadores) => { %>
                         <div class="list-item">
                             <span class="worker-name"><%= Trabajadores.Nombre_Empleado %></span>
-                            <button class="button is-small is-link is-light edit-button">Editar</button>
+                            <button class="button is-small is-link is-light edit-button" data-id="<%= Trabajadores._id %>">Editar</button>
                         </div>
                     <% }) %>
                 </div>
+            </div>
+
+            <!-- Botón para añadir trabajador -->
+            <div class="has-text-centered mt-5">
+                <button class="button is-success is-medium">Añadir</button>
+            </div>
         </section>
 
-                <!-- Boton para añadir trabajador -->
-                <div class="has-text-centered mt-5">
-                    <button class="button is-success is-medium">Añadir</button>
-                </div>
+        <!-- Modal para añadir trabajador -->
+        <div class="modal" id="addWorkerModal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Añadir Trabajador</p>
+                    <button class="delete" aria-label="close" id="closeModalBtn"></button>
+                </header>
+                <section class="modal-card-body">
+                    <form id="formularioEmpleado" action="/empleado/empleados/nuevo" method="POST">
+                        <!-- Formulario de añadir trabajador -->
+                        <div class="field">
+                            <label class="label">Nombre del Trabajador</label>
+                            <div class="control">
+                                <input class="input" type="text" name="nombre" placeholder="Nombre" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Teléfono</label>
+                            <div class="control">
+                                <input class="input" type="text" name="telefono" placeholder="Teléfono" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Usuario</label>
+                            <div class="control">
+                                <input class="input" type="email" name="usuario" placeholder="Correo electrónico" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Password</label>
+                            <div class="control">
+                                <input class="input" type="password" name="password" placeholder="Contraseña" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Establecimiento</label>
+                            <div class="select">
+                                <select name="ID_Establecimiento" required>
+                                    <% establecimiento.forEach((establecimiento) => { %>
+                                        <option value="<%= establecimiento.ID_Establecimiento %>">
+                                            <%= establecimiento.Nombre_Establecimiento %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Administrador</label>
+                            <div class="select">
+                                <select name="id_Admin" required>
+                                    <% admin.forEach((admin) => { %>
+                                        <option value="<%= admin.ID_Admin %>">
+                                            <%= admin.Nombre %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <footer class="modal-card-foot">
+                            <button class="button is-success">Guardar</button>
+                        </footer>
+                    </form>
+                </section>
             </div>
+        </div>
 
-            <!-- Modal para añadir trabajador -->
-            <div class="modal" id="addWorkerModal">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Añadir Trabajador</p>
-                        <button class="delete" aria-label="close" id="closeModalBtn"></button>
-                    </header>
-                    <section class="modal-card-body">
-
-                        <!-- Contenido del formulario para añadir trabajador -->
-                        <form id="formularioEmpleado" action="/empleado/empleados/nuevo" method="POST">
-                            <div class="field">
-                                <label class="label">Nombre del Trabajador</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="nombre" placeholder="Nombre" required>
-                                </div>
+        <!-- Modal para editar trabajador -->
+        <div class="modal" id="editWorkerModal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Editar Trabajador</p>
+                    <button class="delete" aria-label="close" id="closeEditModalBtn"></button>
+                </header>
+                <section class="modal-card-body">
+                    <form id="editar_info" action="/empleados/editar" method="post">
+                        <!-- Hidden fields for ID_Empleado, ID_Establecimiento, and ID_Admin -->
+                        <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
+                        <input type="hidden" id="editIDEstablecimiento" name="ID_Establecimiento">
+                        <input type="hidden" id="editIDAdmin" name="id_Admin">
+        
+                        <!-- Nombre del trabajador -->
+                        <div class="field">
+                            <label class="label">Nombre del Trabajador</label>
+                            <div class="control">
+                                <input class="input" type="text" id="editNombre" name="nombre" placeholder="Nombre" required>
                             </div>
-                            <div class="field">
-                                <label class="label">Teléfono</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="telefono" placeholder="Teléfono" required>
-                                </div>
+                        </div>
+        
+                        <!-- Teléfono del trabajador -->
+                        <div class="field">
+                            <label class="label">Teléfono</label>
+                            <div class="control">
+                                <input class="input" type="text" id="editTelefono" name="telefono" placeholder="Teléfono" required>
                             </div>
-                            <div class="field">
-                                <label class="label">Usuario</label>
-                                <div class="control">
-                                    <input class="input" type="email" name="usuario" placeholder="Correo electrónico" required>
-                                </div>
+                        </div>
+        
+                        <!-- Usuario del trabajador -->
+                        <div class="field">
+                            <label class="label">Usuario</label>
+                            <div class="control">
+                                <input class="input" type="text" id="editUsuario" name="usuario" placeholder="Usuario" required>
                             </div>
-                            <div class="field">
-                                <label class="label">Password</label>
-                                <div class="control">
-                                    <input class="input" type="password" name="password" placeholder="Contraseña" required>
-                                </div>
+                        </div>
+        
+                        <!-- Contraseña del trabajador -->
+                        <div class="field">
+                            <label class="label">Contraseña</label>
+                            <div class="control">
+                                <input class="input" type="password" id="editContrasena" name="password" placeholder="Contraseña" required>
                             </div>
-                    
-                            <!-- Menú desplegable para seleccionar el establecimiento -->
-                            <div class="field">
-                                <label class="label">Establecimiento:</label>
-                                <div class="select">
-                                    <select name="ID_Establecimiento" required>
-                                        <% establecimiento.forEach((establecimiento) => { %>
-                                            <option value="<%= establecimiento.ID_Establecimiento %>">
-                                                <%= establecimiento.Nombre_Establecimiento %>
-                                            </option>
-                                        <% }); %>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Menú desplegable para seleccionar el administrador -->
-                            <div class="field">
-                                <label class="label">Administrador:</label>
-                                <div class="select">
-                                    <select name="id_Admin" required>
-                                        <% admin.forEach((admin) => { %>
-                                            <option value="<%= admin.ID_Admin %>">
-                                                <%= admin.Nombre %>
-                                            </option>
-                                        <% }); %>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <footer class="modal-card-foot">
-                                <button class="button is-success">Guardar</button>
-                            </footer>
-                        </form> <!-- Fin del form -->
-
-                    </section>
-                </div>
+                        </div>
+        
+                        <footer class="modal-card-foot">
+                            <button class="button is-success" type="submit" id="saveEditBtn">Guardar</button>
+                            <button class="button" type="button" id="cancelEditBtn">Cancelar</button>
+                        </footer>
+                    </form>
+                </section>
             </div>
-
-            <!-- Modal para editar trabajador -->
-            <div class="modal" id="editWorkerModal">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Editar Trabajador</p>
-                        <button class="delete" aria-label="close" id="closeEditModalBtn"></button>
-                    </header>
-                    <section class="modal-card-body">
-                        <form>
-                            <div class="field">
-                                <label class="label">Nombre del Trabajador</label>
-                                <div class="control">
-                                    <input class="input" type="text" id="editNombre" placeholder="Nombre">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="label">Puesto</label>
-                                <div class="control">
-                                    <input class="input" type="text" id="editPuesto" placeholder="Puesto">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <label class="label">Correo Electrónico</label>
-                                <div class="control">
-                                    <input class="input" type="email" id="editCorreo" placeholder="Correo Electrónico">
-                                </div>
-                            </div>
-                            <footer class="modal-card-foot">
-                                <button class="button is-success" id="saveEditBtn">Guardar</button>
-                                <button class="button" id="deleteWorkerBtn">Eliminar</button>
-                                <button class="button" id="cancelEditBtn">Cancelar</button>
-                            </footer>
-                        </form>
-                    </section>
-                </div>
-            </div>
+        </div>
+        
 
     </div>
 
     <script>
-        // Funcionalidad de Añadir Trabajador
+        // Funcionalidad de abrir y cerrar modal de añadir trabajador
         const addWorkerBtn = document.querySelector('.button.is-success.is-medium');
         const addWorkerModal = document.getElementById('addWorkerModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
 
         addWorkerBtn.addEventListener('click', () => {
             addWorkerModal.classList.add('is-active');
@@ -195,27 +207,31 @@
             addWorkerModal.classList.remove('is-active');
         });
 
-        cancelBtn.addEventListener('click', () => {
-            addWorkerModal.classList.remove('is-active');
-        });
-
-        // Funcionalidad de Editar Trabajador
+        // Funcionalidad de abrir y cerrar modal de editar trabajador
         const editWorkerModal = document.getElementById('editWorkerModal');
         const closeEditModalBtn = document.getElementById('closeEditModalBtn');
         const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const saveEditBtn = document.getElementById('saveEditBtn');
-        const deleteWorkerBtn = document.getElementById('deleteWorkerBtn');
-        const editNombre = document.getElementById('editNombre');
-
         const editButtons = document.querySelectorAll('.edit-button');
+        const editNombre = document.getElementById('editNombre');
+        const editPuesto = document.getElementById('editPuesto');
+        const editCorreo = document.getElementById('editCorreo');
+
+        // Abrir modal de edición al hacer clic en un botón de "Editar"
         editButtons.forEach((button, index) => {
             button.addEventListener('click', () => {
+                const trabajadorId = button.getAttribute('data-id');
+
+                // Simulación de datos (puedes hacer una llamada AJAX para obtener datos reales)
+                editNombre.value = document.querySelectorAll('.worker-name')[index].textContent;
+                editPuesto.value = "Puesto ejemplo";  // Reemplazar con datos reales
+                editCorreo.value = "correo@example.com";  // Reemplazar con datos reales
+
+                // Mostrar el modal de edición
                 editWorkerModal.classList.add('is-active');
-                const nombre = document.querySelectorAll('.worker-name')[index].textContent;
-                editNombre.value = nombre;
             });
         });
 
+        // Cerrar modal de edición
         closeEditModalBtn.addEventListener('click', () => {
             editWorkerModal.classList.remove('is-active');
         });
@@ -224,15 +240,9 @@
             editWorkerModal.classList.remove('is-active');
         });
 
-        saveEditBtn.addEventListener('click', () => {
-            alert('Datos guardados exitosamente');
-            editWorkerModal.classList.remove('is-active');
-        });
-
-        deleteWorkerBtn.addEventListener('click', () => {
-            const confirmation = confirm("¿Estás seguro de que deseas eliminar este trabajador?");
-            if (confirmation) {
-                alert('Trabajador eliminado exitosamente');
+        // Cerrar modal al hacer clic fuera del modal
+        window.addEventListener('click', function (event) {
+            if (event.target === editWorkerModal) {
                 editWorkerModal.classList.remove('is-active');
             }
         });

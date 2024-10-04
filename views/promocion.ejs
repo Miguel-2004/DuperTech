@@ -124,15 +124,16 @@
                 </div>
             </div>
             <button type="submit" class="button is-link is-fullwidth mt-4">Registrar</button>
+        
+                <!-- Pop-up de éxito -->
+                <div class="popup" id="successPopup" style="display:none;">
+                <h2 class="title is-4 has-text-link">¡Éxito!</h2>
+                <p>La promoción fue guardada con éxito.</p>
+                <button id="cerrarSuccessPopup" class="button is-success">Cerrar</button>
+                </div>
         </form>
     </div>
 
-    <!-- Pop-up de éxito -->
-    <div class="popup" id="successPopup" style="display:none;">
-        <h2 class="title is-4 has-text-link">¡Éxito!</h2>
-        <p>La promoción fue guardada con éxito.</p>
-        <button id="cerrarSuccessPopup" class="button is-success">Cerrar</button>
-    </div>
 
     <%- include('includes/footer') %>
 

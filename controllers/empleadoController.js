@@ -1,5 +1,5 @@
 const Model = require('../models/empeladoModel');
-const Establecimiento = require('../models/establecimiento.model');
+const Establecimiento = require('../models/establecimientos.model');
 
 exports.getAllTrabajadores = async (req, res, next) => {
     try {

@@ -2,16 +2,16 @@ const express = require('express');
 const router = express.Router();
 const promocionesController = require('../controllers/promocionesController');
 
-// Ruta para registrar una nueva promoción
+// Ruta para agregar promociones
 router.post('/registrar', promocionesController.registrarPromocion);
 
-// Ruta para editar una promoción existente
+// Ruta para editar promociones
 router.post('/editar', promocionesController.editarPromocion);
 
-// Ruta para eliminar una promoción
+// Ruta para eliminar promociones
 router.post('/eliminar', promocionesController.eliminarPromocion);
 
-// Ruta para listar todas las promociones
-router.get('/', promocionesController.getAllPromociones);
+// Ruta para mostrar promociones
+router.get('/', promocionesController.getPromocionesPaginated);
 
 module.exports = router;

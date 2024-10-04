@@ -1,85 +1,99 @@
 const db = require('../utils/database');
 
-// Obtener todas las promociones
-exports.getAllPromociones = async () => {
+// Contar el número total de promociones
+exports.countPromociones = async () => {
     try {
         const connection = await db();
-        const [result] = await connection.execute('SELECT * FROM recompensa');
+        const [result] = await connection.execute('SELECT COUNT(*) as total FROM recompensa');
         await connection.release();
-        return result;
+        return result[0].total;
     } catch (error) {
-        console.error('Error al obtener las promociones:', error);
+        console.error('Error al contar las promociones:', error);
         throw error;
     }
 };
 
-// Registrar una nueva promoción
-exports.registrarPromocion = async (nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {
+// Obtener promociones con paginación
+exports.getPromocionesPaginated = async (limit, offset) => {
     try {
         const connection = await db();
+        const [result] = await connection.execute('SELECT * FROM recompensa LIMIT ? OFFSET ?', [limit, offset]);
+        await connection.release();
+        return result;
+    } catch (error) {
+        console.error('Error al obtener las promociones paginadas:', error);
+        throw error;
+    }
+};
+
+// Registrar nueva promoción (en recompensa y regalo)
+exports.registrarPromocion = async (nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {
+    const connection = await db();
+    try {
         await connection.beginTransaction();
 
-        const [result] = await connection.execute(`
-            INSERT INTO recompensa (Nombre_Recompensa, Fecha_Inicio, Fecha_Final)
-            VALUES (?, ?, ?)
-        `, [nombreRecompensa, fechaInicio, fechaFinal]);
-
+        const [result] = await connection.execute(
+            'INSERT INTO recompensa (Nombre_Recompensa, Fecha_Inicio, Fecha_Final) VALUES (?, ?, ?)', 
+            [nombreRecompensa, fechaInicio, fechaFinal]
+        );
         const idRecompensa = result.insertId;
-        await connection.execute(`
-            INSERT INTO regalo (ID_Recompensa, Descripcion_Regalo)
-            VALUES (?, ?)
-        `, [idRecompensa, descripcionRegalo]);
+
+        await connection.execute(
+            'INSERT INTO regalo (ID_Recompensa, Nombre_Regalo, Descripcion_Regalo) VALUES (?, ?, ?)', 
+            [idRecompensa, nombreRecompensa, descripcionRegalo]
+        );
 
         await connection.commit();
-        await connection.release();
     } catch (error) {
+        await connection.rollback();
         console.error('Error al registrar la promoción:', error);
-        if (connection) await connection.rollback();
         throw error;
+    } finally {
+        connection.release();
     }
 };
 
 // Editar una promoción existente
-exports.editarPromocion = async (id, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {
+exports.editarPromocion = async (idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {
+    const connection = await db();
     try {
-        const connection = await db();
         await connection.beginTransaction();
 
-        await connection.execute(`
-            UPDATE recompensa 
-            SET Nombre_Recompensa = ?, Fecha_Inicio = ?, Fecha_Final = ?
-            WHERE ID_Recompensa = ?
-        `, [nombreRecompensa, fechaInicio, fechaFinal, id]);
+        await connection.execute(
+            'UPDATE recompensa SET Nombre_Recompensa = ?, Fecha_Inicio = ?, Fecha_Final = ? WHERE ID_Recompensa = ?',
+            [nombreRecompensa, fechaInicio, fechaFinal, idRecompensa]
+        );
 
-        await connection.execute(`
-            UPDATE regalo
-            SET Descripcion_Regalo = ?
-            WHERE ID_Recompensa = ?
-        `, [descripcionRegalo, id]);
+        await connection.execute(
+            'UPDATE regalo SET Nombre_Regalo = ?, Descripcion_Regalo = ? WHERE ID_Recompensa = ?',
+            [nombreRecompensa, descripcionRegalo, idRecompensa]
+        );
 
         await connection.commit();
-        await connection.release();
     } catch (error) {
+        await connection.rollback();
         console.error('Error al editar la promoción:', error);
-        if (connection) await connection.rollback();
         throw error;
+    } finally {
+        connection.release();
     }
 };
 
-// Eliminar una promoción existente
-exports.eliminarPromocion = async (ID_Recompensa) => {
+// Eliminar una promoción (de recompensa y regalo)
+exports.eliminarPromocion = async (idRecompensa) => {
+    const connection = await db();
     try {
-        const connection = await db();
         await connection.beginTransaction();
 
-        await connection.execute(`DELETE FROM regalo WHERE ID_Recompensa = ?`, [ID_Recompensa]);
-        await connection.execute(`DELETE FROM recompensa WHERE ID_Recompensa = ?`, [ID_Recompensa]);
+        await connection.execute('DELETE FROM regalo WHERE ID_Recompensa = ?', [idRecompensa]);
+        await connection.execute('DELETE FROM recompensa WHERE ID_Recompensa = ?', [idRecompensa]);
 
         await connection.commit();
-        await connection.release();
     } catch (error) {
+        await connection.rollback();
         console.error('Error al eliminar la promoción:', error);
-        if (connection) await connection.rollback();
         throw error;
+    } finally {
+        connection.release();
     }
 };

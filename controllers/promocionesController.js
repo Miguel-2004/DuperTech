@@ -1,10 +1,21 @@
 const PromocionesModel = require('../models/promociones.model');
 
-// Obtener todas las promociones
-exports.getAllPromociones = async (req, res) => {
+// Obtener promociones con paginación
+exports.getPromocionesPaginated = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5;
+    const offset = (page - 1) * limit;
+
     try {
-        const promociones = await PromocionesModel.getAllPromociones();
-        res.render('promocion', { promociones });
+        const totalPromociones = await PromocionesModel.countPromociones();
+        const totalPages = Math.ceil(totalPromociones / limit);
+        const promociones = await PromocionesModel.getPromocionesPaginated(limit, offset);
+
+        res.render('promocion', {
+            promociones,
+            currentPage: page,
+            totalPages
+        });
     } catch (error) {
         console.error('Error al obtener las promociones:', error);
         res.status(500).send('Error al obtener las promociones.');
@@ -13,16 +24,9 @@ exports.getAllPromociones = async (req, res) => {
 
 // Registrar una nueva promoción
 exports.registrarPromocion = async (req, res) => {
-    console.log(req.body);  // Verifica los datos que llegan
     const { nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
 
-    // Verificación de campos requeridos
-    if (!nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
-        return res.status(400).send('Todos los campos son requeridos.');
-    }
-
     try {
-        // Llamada al modelo para registrar la nueva promoción
         await PromocionesModel.registrarPromocion(nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
         res.redirect('/promociones');
     } catch (error) {
@@ -34,10 +38,6 @@ exports.registrarPromocion = async (req, res) => {
 // Editar una promoción existente
 exports.editarPromocion = async (req, res) => {
     const { idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo } = req.body;
-
-    if (!idRecompensa || !nombreRecompensa || !fechaInicio || !fechaFinal || !descripcionRegalo) {
-        return res.status(400).send('Todos los campos son requeridos.');
-    }
 
     try {
         await PromocionesModel.editarPromocion(idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
@@ -51,10 +51,6 @@ exports.editarPromocion = async (req, res) => {
 // Eliminar una promoción
 exports.eliminarPromocion = async (req, res) => {
     const { ID_Recompensa } = req.body;
-
-    if (!ID_Recompensa) {
-        return res.status(400).send('ID de la recompensa es requerido.');
-    }
 
     try {
         await PromocionesModel.eliminarPromocion(ID_Recompensa);

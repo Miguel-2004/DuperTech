@@ -16,50 +16,18 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .tarjeta-info {
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .tarjeta-info strong {
-            color: #363636;
-        }
-
-        .total-tarjetas {
-            text-align: right;
+        .table-container {
             margin-top: 20px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #084461;
         }
 
-        .hidden {
-            display: none;
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
 
-        .field.has-addons .input {
-            box-shadow: none;
-            border-radius: 5px;
-        }
-
-        .field.has-addons .input:focus {
-            border-color: #084461;
-            box-shadow: 0 0 0 0.125em #084461;
-        }
-
-        .select.is-fullwidth select {
-            border-color: #084461;
-            border-radius: 5px;
-            box-shadow: none;
-        }
-
-        .select.is-fullwidth select:focus {
-            border-color: #084461;
-            box-shadow: 0 0 0 0.125em #084461;
+        .pagination-link, .pagination-previous, .pagination-next {
+            margin: 0 5px;
         }
 
         .add-sello-btn {
@@ -87,52 +55,81 @@
             <div class="box box-centered"> 
                 <h1 class="title has-text-centered">Tarjetas</h1>
 
+                <!-- Filtro por establecimiento -->
                 <div class="field">
                     <label class="label">Filtrar por Sucursal:</label>
                     <div class="control">
                         <div class="select is-fullwidth">
-                            <select id="sucursalSelect">
+                            <select id="sucursalSelect" name="establecimiento" onchange="window.location.href='?establecimiento='+this.value;">
                                 <option value="">Todas las Sucursales</option>
-                                <% for (let i = 0; i < establecimientos.length; i++) { %>
-                                    <option value="<%= establecimientos[i].ID_Establecimiento %>">
-                                        <%= establecimientos[i].Nombre_Establecimiento %>
+                                <% establecimientos.forEach(establecimiento => { %>
+                                    <option value="<%= establecimiento.Nombre_Establecimiento %>" <%= establecimiento.Nombre_Establecimiento === establecimientoFiltro ? 'selected' : '' %>>
+                                        <%= establecimiento.Nombre_Establecimiento %>
                                     </option>
-                                <% } %>
+                                <% }); %>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <div class="field has-addons">
-                    <div class="control has-icons-left is-expanded">
-                        <input class="input" type="text" placeholder="Buscar tarjeta o cliente..." id="searchBar">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-search"></i>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="list" id="tarjetasList">
-                    <% for (let i = 0; i < tarjetas.length; i++) { %>
-                        <div class="tarjeta-info <%= i >= 10 ? 'hidden' : '' %>">
-                            <p><strong>ID de Tarjeta:</strong> <%= tarjetas[i].ID_Tarjeta %></p>
-                            <p><strong>Cliente:</strong> <%= tarjetas[i].Nombre_Cliente %></p>
-                            <p><strong>Sucursal:</strong> <%= tarjetas[i].Nombre_Establecimiento %></p>
-                            <p><strong>Número de Sellos:</strong> <%= tarjetas[i].Numero_Sellos %></p>
-
-                            <!-- Botón para abrir la ventana modal de añadir sello -->
-                            <button class="add-sello-btn" data-tarjeta-id="<%= tarjetas[i].ID_Tarjeta %>">Añadir Sello</button>
+                <!-- Barra de búsqueda para filtrar -->
+                <form action="/tarjetas" method="GET">
+                    <div class="field has-addons">
+                        <div class="control has-icons-left is-expanded">
+                            <input class="input" type="text" name="search" placeholder="Buscar por ID Tarjeta, Cliente o Teléfono..." value="<%= idTarjeta || nombreCliente || telefono %>">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-search"></i>
+                            </span>
                         </div>
-                    <% } %>
+                        <div class="control">
+                            <button class="button is-link" type="submit">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Tabla de tarjetas -->
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>ID Tarjeta</th>
+                                <th>Cliente</th>
+                                <th>Teléfono</th>
+                                <th>Sucursal</th>
+                                <th>Número de Sellos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tarjetasList">
+                            <% tarjetas.forEach(tarjeta => { %>
+                                <tr>
+                                    <td><%= tarjeta.ID_Tarjeta %></td>
+                                    <td><%= tarjeta.Nombre_Cliente %></td>
+                                    <td><%= tarjeta.Telefono_Cliente %></td>
+                                    <td><%= tarjeta.Nombre_Establecimiento %></td>
+                                    <td><%= tarjeta.Numero_Sellos %></td>
+                                    <td>
+                                        <button class="add-sello-btn" data-tarjeta-id="<%= tarjeta.ID_Tarjeta %>">Añadir Sello</button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
                 </div>
 
-                <div class="total-tarjetas">
-                    Total de Tarjetas: <%= totalTarjetas %>
+                <!-- Paginación -->
+                <div class="pagination-container">
+                    <% if (currentPage > 1) { %>
+                        <a href="?page=<%= currentPage - 1 %>&establecimiento=<%= establecimiento %>" class="pagination-previous">Anterior</a>
+                    <% } %>
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?page=<%= currentPage + 1 %>&establecimiento=<%= establecimiento %>" class="pagination-next">Siguiente</a>
+                    <% } %>
                 </div>
             </div>
         </section>
     </div>
-    
+
     <!-- Ventana Modal para añadir sellos -->
     <div class="modal" id="addSelloModal">
         <div class="modal-background"></div>
@@ -152,31 +149,6 @@
     </div>
 
     <script>
-        // Filtrado por sucursal
-        document.getElementById('sucursalSelect').addEventListener('change', function() {
-            const selectedSucursal = this.value;
-            window.location.href = selectedSucursal ? `/tarjetas?sucursalID=${selectedSucursal}` : '/tarjetas';
-        });
-
-        // Búsqueda en la lista de tarjetas
-        document.getElementById('searchBar').addEventListener('keyup', function() {
-            const query = this.value.toLowerCase();
-            const items = document.querySelectorAll('.tarjeta-info');
-
-            items.forEach((item, index) => {
-                const tarjetaInfo = item.textContent.toLowerCase();
-                if (tarjetaInfo.includes(query)) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
-
-                if (query === '' && index >= 10) {
-                    item.classList.add('hidden');
-                }
-            });
-        });
-
         // Abrir y cerrar la ventana modal para añadir sello
         const addSelloModal = document.getElementById('addSelloModal');
         const closeAddSelloModal = document.getElementById('closeAddSelloModal');
@@ -184,7 +156,6 @@
         const confirmAddSelloBtn = document.getElementById('confirmAddSelloBtn');
         let currentTarjetaID = null;
 
-        // Abrir modal al hacer clic en el botón "Añadir Sello"
         document.querySelectorAll('.add-sello-btn').forEach(button => {
             button.addEventListener('click', function() {
                 currentTarjetaID = this.getAttribute('data-tarjeta-id');
@@ -192,7 +163,6 @@
             });
         });
 
-        // Cerrar modal al hacer clic en la 'X' o 'Cancelar'
         closeAddSelloModal.addEventListener('click', () => {
             addSelloModal.classList.remove('is-active');
         });
@@ -201,9 +171,7 @@
             addSelloModal.classList.remove('is-active');
         });
 
-        // Confirmar añadir sello
         confirmAddSelloBtn.addEventListener('click', () => {
-            // Aquí puedes realizar la acción para añadir un sello en el servidor
             alert(`Sello añadido a la tarjeta con ID: ${currentTarjetaID}`);
             addSelloModal.classList.remove('is-active');
         });

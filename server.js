@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser'); 
 
 const app = express();
-const PORT = 3000;
+const PORT = 3100;
 
 // Importar el controlador
 const duperController = require('./controllers/duper.controller');

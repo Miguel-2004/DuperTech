@@ -29,7 +29,7 @@ exports.nuevoEmpleado = async (req, res, next) => {
         if (!empleado) {
             return res.render('empleados', { mensaje: 'Error al crear el empleado' });
         }
-        res.redirect('/empleados');  // Redirige después de crear
+        res.redirect('/empleado/empleados');  // Redirige después de crear
     } catch (e) {
         console.error(e);
         res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });

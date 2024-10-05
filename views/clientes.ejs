@@ -3,14 +3,12 @@
 <head>
     <%- include('includes/head') %> 
     <title>Lista de Clientes</title>
-
 </head>
 <body>
 
     <%- include('includes/sidebar') %>
 
     <style>
-        /* Estilo para centrar y agrandar el recuadro */
         .box-centered {
             width: 80%; 
             max-width: 1200px; 
@@ -27,8 +25,8 @@
         }
 
         .worker-name {
-            flex-grow: 1; /* Permitir que el nombre ocupe el espacio disponible */
-            margin-right: 20px; /* Espacio entre el nombre y el botón */
+            flex-grow: 1;
+            margin-right: 20px;
         }
 
         .edit-button {
@@ -36,33 +34,30 @@
         }
 
         .popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    max-width: 500px;
-    width: 200%;
-}
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 500px;
+            width: 200%;
+        }
 
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none;
-}
-
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
     </style>
-</head>
-<body>
 
     <!-- contenedor principal -->
     <div class="container">
@@ -87,19 +82,68 @@
                             <span class="worker-name"><%= Clientes[i].Nombre_Cliente %></span>
                             <button class="button is-small is-link is-light edit-button" 
                                     onclick="mostrarPopup('<%= Clientes[i].Nombre_Cliente %>', '<%= Clientes[i].ID_Cliente %>', '<%= Clientes[i].Telefono_Cliente %>',
-                                     '<%= Clientes[i].Fecha_Nac %>', '<%= Clientes[i].Sexo %>', '<%= Clientes[i].ID_Tarjeta %>', '<%= Clientes[i].Version %>', '<%= Clientes[i].Numero_Sellos %>')">más información</button>
+                                     '<%= Clientes[i].Fecha_Nac %>', '<%= Clientes[i].Sexo %>', '<%= Clientes[i].ID_Tarjeta %>', '<%= Clientes[i].Version %>', '<%= Clientes[i].Numero_Sellos %>')">Más información</button>
                         </div>
                     <% } %>
-                </div>
-
-                <!-- boton nuevo cliente -->
-                <div class="has-text-centered mt-5">
-                    <button class="button is-success is-medium">Añadir</button>
                 </div>
             </div>
         </section>
     </div>
     
+    <!-- Boton para añadir Clientes -->
+    <div class="has-text-centered mt-5">
+        <button class="button is-success is-medium" id="addClientBtn">Añadir</button>
+    </div>
+
+    <!-- Modal para añadir clientes -->
+    <div class="modal" id="addcliente">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Añadir Clientes</p>
+                <button class="delete" aria-label="close" id="closeModalBtn"></button>
+            </header>
+            <section class="modal-card-body">
+                <form id="formularioCliente" action="/cliente/clientes/nuevo" method="POST">
+                    <div class="field">
+                        <label class="label">Nombre del cliente</label>
+                        <div class="control">
+                            <input class="input" type="text" name="nombre" placeholder="Nombre" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Teléfono</label>
+                        <div class="control">
+                            <input class="input" type="tel" name="telefono" placeholder="Teléfono" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Fecha de nacimiento</label>
+                        <div class="control">
+                            <input class="input" type="date" name="FechaNac" placeholder="Fecha de nacimiento" required>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Sexo</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="sexo" required>
+                                    <option value="">Seleccione una opción</option>
+                                    <option value="M">M</option>
+                                    <option value="F">F</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="modal-card-foot">
+                        <button class="button is-success">Guardar</button>
+                    </footer>
+                </form>
+            </section>
+        </div>
+    </div>
+    <!-- fin del formulario para crear un cliente -->
+
     <!-- Pop-up -->
     <div class="popup box" id="miPopup" style="display:none;">
         <button id="cerrarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
@@ -115,20 +159,70 @@
         <button id="editarPopup" class="button is-link is-fullwidth mt-4">Editar</button>
     </div>
 
+    <!-- Popup de Edición -->
+    <form id="editar_info" action="/cliente/clientes/editar" method="POST">
+        <div class="popup box" id="editarMiPopup" style="display:none;">
+            <button id="cerrarEditarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
+            <h2 class="title is-4 has-text-link">Editar detalles</h2>
+
+            <!-- Campo ID no editable -->
+            <div class="field">
+                <label class="label">ID</label>
+                <div class="control">
+                    <input id="editarID" name="ID_Cliente" class="input" type="text" value="" readonly>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Nombre</label>
+                <div class="control">
+                    <input id="editarNombre" name="Nombre_Cliente" class="input" type="text" value="">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Teléfono</label>
+                <div class="control">
+                    <input id="editarTelefono" name="Telefono_Cliente" class="input" type="text" value="">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Fecha de nacimiento</label>
+                <div class="control">
+                    <input id="editarFecha" name="Fecha_Cliente" class="input" type="date" value="">   
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Sexo</label>
+                <div class="control">
+                    <select id="editarSexo" name="sexo" type="text"  required>
+                        <option value="">Seleccione una opción</option>
+                        <option value="M">M</option>
+                        <option value="F">F</option>
+                    </select>
+                </div>
+            </div>
+            <button id="guardarCambios" class="button is-success is-fullwidth mt-4">Guardar Cambios</button>
+        </div>
+    </form>
+
     <script>
-        // Función para mostrar el pop-up y actualizar la información del cliente
         function mostrarPopup(nombre, id, telefono, fecha, sexo, tarjeta, version, sellos) {
-            // Asignar los valores del cliente al pop-up
             document.getElementById('popupNombre').textContent = nombre;
             document.getElementById('popupID').textContent = id;
             document.getElementById('popupTelefono').textContent = telefono;
-            
+
             let fechaObj = new Date(fecha);
             let dia = fechaObj.getDate();
+
             let mes = fechaObj.getMonth() + 1; 
             let año = fechaObj.getFullYear();
-            let fechaFormateada = `${dia}/${mes}/${año}`;
-
+            if (mes<10){
+                mes= '0'+mes;
+            }
+            if (dia<10){
+                dia= '0'+dia;
+            }
+            let fechaFormateada = `${año}-${mes}-${dia}`;
             document.getElementById('popupFecha').textContent = fechaFormateada;
 
             document.getElementById('popupSexo').textContent = sexo;
@@ -136,17 +230,51 @@
             document.getElementById('popupVersion').textContent = version;
             document.getElementById('popupSellos').textContent = sellos;
 
-            // Mostrar el pop-up
             document.getElementById('miPopup').style.display = 'block';
         }
 
-        // Función para cerrar el pop-up
+        // Cerrar el pop-up
         document.getElementById('cerrarPopup').addEventListener('click', function() {
             document.getElementById('miPopup').style.display = 'none';
         });
+
+        // Abrir el popup de edición y prellenar los campos, incluyendo el ID
+        document.getElementById("editarPopup").addEventListener("click", function() {
+            document.getElementById("editarMiPopup").style.display = "block";
+            document.getElementById("editarID").value = document.getElementById("popupID").innerText; // ID del cliente
+            document.getElementById("editarNombre").value = document.getElementById("popupNombre").innerText;
+            document.getElementById("editarTelefono").value = document.getElementById("popupTelefono").innerText;
+            document.getElementById("editarFecha").value = document.getElementById("popupFecha").innerText;
+            document.getElementById("editarSexo").value = document.getElementById("popupSexo").innerText;
+        });
+
+        // Cerrar popup de edición
+        document.getElementById("cerrarEditarPopup").addEventListener("click", function() {
+            document.getElementById("editarMiPopup").style.display = "none";
+        });
+
+        // Guardar cambios
+        document.getElementById("guardarCambios").addEventListener("click", function() {
+            document.getElementById("popupNombre").innerText = document.getElementById("editarNombre").value;
+            document.getElementById("popupTelefono").innerText = document.getElementById("editarTelefono").value;
+            document.getElementById("popupFecha").innerText = document.getElementById("editarFecha").value;
+            document.getElementById("popupSexo").innerText = document.getElementById("editarSexo").value;
+            document.getElementById("editarMiPopup").style.display = "none";
+        });
+
+        // Funcionalidad para añadir clientes
+        const addClientBtn = document.getElementById('addClientBtn');
+        const addClientModal = document.getElementById('addcliente');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        addClientBtn.addEventListener('click', () => {
+            addClientModal.classList.add('is-active');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            addClientModal.classList.remove('is-active');
+        });
     </script>
-    
-    
     <%- include('includes/footer') %>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Gestión de Promociones</title>
+    <title>Gestión de Establecimientos</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <%- include('includes/head') %>
@@ -50,34 +50,34 @@
     <div class="container">
         <section class="section">
             <div class="box box-centered"> 
-                <h1 class="title">Promociones</h1>
+                <h1 class="title">Establecimientos</h1>
 
-                <!-- Lista de promociones -->
-                <div class="promociones-lista">
-                    <h2 class="title is-4">Promociones Existentes</h2>
+                <!-- Lista de establecimientos -->
+                <div class="establecimientos-lista">
+                    <h2 class="title is-4">Establecimientos Existentes</h2>
                     <table class="table is-fullwidth">
                         <thead>
                             <tr>
-                                <th>ID Recompensa</th>
-                                <th>Nombre Recompensa</th>
-                                <th>Fecha Inicio</th>
-                                <th>Fecha Final</th>
+                                <th>ID Establecimiento</th>
+                                <th>Nombre Establecimiento</th>
+                                <th>Dirección</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (promociones && promociones.length > 0) { %>
-                                <% promociones.forEach(function(promocion) { %>
+                            <% if (establecimientos && establecimientos.length > 0) { %>
+                                <% establecimientos.forEach(function(establecimiento) { %>
                                     <tr>
-                                        <td><%= promocion.ID_Recompensa %></td>
-                                        <td><%= promocion.Nombre_Recompensa %></td>
-                                        <td><%= new Date(promocion.Fecha_Inicio).toISOString().split('T')[0] %></td>
-                                        <td><%= new Date(promocion.Fecha_Final).toISOString().split('T')[0] %></td>
+                                        <td><%= establecimiento.ID_Establecimiento %></td>
+                                        <td><%= establecimiento.Nombre_Establecimiento %></td>
+                                        <td><%= establecimiento.Dir_Estab %></td>
                                         <td>
                                             <div class="actions">
-                                                <button class="button is-small is-link" onclick="editarPromocion('<%= promocion.ID_Recompensa %>', '<%= promocion.Nombre_Recompensa %>', '<%= promocion.Fecha_Inicio %>', '<%= promocion.Fecha_Final %>', '<%= promocion.Descripcion_Regalo %>')">Editar</button>
-                                                <form action="/promociones/eliminar" method="POST" style="display:inline;">
-                                                    <input type="hidden" name="ID_Recompensa" value="<%= promocion.ID_Recompensa %>">
+                                                <!-- Botón para abrir pop-up de edición -->
+                                                <button class="button is-small is-link" 
+                                                        onclick="editarEstablecimiento('<%= establecimiento.ID_Establecimiento %>', '<%= establecimiento.Nombre_Establecimiento %>', '<%= establecimiento.Dir_Estab %>')">Editar</button>
+                                                <form action="/establecimientos/eliminar" method="POST" style="display:inline;">
+                                                    <input type="hidden" name="id" value="<%= establecimiento.ID_Establecimiento %>">
                                                     <button type="submit" class="button is-small is-danger">Eliminar</button>
                                                 </form>
                                             </div>
@@ -86,7 +86,7 @@
                                 <% }); %>
                             <% } else { %>
                                 <tr>
-                                    <td colspan="5" class="has-text-centered">No hay promociones disponibles.</td>
+                                    <td colspan="4" class="has-text-centered">No hay establecimientos disponibles.</td>
                                 </tr>
                             <% } %>
                         </tbody>
@@ -110,41 +110,29 @@
                     </div>
                 </div>
 
-                <!-- Botón Añadir nueva promoción -->
+                <!-- Botón Añadir nuevo establecimiento -->
                 <div class="has-text-centered mt-5">
-                    <button class="button is-success is-medium" onclick="showAddPopup()">Añadir Promoción</button>
+                    <button class="button is-success is-medium" onclick="showAddPopup()">Añadir Establecimiento</button>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Pop-up para añadir una nueva promoción -->
+    <!-- Pop-up para añadir un nuevo establecimiento -->
     <div class="modal" id="addModal">
         <div class="modal-content">
-            <h2 class="title is-4 has-text-link">Registrar Nueva Promoción</h2>
-            <form action="/promociones/registrar" method="POST">
+            <h2 class="title is-4 has-text-link">Registrar Nuevo Establecimiento</h2>
+            <form action="/establecimientos/agregar" method="POST">
                 <div class="field">
-                    <label for="nombreRecompensa" class="label">Nombre Recompensa:</label>
+                    <label for="nombre" class="label">Nombre Establecimiento:</label>
                     <div class="control">
-                        <input type="text" id="nombreRecompensa" name="nombreRecompensa" class="input" required>
+                        <input type="text" id="nombre" name="nombre" class="input" required>
                     </div>
                 </div>
                 <div class="field">
-                    <label for="fechaInicio" class="label">Fecha Inicio:</label>
+                    <label for="direccion" class="label">Dirección:</label>
                     <div class="control">
-                        <input type="date" id="fechaInicio" name="fechaInicio" class="input" required>
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="fechaFinal" class="label">Fecha Final:</label>
-                    <div class="control">
-                        <input type="date" id="fechaFinal" name="fechaFinal" class="input" required>
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="descripcionRegalo" class="label">Descripción Regalo:</label>
-                    <div class="control">
-                        <textarea id="descripcionRegalo" name="descripcionRegalo" class="textarea" required></textarea>
+                        <input type="text" id="direccion" name="direccion" class="input" required>
                     </div>
                 </div>
                 <button type="submit" class="button is-link is-fullwidth mt-4">Registrar</button>
@@ -153,34 +141,22 @@
         </div>
     </div>
 
-    <!-- Pop-up para editar una promoción -->
+    <!-- Pop-up para editar un establecimiento -->
     <div class="modal" id="editModal">
         <div class="modal-content">
-            <h2 class="title is-4 has-text-link">Editar Promoción</h2>
-            <form action="/promociones/editar" method="POST">
-                <input type="hidden" id="idRecompensa" name="idRecompensa">
+            <h2 class="title is-4 has-text-link">Editar Establecimiento</h2>
+            <form action="/establecimientos/editar" method="POST">
+                <input type="hidden" id="idEstablecimiento" name="id">
                 <div class="field">
-                    <label for="nombreRecompensaEdit" class="label">Nombre Recompensa:</label>
+                    <label for="nombreEdit" class="label">Nombre Establecimiento:</label>
                     <div class="control">
-                        <input type="text" id="nombreRecompensaEdit" name="nombreRecompensa" class="input" required>
+                        <input type="text" id="nombreEdit" name="nombre" class="input" required>
                     </div>
                 </div>
                 <div class="field">
-                    <label for="fechaInicioEdit" class="label">Fecha Inicio:</label>
+                    <label for="direccionEdit" class="label">Dirección:</label>
                     <div class="control">
-                        <input type="date" id="fechaInicioEdit" name="fechaInicio" class="input" required>
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="fechaFinalEdit" class="label">Fecha Final:</label>
-                    <div class="control">
-                        <input type="date" id="fechaFinalEdit" name="fechaFinal" class="input" required>
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="descripcionRegaloEdit" class="label">Descripción Regalo:</label>
-                    <div class="control">
-                        <textarea id="descripcionRegaloEdit" name="descripcionRegalo" class="textarea" required></textarea>
+                        <input type="text" id="direccionEdit" name="direccion" class="input" required>
                     </div>
                 </div>
                 <button type="submit" class="button is-link is-fullwidth mt-4">Guardar Cambios</button>
@@ -201,13 +177,10 @@
             document.getElementById('addModal').classList.remove('is-active');
         }
 
-        function editarPromocion(id, nombre, inicio, fin, descripcion) {
-            document.getElementById('idRecompensa').value = id;
-            document.getElementById('nombreRecompensaEdit').value = nombre;
-            document.getElementById('fechaInicioEdit').value = new Date(inicio).toISOString().split('T')[0];
-            document.getElementById('fechaFinalEdit').value = new Date(fin).toISOString().split('T')[0];
-            document.getElementById('descripcionRegaloEdit').value = descripcion;
-
+        function editarEstablecimiento(id, nombre, direccion) {
+            document.getElementById('idEstablecimiento').value = id;
+            document.getElementById('nombreEdit').value = nombre;
+            document.getElementById('direccionEdit').value = direccion;
             document.getElementById('editModal').classList.add('is-active');
         }
 

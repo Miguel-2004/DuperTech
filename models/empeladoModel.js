@@ -14,6 +14,32 @@ module.exports = class Usuario {
         }
     }
 
+    // Obtener trabajador con paginación
+    static async getTrabajadorP(limit, offset) {
+        try {
+            const connection = await db();
+            const [result] = await connection.execute(`
+                SELECT * FROM empleado LIMIT ? OFFSET ?
+            `, [limit, offset]);
+            await connection.release();
+            return result;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    // Contar el total de empleados
+    static async countTrabajador() {
+        try {
+            const connection = await db();
+            const [result] = await connection.execute('SELECT COUNT(*) as total FROM empleado');
+            await connection.release();
+            return result[0].total;
+        } catch (e) {
+            throw e;
+        }
+    }
+
     static async getAdmin() {
         try {
             const connection = await db();

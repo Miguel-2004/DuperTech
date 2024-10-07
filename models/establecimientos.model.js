@@ -2,6 +2,20 @@ const db = require('../utils/database');
 
 module.exports = class Establecimiento {
 
+    //obtener establecimientos sin paginacion
+    static async getEstablecimientos() {
+        try {
+            const connection = await db();
+            const [result] = await connection.execute(`
+                SELECT * FROM establecimiento
+            `);
+            await connection.release();
+            return result;
+        } catch (e) {
+            throw e;
+        }
+    }
+
     // Obtener establecimientos con paginación
     static async getEstablecimientosPaginated(limit, offset) {
         try {

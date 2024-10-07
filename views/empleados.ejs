@@ -28,6 +28,15 @@
         .edit-button {
             margin-left: auto;
         }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination-button {
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +67,26 @@
                         </div>
                     <% }) %>
                 </div>
+
+                <!-- Paginación simplificada con flechas -->
+                <div class="pagination-container">
+                    <% if (currentPage > 1) { %>
+                        <!-- Botón de página anterior (Flecha izquierda) -->
+                        <a href="?page=<%= currentPage - 1 %>" class="button is-link pagination-button">
+                            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                        </a>
+                    <% } %>
+
+                    <% if (currentPage < totalPages) { %>
+                        <!-- Botón de página siguiente (Flecha derecha) -->
+                        <a href="?page=<%= currentPage + 1 %>" class="button is-link pagination-button">
+                            <span class="icon"><i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    <% } %>
+                </div>
             </div>
+
+
 
             <!-- Botón para añadir trabajador -->
             <div class="has-text-centered mt-5">

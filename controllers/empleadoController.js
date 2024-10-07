@@ -15,8 +15,40 @@ exports.getAllTrabajadores = async (req, res, next) => {
     }
 };
 
+//Obtener los empleados con paginacion
+exports.getTrabajadores = async (req, res) => {
+    try {
+        // Obtener el número de página de la solicitud (predeterminada en 1 si no se pasa)
+        const currentPage = parseInt(req.query.page) || 1;
+        const limit = 10; // Número de elementos por página
+        const offset = (currentPage - 1) * limit;
+
+        const establecimiento = await Establecimiento.getEstablecimientos();
+        const admin = await Model.getAdmin();
+
+        // Obtener los trabajadores y el total
+        const Trabajadores = await Model.getTrabajadorP(limit, offset);
+        const totalTrabajadores = await Model.countTrabajador();
+        const totalPages = Math.ceil(totalTrabajadores / limit);
+
+        res.render('empleados', {
+            Trabajadores: Trabajadores,
+            currentPage: currentPage,
+            totalPages: totalPages,
+            establecimiento:establecimiento,
+            admin: admin 
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener los establecimientos');
+    }
+};
+
 exports.nuevoEmpleado = async (req, res, next) => {
     try {
+        const establecimiento = await Establecimiento.getEstablecimientos();
+        const admin = await Model.getAdmin();
+
         const nombre = req.body.nombre;
         const telefono = req.body.telefono;
         const usuario = req.body.usuario;

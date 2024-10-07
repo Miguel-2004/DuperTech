@@ -2,10 +2,164 @@
 <html data-theme="dark">
     <head>
         <%- include('includes/head') %> <!-- Partial para el head -->
+        <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" rel="stylesheet">
+        <style>
+            /* Ajustes personalizados */
+            .card-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 30px;
+                justify-content: center;
+                margin-top: 30px;
+                padding: 20px;
+            }
+
+            .card-custom {
+                width: 350px;
+                padding: 20px;
+            }
+
+            .card-header-title {
+                color: #4a4a4a;
+                font-weight: bold;
+                text-align: center;
+                font-size: 1.4rem;
+            }
+
+            .card-content {
+                background-color: #f5f5f5;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .circle-icon {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background-color: #e0e0e0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 20px;
+            }
+
+            .is-dark-theme .card {
+                background-color: #2b2b2b;
+                color: #fff;
+            }
+        </style>
     </head>
     <body>
         <%- include('includes/sidebar') %>
-        
+
+        <section class="section">
+            <div class="container">
+                <div class="card-grid">
+                    <!-- Card 1 -->
+                    <div class="card card-custom">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Empleados
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="circle-icon">
+                                <img src="path/to/icon1.png" alt="Icono Empleados">
+                            </div>
+                            <div class="content">
+                                Información sobre los empleados de la compañía.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="card card-custom">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Establecimientos
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="circle-icon">
+                                <img src="path/to/icon2.png" alt="Icono Establecimientos">
+                            </div>
+                            <div class="content">
+                                Detalles de los establecimientos registrados.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="card card-custom">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Clientes
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="circle-icon">
+                                <img src="path/to/icon3.png" alt="Icono Clientes">
+                            </div>
+                            <div class="content">
+                                Información sobre los clientes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="card card-custom">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Trabajadores
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="circle-icon">
+                                <img src="path/to/icon4.png" alt="Icono Trabajadores">
+                            </div>
+                            <div class="content">
+                                Datos y roles de los trabajadores.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="card card-custom">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Tarjetas
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="circle-icon">
+                                <img src="path/to/icon5.png" alt="Icono Tarjetas">
+                            </div>
+                            <div class="content">
+                                Información de las tarjetas registradas.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="card card-custom">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Promociones
+                            </p>
+                        </header>
+                        <div class="card-content">
+                            <div class="circle-icon">
+                                <img src="path/to/icon6.png" alt="Icono Promociones">
+                            </div>
+                            <div class="content">
+                                Detalles de las promociones actuales.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <%- include('includes/footer') %> <!-- Partial para el footer -->
     </body>
 </html>

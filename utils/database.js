@@ -1,10 +1,10 @@
 const mysql = require('mysql2')
 
 const pool = mysql.createPool({
-    host: "127.0.0.1",
-    user: "root",
-    password: "",
-    database: "sistema_tarjetas", //cambiar nombre
+    host: 'mysql-dupertech.alwaysdata.net',
+    user: "dupertech_user",
+    password: "DuperUser",
+    database: "dupertech_tarjetas", //cambiar nombre
     connectionLimit: 10 // Numero de conexiones
 }).promise()
 

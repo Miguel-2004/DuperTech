@@ -1,26 +1,19 @@
 const db = require('../utils/database');
 
 module.exports = class Reporte {
-    // Obtener recompensas reclamadas por año y mes
-    static async getRecompensasPorMes() {
+    // Obtener sellos por empleado
+    static async getSellosPorEmpleado() {
         try {
             const connection = await db();
-            //console.log('Conexión a la base de datos establecida.');
-
             const [result] = await connection.execute(`
                 SELECT 
-                    YEAR(Fecha_Reclamacion) AS Año,
-                    MONTH(Fecha_Reclamacion) AS Mes,
-                    COUNT(ID_Recompensa) AS Total_Recompensas
+                    ID_Empleado,
+                    COUNT(Sello_ID) AS Total_Sellos
                 FROM 
-                    reclamacion_recompensa
+                    sello
                 GROUP BY 
-                    Año, Mes
-                ORDER BY 
-                    Año, Mes;
+                    ID_Empleado;
             `);
-
-            //console.log('Datos obtenidos desde la base de datos:', result);
 
             await connection.release();
             return result;

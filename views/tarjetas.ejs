@@ -22,12 +22,18 @@
 
         .pagination-container {
             display: flex;
+            align-items: center;
             justify-content: center;
             margin-top: 20px;
         }
 
-        .pagination-link, .pagination-previous, .pagination-next {
-            margin: 0 5px;
+        .pagination-button {
+            margin: 0 10px;
+        }
+
+        .pagination-info {
+            margin: 0 15px;
+            font-size: 1em;
         }
 
         .add-sello-btn {
@@ -117,13 +123,25 @@
                     </table>
                 </div>
 
-                <!-- Paginación -->
+                <!-- Paginación simplificada con flechas -->
                 <div class="pagination-container">
                     <% if (currentPage > 1) { %>
-                        <a href="?page=<%= currentPage - 1 %>&establecimiento=<%= establecimiento %>" class="pagination-previous">Anterior</a>
+                        <!-- Botón de página anterior (Flecha izquierda) -->
+                        <a href="?page=<%= currentPage - 1 %>&establecimiento=<%= establecimiento %>" class="button is-link pagination-button">
+                            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                        </a>
                     <% } %>
+
+                    <!-- Información de la página actual -->
+                    <span class="pagination-info">
+                        Página <%= currentPage %> de <%= totalPages %>
+                    </span>
+
                     <% if (currentPage < totalPages) { %>
-                        <a href="?page=<%= currentPage + 1 %>&establecimiento=<%= establecimiento %>" class="pagination-next">Siguiente</a>
+                        <!-- Botón de página siguiente (Flecha derecha) -->
+                        <a href="?page=<%= currentPage + 1 %>&establecimiento=<%= establecimiento %>" class="button is-link pagination-button">
+                            <span class="icon"><i class="fas fa-arrow-right"></i></span>
+                        </a>
                     <% } %>
                 </div>
             </div>

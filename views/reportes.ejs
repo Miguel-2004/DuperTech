@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Incluir la sección de la cabecera y establecer el título de la página -->
     <%- include('includes/head') %> 
     <title><%= pageTitle %></title>
-    <!-- Cargar Bulma para estilos y definir estilos personalizados -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
-        /* Estilo del contenedor principal del reporte */
         .box-centered {
             width: 60%;
             max-width: 800px;
@@ -17,32 +14,25 @@
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        /* Contenedor de la gráfica para ajustar su tamaño */
         .chart-container {
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
         }
-        /* Ajustar la altura máxima y ancho del canvas de la gráfica */
         canvas {
             max-height: 400px;
             width: 100%;
         }
     </style>
-    <!-- Cargar la librería Chart.js para generar la gráfica -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- Incluir la barra lateral desde otro archivo -->
     <%- include('includes/sidebar') %> 
 
     <section class="section">
         <div class="container">
             <div class="box box-centered">
-                <!-- Título principal del reporte -->
                 <h1 class="title has-text-centered">Reporte de Sellos por Empleado</h1>
-                
-                <!-- Contenedor de la gráfica de sellos por empleado -->
                 <div class="chart-container">
                     <canvas id="sellosChart"></canvas>
                 </div>
@@ -51,24 +41,29 @@
     </section>
 
     <script>
-        // Obtener el contexto del canvas para renderizar la gráfica
         const ctx = document.getElementById('sellosChart').getContext('2d');
 
-        // Generar las etiquetas de la gráfica a partir de los IDs de empleados
+        // Generar las etiquetas de la gráfica con el ID del empleado
         const labels = [
           <% sellosPorEmpleado.forEach(function(sello, index) { %>
             '<%= sello.ID_Empleado %>'<% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
           <% }); %>
         ];
 
-        // Generar los datos de la gráfica a partir del número total de sellos
+        // Generar los datos de la gráfica a partir del número total de sellos por empleado
         const data = [
           <% sellosPorEmpleado.forEach(function(sello, index) { %>
             <%= sello.Total_Sellos %><% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
           <% }); %>
         ];
 
-        // Configuración de los datos y apariencia de la gráfica
+        // Guardar los nombres de los empleados para mostrarlos en el tooltip
+        const nombresEmpleados = [
+          <% sellosPorEmpleado.forEach(function(sello, index) { %>
+            '<%= sello.Nombre_Empleado %>'<% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
+          <% }); %>
+        ];
+
         const sellosData = {
             labels: labels,
             datasets: [{
@@ -80,13 +75,35 @@
             }]
         };
 
-        // Crear y configurar la gráfica de barras usando Chart.js
         const sellosChart = new Chart(ctx, {
             type: 'bar',
             data: sellosData,
             options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            // Personalizar el tooltip para mostrar solo el nombre del empleado y el número de sellos
+                            title: function() {
+                                // No mostrar el título (que sería la etiqueta del eje X)
+                                return '';
+                            },
+                            label: function(tooltipItem) {
+                                const nombreEmpleado = nombresEmpleados[tooltipItem.dataIndex];
+                                const totalSellos = tooltipItem.raw;
+                                return `${nombreEmpleado}: ${totalSellos} sellos`;
+                            }
+                        }
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
                 scales: {
-                    // Configuración del eje X con etiquetas rotadas y título
                     x: {
                         ticks: {
                             maxRotation: 90,
@@ -103,7 +120,6 @@
                             }
                         }
                     },
-                    // Configuración del eje Y con título y ajuste de las etiquetas
                     y: {
                         ticks: {
                             font: {
@@ -115,17 +131,6 @@
                             text: 'Sellos',
                             font: {
                                 size: 16
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    // Configuración de la leyenda de la gráfica
-                    legend: {
-                        display: true,
-                        labels: {
-                            font: {
-                                size: 14
                             }
                         }
                     }

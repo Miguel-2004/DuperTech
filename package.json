@@ -4,12 +4,14 @@
   "description": "Trabajo en equipo de la materia TC2005B.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "cross-env NODE_ENV=production PATH_SERVER='/dupertech/' node server.js",
+    "start:dev": "nodemon NODE_ENV=development PATH_SERVER='/' server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
+    "cross-env": "^7.0.3",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "mysql2": "^3.11.3",

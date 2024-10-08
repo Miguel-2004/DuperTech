@@ -103,7 +103,7 @@
                     <button class="delete" aria-label="close" id="closeModalBtn"></button>
                 </header>
                 <section class="modal-card-body">
-                    <form id="formularioEmpleado" action="/empleado/empleados/nuevo" method="POST">
+                    <form id="formularioEmpleado" action="<%= process.env.PATH_SERVER %>empleado/empleados/nuevo" method="POST">
                         <!-- Formulario de añadir trabajador -->
                         <div class="field">
                             <label class="label">Nombre del Trabajador</label>
@@ -171,7 +171,7 @@
                     <button class="delete" aria-label="close" id="closeEditModalBtn"></button>
                 </header>
                 <section class="modal-card-body">
-                    <form id="editar_info" action="/empleados/editar" method="post">
+                    <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleados/editar" method="post">
                         <!-- Hidden fields for ID_Empleado, ID_Establecimiento, and ID_Admin -->
                         <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
                         <input type="hidden" id="editIDEstablecimiento" name="ID_Establecimiento">

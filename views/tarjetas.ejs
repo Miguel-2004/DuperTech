@@ -73,7 +73,7 @@
                 </div>
 
                 <!-- Barra de búsqueda para filtrar -->
-                <form action="/tarjetas" method="GET">
+                <form action="<%= process.env.PATH_SERVER %>tarjetas" method="GET">
                     <div class="field has-addons">
                         <div class="control has-icons-left is-expanded">
                             <input class="input" type="text" name="search" placeholder="Buscar por ID Tarjeta, Cliente o Teléfono..." value="<%= idTarjeta || nombreCliente || telefono %>">

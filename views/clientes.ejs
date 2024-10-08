@@ -104,7 +104,7 @@
                 <button class="delete" aria-label="close" id="closeModalBtn"></button>
             </header>
             <section class="modal-card-body">
-                <form id="formularioCliente" action="/cliente/clientes/nuevo" method="POST">
+                <form id="formularioCliente" action="<%= process.env.PATH_SERVER %>cliente/clientes/nuevo" method="POST">
                     <div class="field">
                         <label class="label">Nombre del cliente</label>
                         <div class="control">
@@ -160,7 +160,7 @@
     </div>
 
     <!-- Popup de Edición -->
-    <form id="editar_info" action="/cliente/clientes/editar" method="POST">
+    <form id="editar_info" action="<%= process.env.PATH_SERVER %>cliente/clientes/editar" method="POST">
         <div class="popup box" id="editarMiPopup" style="display:none;">
             <button id="cerrarEditarPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
             <h2 class="title is-4 has-text-link">Editar detalles</h2>

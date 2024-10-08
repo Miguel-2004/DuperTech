@@ -76,7 +76,7 @@
                                         <td>
                                             <div class="actions">
                                                 <button class="button is-small is-link" onclick="editarPromocion('<%= promocion.ID_Recompensa %>', '<%= promocion.Nombre_Recompensa %>', '<%= promocion.Fecha_Inicio %>', '<%= promocion.Fecha_Final %>', '<%= promocion.Descripcion_Regalo %>')">Editar</button>
-                                                <form action="/promociones/eliminar" method="POST" style="display:inline;">
+                                                <form action="<%= process.env.PATH_SERVER %>promociones/eliminar" method="POST" style="display:inline;">
                                                     <input type="hidden" name="ID_Recompensa" value="<%= promocion.ID_Recompensa %>">
                                                     <button type="submit" class="button is-small is-danger">Eliminar</button>
                                                 </form>
@@ -122,7 +122,7 @@
     <div class="modal" id="addModal">
         <div class="modal-content">
             <h2 class="title is-4 has-text-link">Registrar Nueva Promoción</h2>
-            <form action="/promociones/registrar" method="POST">
+            <form action="<%= process.env.PATH_SERVER %>promociones/registrar" method="POST">
                 <div class="field">
                     <label for="nombreRecompensa" class="label">Nombre Recompensa:</label>
                     <div class="control">
@@ -157,7 +157,7 @@
     <div class="modal" id="editModal">
         <div class="modal-content">
             <h2 class="title is-4 has-text-link">Editar Promoción</h2>
-            <form action="/promociones/editar" method="POST">
+            <form action="<%= process.env.PATH_SERVER %>promociones/editar" method="POST">
                 <input type="hidden" id="idRecompensa" name="idRecompensa">
                 <div class="field">
                     <label for="nombreRecompensaEdit" class="label">Nombre Recompensa:</label>

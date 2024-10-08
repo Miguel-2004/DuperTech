@@ -32,10 +32,10 @@
     <div class="login-container">
         <div class="box has-background-white">
             <div class="login-image">
-                <img src="/images/dp_white.png" alt="Logo">
+                <img src="<%= process.env.PATH_SERVER %>images/dp_white.png" alt="Logo">
             </div>
             <h1 class="title has-text-centered">Iniciar Sesión</h1>
-            <form id="loginForm" action="/users/login" method="POST">
+            <form id="loginForm" action="<%= process.env.PATH_SERVER %>users/login" method="POST">
                 <div class="field">
                     <label class="label">Correo Electrónico</label>
                     <div class="control">

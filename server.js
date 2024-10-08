@@ -27,6 +27,8 @@ const rutaPromociones = require ('./routes/promociones');
 const rutaEstablecimientos = require ('./routes/establecimientos');
 const rutaReportes = require('./routes/reportes');
 
+//console.log(process.env);
+
 // Usar las rutas correctas
 app.use('/users', rutaUsers);
 app.use('/empleado', rutaEmpleados);

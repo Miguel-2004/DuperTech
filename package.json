@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production PATH_SERVER='/dupertech/' node server.js",
-    "start:dev": "nodemon NODE_ENV=development PATH_SERVER='/' server.js"
+    "start:dev": "cross-env NODE_ENV=development PATH_SERVER='/' node --watch server.js"
   },
   "author": "",
   "license": "ISC",

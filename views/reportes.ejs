@@ -1,99 +1,133 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Incluir la sección de la cabecera y establecer el título de la página -->
     <%- include('includes/head') %> 
     <title><%= pageTitle %></title>
+    <!-- Cargar Bulma para estilos y definir estilos personalizados -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
+        /* Estilo del contenedor principal del reporte */
         .box-centered {
-            width: 80%;
-            max-width: 1200px;
+            width: 60%;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+        /* Contenedor de la gráfica para ajustar su tamaño */
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        /* Ajustar la altura máxima y ancho del canvas de la gráfica */
         canvas {
-            margin-top: 40px;
+            max-height: 400px;
+            width: 100%;
         }
     </style>
+    <!-- Cargar la librería Chart.js para generar la gráfica -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <!-- Incluir la barra lateral desde otro archivo -->
     <%- include('includes/sidebar') %> 
 
     <section class="section">
         <div class="container">
             <div class="box box-centered">
-                <h1 class="title has-text-centered">Reporte de Recompensas Reclamadas por Año y Mes</h1>
-
-                <% if (recompensasPorMes && recompensasPorMes.length > 0) { %>
-                  <div>
-                    <h2 class="subtitle has-text-centered">Recompensas Mensuales</h2>
-                    <table class="table is-striped is-fullwidth">
-                        <thead>
-                            <tr>
-                                <th>Año</th>
-                                <th>Mes</th>
-                                <th>Total Recompensas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% recompensasPorMes.forEach(function(recompensa) { %>
-                                <tr>
-                                    <td><%= recompensa.Año %></td>
-                                    <td><%= recompensa.Mes %></td>
-                                    <td><%= recompensa.Total_Recompensas %></td>
-                                </tr>
-                            <% }); %>
-                        </tbody>
-                    </table>
-
-                    <canvas id="recompensasChart"></canvas>
-                  </div>
-                <% } else { %>
-                  <p class="has-text-centered">No hay recompensas reclamadas.</p>
-                <% } %>
+                <!-- Título principal del reporte -->
+                <h1 class="title has-text-centered">Reporte de Sellos por Empleado</h1>
+                
+                <!-- Contenedor de la gráfica de sellos por empleado -->
+                <div class="chart-container">
+                    <canvas id="sellosChart"></canvas>
+                </div>
             </div>
         </div>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
-        // Definir arrays labels y data correctamente a partir de recompensasPorMes
+        // Obtener el contexto del canvas para renderizar la gráfica
+        const ctx = document.getElementById('sellosChart').getContext('2d');
+
+        // Generar las etiquetas de la gráfica a partir de los IDs de empleados
         const labels = [
-            <% recompensasPorMes.forEach(function(recompensa, index) { %>
-                '<%= recompensa.Mes %> <%= recompensa.Año %>'<% if (index < recompensasPorMes.length - 1) { %>, <% } %>
-            <% }); %>
+          <% sellosPorEmpleado.forEach(function(sello, index) { %>
+            '<%= sello.ID_Empleado %>'<% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
+          <% }); %>
         ];
 
+        // Generar los datos de la gráfica a partir del número total de sellos
         const data = [
-            <% recompensasPorMes.forEach(function(recompensa, index) { %>
-                <%= recompensa.Total_Recompensas %><% if (index < recompensasPorMes.length - 1) { %>, <% } %>
-            <% }); %>
+          <% sellosPorEmpleado.forEach(function(sello, index) { %>
+            <%= sello.Total_Sellos %><% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
+          <% }); %>
         ];
 
-        // Configuración de Chart.js
-        const ctx = document.getElementById('recompensasChart').getContext('2d');
-        const recompensasData = {
+        // Configuración de los datos y apariencia de la gráfica
+        const sellosData = {
             labels: labels,
             datasets: [{
-                label: 'Recompensas por Mes',
+                label: 'Total Sellos por Empleado',
                 data: data,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             }]
         };
 
-        const recompensasChart = new Chart(ctx, {
+        // Crear y configurar la gráfica de barras usando Chart.js
+        const sellosChart = new Chart(ctx, {
             type: 'bar',
-            data: recompensasData,
+            data: sellosData,
             options: {
                 scales: {
+                    // Configuración del eje X con etiquetas rotadas y título
+                    x: {
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 45,
+                            font: {
+                                size: 14
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Empleados',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    // Configuración del eje Y con título y ajuste de las etiquetas
                     y: {
-                        beginAtZero: true
+                        ticks: {
+                            font: {
+                                size: 14
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Sellos',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    // Configuración de la leyenda de la gráfica
+                    legend: {
+                        display: true,
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
                     }
                 }
             }

@@ -1,18 +1,20 @@
 const db = require('../utils/database');
 
 module.exports = class Reporte {
-    // Obtener sellos por empleado
     static async getSellosPorEmpleado() {
         try {
             const connection = await db();
             const [result] = await connection.execute(`
                 SELECT 
-                    ID_Empleado,
-                    COUNT(Sello_ID) AS Total_Sellos
+                    e.ID_Empleado,
+                    e.Nombre_Empleado,
+                    COUNT(s.Sello_ID) AS Total_Sellos
                 FROM 
-                    sello
+                    sello s
+                JOIN 
+                    empleado e ON s.ID_Empleado = e.ID_Empleado
                 GROUP BY 
-                    ID_Empleado;
+                    e.ID_Empleado, e.Nombre_Empleado;
             `);
 
             await connection.release();

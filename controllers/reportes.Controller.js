@@ -1,6 +1,5 @@
 const ReporteModel = require('../models/reportes.model');
 
-// Controlador para obtener el reporte de sellos por empleado
 exports.getReporteSellos = async (req, res, next) => {
     try {
         const sellosPorEmpleado = await ReporteModel.getSellosPorEmpleado();

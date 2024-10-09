@@ -61,7 +61,7 @@ exports.nuevoEmpleado = async (req, res, next) => {
         if (!empleado) {
             return res.render('empleados', { mensaje: 'Error al crear el empleado' });
         }
-        res.redirect('/empleado/empleados');  // Redirige después de crear
+        res.render('empleados');  // Redirige después de crear
     } catch (e) {
         console.error(e);
         res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });
@@ -70,6 +70,8 @@ exports.nuevoEmpleado = async (req, res, next) => {
 
 exports.editarEmpleado = async (req, res, next) => {
     try {
+        const Trabajadores = await Model.getTrabajador();
+
         const nombre = req.body.nombre;
         const telefono = req.body.telefono;
         const usuario = req.body.usuario;
@@ -80,8 +82,10 @@ exports.editarEmpleado = async (req, res, next) => {
 
         const resultado = await Model.editTrabajador(nombre, telefono, usuario, contrasena, ID_Es, id_Admin, id_Empleado);
 
+        const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
+
         if (resultado === "yes") {
-            res.redirect('/empleados');  // Redirige o muestra algún mensaje de éxito
+            res.render('empleados',{Trabajadores: TrabajadoresArray});  // Redirige o muestra algún mensaje de éxito
         } else {
             res.render('empleados', { mensaje: 'Error al editar el empleado' });
         }

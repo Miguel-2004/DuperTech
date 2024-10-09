@@ -208,7 +208,7 @@
             <h2 class="title is-4 has-text-link">Editar detalles del trabajador</h2>
 
             <!-- Formulario de edición con el action establecido -->
-            <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleados/editar" method="post">
+            <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleado/empleados/editar" method="post">
                 <!-- Campo ID (oculto) -->
                 <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
                 <input type="hidden" id="editIDEstablecimiento" name="ID_Establecimiento">
@@ -246,21 +246,34 @@
                     </div>
                 </div>
 
-                <!-- Campo ID Establecimiento -->
+                <!-- Campo Establecimiento -->
                 <div class="field">
-                    <label class="label">ID Establecimiento</label>
-                    <div class="control">
-                        <input id="editIDEstablecimiento" class="input" type="text" name="ID_Establecimiento" placeholder="ID del Establecimiento" required>
+                    <label class="label">Establecimiento</label>
+                    <div class="select">
+                        <select id="editIDEstablecimiento" name="ID_Establecimiento" required>
+                            <% establecimiento.forEach((establecimiento) => { %>
+                                <option value="<%= establecimiento.ID_Establecimiento %>">
+                                    <%= establecimiento.Nombre_Establecimiento %>
+                                </option>
+                            <% }); %>
+                        </select>
                     </div>
                 </div>
 
-                <!-- Campo ID Admin -->
+                <!-- Campo Administrador -->
                 <div class="field">
-                    <label class="label">ID Admin</label>
-                    <div class="control">
-                        <input id="editIDAdmin" class="input" type="text" name="id_Admin" placeholder="ID del Admin" required>
+                    <label class="label">Administrador</label>
+                    <div class="select">
+                        <select id="editIDAdmin" name="id_Admin" required>
+                            <% admin.forEach((admin) => { %>
+                                <option value="<%= admin.ID_Admin %>">
+                                    <%= admin.Nombre %>
+                                </option>
+                            <% }); %>
+                        </select>
                     </div>
                 </div>
+
 
                 <!-- Botón para guardar cambios -->
                 <button class="button is-link is-fullwidth mt-4" type="submit">Guardar Cambios</button>
@@ -295,7 +308,11 @@
         document.getElementById("editTelefono").value = telefono;
         document.getElementById("editUsuario").value = usuario;
         document.getElementById("editContrasenia").value = contrasenia;
+        
+        // Seleccionar el establecimiento correcto
         document.getElementById("editIDEstablecimiento").value = idEstablecimiento;
+
+        // Seleccionar el administrador correcto
         document.getElementById("editIDAdmin").value = idAdmin;
     }
 

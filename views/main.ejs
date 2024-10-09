@@ -22,6 +22,7 @@
                 align-items: center;
                 justify-content: center;
                 text-align: center;
+                cursor: pointer; /* Para que se vea como un enlace */
             }
 
             .card-header-title {
@@ -63,7 +64,7 @@
             <div class="container">
                 <div class="card-grid">
                     <!-- Card 1 -->
-                    <div class="card card-custom">
+                    <div class="card card-custom" data-url="<%= process.env.PATH_SERVER %>reportes">
                         <header class="card-header">
                             <p class="card-header-title">
                                 Reportes
@@ -80,7 +81,7 @@
                     </div>
 
                     <!-- Card 2 -->
-                    <div class="card card-custom">
+                    <div class="card card-custom" data-url="<%= process.env.PATH_SERVER %>establecimientos">
                         <header class="card-header">
                             <p class="card-header-title">
                                 Establecimientos
@@ -97,7 +98,7 @@
                     </div>
 
                     <!-- Card 3: Clientes-->
-                    <div class="card card-custom">
+                    <div class="card card-custom" data-url="<%= process.env.PATH_SERVER %>cliente/clientes">
                         <header class="card-header">
                             <p class="card-header-title">
                                 Clientes
@@ -108,13 +109,13 @@
                                 <img src="<%= process.env.PATH_SERVER %>images/CLI_ICON.png" alt="Icono Clientes">
                             </div>
                             <div class="content">
-                                Información dicional sobre los clientes.
+                                Información adicional sobre los clientes.
                             </div>
                         </div>
                     </div>
 
                     <!-- Card 4 -->
-                    <div class="card card-custom">
+                    <div class="card card-custom" data-url="<%= process.env.PATH_SERVER %>empleado/empleados">
                         <header class="card-header">
                             <p class="card-header-title">
                                 Empleados
@@ -131,7 +132,7 @@
                     </div>
 
                     <!-- Card 5 -->
-                    <div class="card card-custom">
+                    <div class="card card-custom" data-url="<%= process.env.PATH_SERVER %>tarjetas">
                         <header class="card-header">
                             <p class="card-header-title">
                                 Tarjetas
@@ -148,7 +149,7 @@
                     </div>
 
                     <!-- Card 6 -->
-                    <div class="card card-custom">
+                    <div class="card card-custom" data-url="<%= process.env.PATH_SERVER %>promociones">
                         <header class="card-header">
                             <p class="card-header-title">
                                 Promociones
@@ -168,5 +169,20 @@
         </section>
 
         <%- include('includes/footer') %> <!-- Partial para el footer -->
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const cards = document.querySelectorAll('.card-custom');
+
+                cards.forEach((card) => {
+                    card.addEventListener('click', function() {
+                        const url = card.getAttribute('data-url');
+                        if (url) {
+                            window.location.href = url;
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

@@ -37,6 +37,33 @@
         .pagination-button {
             margin: 0 5px;
         }
+
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        
     </style>
 </head>
 <body>
@@ -63,7 +90,14 @@
                     <% Trabajadores.forEach((Trabajadores) => { %>
                         <div class="list-item">
                             <span class="worker-name"><%= Trabajadores.Nombre_Empleado %></span>
-                            <button class="button is-small is-link is-light edit-button" data-id="<%= Trabajadores._id %>">Editar</button>
+                            <button class="button is-small is-link is-light edit-button" 
+                            onclick="mostrarPopupEditar('<%= Trabajadores.Nombre_Empleado %>', 
+                                    '<%= Trabajadores.ID_Empleado %>', 
+                                    '<%= Trabajadores.Telefono_Empleado %>', 
+                                    '<%= Trabajadores.Usuario %>', 
+                                    '<%= Trabajadores.Contrasenia %>', 
+                                    '<%= Trabajadores.ID_Establecimiento %>', 
+                                    '<%= Trabajadores.ID_Admin %>')">Editar</button>
                         </div>
                     <% }) %>
                 </div>
@@ -162,62 +196,77 @@
             </div>
         </div>
 
-        <!-- Modal para editar trabajador -->
-        <div class="modal" id="editWorkerModal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Editar Trabajador</p>
-                    <button class="delete" aria-label="close" id="closeEditModalBtn"></button>
-                </header>
-                <section class="modal-card-body">
-                    <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleados/editar" method="post">
-                        <!-- Hidden fields for ID_Empleado, ID_Establecimiento, and ID_Admin -->
-                        <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
-                        <input type="hidden" id="editIDEstablecimiento" name="ID_Establecimiento">
-                        <input type="hidden" id="editIDAdmin" name="id_Admin">
-        
-                        <!-- Nombre del trabajador -->
-                        <div class="field">
-                            <label class="label">Nombre del Trabajador</label>
-                            <div class="control">
-                                <input class="input" type="text" id="editNombre" name="nombre" placeholder="Nombre" required>
-                            </div>
-                        </div>
-        
-                        <!-- Teléfono del trabajador -->
-                        <div class="field">
-                            <label class="label">Teléfono</label>
-                            <div class="control">
-                                <input class="input" type="text" id="editTelefono" name="telefono" placeholder="Teléfono" required>
-                            </div>
-                        </div>
-        
-                        <!-- Usuario del trabajador -->
-                        <div class="field">
-                            <label class="label">Usuario</label>
-                            <div class="control">
-                                <input class="input" type="text" id="editUsuario" name="usuario" placeholder="Usuario" required>
-                            </div>
-                        </div>
-        
-                        <!-- Contraseña del trabajador -->
-                        <div class="field">
-                            <label class="label">Contraseña</label>
-                            <div class="control">
-                                <input class="input" type="password" id="editContrasena" name="password" placeholder="Contraseña" required>
-                            </div>
-                        </div>
-        
-                        <footer class="modal-card-foot">
-                            <button class="button is-success" type="submit" id="saveEditBtn">Guardar</button>
-                            <button class="button" type="button" id="cancelEditBtn">Cancelar</button>
-                        </footer>
-                    </form>
-                </section>
-            </div>
+        <!-- Superposición de fondo -->
+        <div id="popupOverlay" class="popup-overlay"></div>
+
+        <!-- Pop-up de Edición -->
+        <div class="popup" id="editPopup" style="display: none;">
+            <!-- Botón de cerrar -->
+            <button id="closeEditPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
+
+            <!-- Título -->
+            <h2 class="title is-4 has-text-link">Editar detalles del trabajador</h2>
+
+            <!-- Formulario de edición con el action establecido -->
+            <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleados/editar" method="post">
+                <!-- Campo ID (oculto) -->
+                <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
+                <input type="hidden" id="editIDEstablecimiento" name="ID_Establecimiento">
+                <input type="hidden" id="editIDAdmin" name="id_Admin">
+
+                <!-- Campo Nombre -->
+                <div class="field">
+                    <label class="label">Nombre</label>
+                    <div class="control">
+                        <input id="editNombre" class="input" type="text" name="nombre" placeholder="Nombre del trabajador" required>
+                    </div>
+                </div>
+
+                <!-- Campo Teléfono -->
+                <div class="field">
+                    <label class="label">Teléfono</label>
+                    <div class="control">
+                        <input id="editTelefono" class="input" type="text" name="telefono" placeholder="Teléfono" required>
+                    </div>
+                </div>
+
+                <!-- Campo Usuario -->
+                <div class="field">
+                    <label class="label">Usuario</label>
+                    <div class="control">
+                        <input id="editUsuario" class="input" type="text" name="usuario" placeholder="Usuario" required>
+                    </div>
+                </div>
+
+                <!-- Campo Contraseña -->
+                <div class="field">
+                    <label class="label">Contraseña</label>
+                    <div class="control">
+                        <input id="editContrasenia" class="input" type="password" name="password" placeholder="Contraseña" required>
+                    </div>
+                </div>
+
+                <!-- Campo ID Establecimiento -->
+                <div class="field">
+                    <label class="label">ID Establecimiento</label>
+                    <div class="control">
+                        <input id="editIDEstablecimiento" class="input" type="text" name="ID_Establecimiento" placeholder="ID del Establecimiento" required>
+                    </div>
+                </div>
+
+                <!-- Campo ID Admin -->
+                <div class="field">
+                    <label class="label">ID Admin</label>
+                    <div class="control">
+                        <input id="editIDAdmin" class="input" type="text" name="id_Admin" placeholder="ID del Admin" required>
+                    </div>
+                </div>
+
+                <!-- Botón para guardar cambios -->
+                <button class="button is-link is-fullwidth mt-4" type="submit">Guardar Cambios</button>
+            </form>
         </div>
-        
+
 
     </div>
 
@@ -235,45 +284,25 @@
             addWorkerModal.classList.remove('is-active');
         });
 
-        // Funcionalidad de abrir y cerrar modal de editar trabajador
-        const editWorkerModal = document.getElementById('editWorkerModal');
-        const closeEditModalBtn = document.getElementById('closeEditModalBtn');
-        const cancelEditBtn = document.getElementById('cancelEditBtn');
-        const editButtons = document.querySelectorAll('.edit-button');
-        const editNombre = document.getElementById('editNombre');
-        const editPuesto = document.getElementById('editPuesto');
-        const editCorreo = document.getElementById('editCorreo');
+        // Función para mostrar el popup con los datos del trabajador
+    function mostrarPopupEditar(nombre, idEmpleado, telefono, usuario, contrasenia, idEstablecimiento, idAdmin) {
+        // Mostrar el popup de edición
+        document.getElementById("editPopup").style.display = "block";
 
-        // Abrir modal de edición al hacer clic en un botón de "Editar"
-        editButtons.forEach((button, index) => {
-            button.addEventListener('click', () => {
-                const trabajadorId = button.getAttribute('data-id');
+        // Llenar los campos del popup con los datos del trabajador
+        document.getElementById("editNombre").value = nombre;
+        document.getElementById("editIDEmpleado").value = idEmpleado;
+        document.getElementById("editTelefono").value = telefono;
+        document.getElementById("editUsuario").value = usuario;
+        document.getElementById("editContrasenia").value = contrasenia;
+        document.getElementById("editIDEstablecimiento").value = idEstablecimiento;
+        document.getElementById("editIDAdmin").value = idAdmin;
+    }
 
-                // Simulación de datos (puedes hacer una llamada AJAX para obtener datos reales)
-                editNombre.value = document.querySelectorAll('.worker-name')[index].textContent;
-                editPuesto.value = "Puesto ejemplo";  // Reemplazar con datos reales
-                editCorreo.value = "correo@example.com";  // Reemplazar con datos reales
-
-                // Mostrar el modal de edición
-                editWorkerModal.classList.add('is-active');
-            });
-        });
-
-        // Cerrar modal de edición
-        closeEditModalBtn.addEventListener('click', () => {
-            editWorkerModal.classList.remove('is-active');
-        });
-
-        cancelEditBtn.addEventListener('click', () => {
-            editWorkerModal.classList.remove('is-active');
-        });
-
-        // Cerrar modal al hacer clic fuera del modal
-        window.addEventListener('click', function (event) {
-            if (event.target === editWorkerModal) {
-                editWorkerModal.classList.remove('is-active');
-            }
-        });
+    // Cerrar el popup cuando se haga clic en el botón de cerrar
+    document.getElementById("closeEditPopup").addEventListener("click", function() {
+        document.getElementById("editPopup").style.display = "none";
+    });
     </script>
 
     <%- include('includes/footer') %>

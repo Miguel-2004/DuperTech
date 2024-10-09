@@ -24,7 +24,7 @@ exports.verificarUser = async (req, res, next) => {
         if (!usuario) {
             res.render('Login');
         } else {
-            res.redirect('/main');
+            res.redirect('main');
         }
     } catch (e) {
         console.error(e);

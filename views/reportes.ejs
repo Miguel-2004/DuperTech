@@ -48,6 +48,14 @@
                     <canvas id="promocionesChart"></canvas>
                 </div>
             </div>
+
+            <!-- Gráfica de Tarjetas por Sucursal -->
+            <div class="box box-centered">
+                <h1 class="title has-text-centered">Tarjetas por Sucursal</h1>
+                <div class="chart-container">
+                    <canvas id="tarjetasChart"></canvas>
+                </div>
+            </div>
         </div>
     </section>
     
@@ -120,82 +128,112 @@
         });
     </script>
 
-  <!-- Script para la gráfica de Promociones Canjeadas -->
-<script>
-    const ctxPromociones = document.getElementById('promocionesChart').getContext('2d');
+    <!-- Script para la gráfica de Promociones Canjeadas -->
+    <script>
+        const ctxPromociones = document.getElementById('promocionesChart').getContext('2d');
 
-    // Mostrar mensaje para verificar que el script está corriendo
-    console.log("El script para la gráfica de promociones está funcionando");
+        // Mostrar mensaje para verificar que el script está corriendo
+        console.log("El script para la gráfica de promociones está funcionando");
 
-    // Los datos que vienen de reclamaciones en formato JSON desde EJS
-    const promocionesData = [
-      <% reclamaciones.forEach(function(promo, index) { %>
-        { 
-          x: new Date(Date.UTC(<%= promo.mes.split('-')[0] %>, <%= promo.mes.split('-')[1] %> - 1, 1)),
-          y: <%= promo.canjeadas %> 
-        }<% if (index < reclamaciones.length - 1) { %>, <% } %>
-      <% }); %>
-    ];
+        // Los datos que vienen de reclamaciones en formato JSON desde EJS
+        const promocionesData = [
+          <% reclamaciones.forEach(function(promo, index) { %>
+            { 
+              x: new Date(Date.UTC(<%= promo.mes.split('-')[0] %>, <%= promo.mes.split('-')[1] %> - 1, 1)),
+              y: <%= promo.canjeadas %> 
+            }<% if (index < reclamaciones.length - 1) { %>, <% } %>
+          <% }); %>
+        ];
 
-    // Verificar los datos en la consola para asegurarnos de que se generaron correctamente
-    console.log("Datos de promociones generados por EJS:", promocionesData);
+        // Verificar los datos en la consola para asegurarnos de que se generaron correctamente
+        console.log("Datos de promociones generados por EJS:", promocionesData);
 
-    // Asegurarse de que las fechas se están construyendo correctamente como objetos Date
-    promocionesData.forEach(dato => {
-        console.log("Fecha generada (x):", dato.x, "Cantidad (y):", dato.y);
-    });
+        // Asegurarse de que las fechas se están construyendo correctamente como objetos Date
+        promocionesData.forEach(dato => {
+            console.log("Fecha generada (x):", dato.x, "Cantidad (y):", dato.y);
+        });
 
-    // Crear la gráfica de Chart.js con los datos generados
-    const promocionesChart = new Chart(ctxPromociones, {
-        type: 'scatter', // Tipo de gráfico scatter para puntos
-        data: {
-            datasets: [{
-                label: 'Promociones Canjeadas',
-                data: promocionesData,  // Usar los datos finales (de la base de datos)
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                pointRadius: 5  // Tamaño de los puntos
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    type: 'time',  // Eje X de tiempo para mostrar fechas
-                    time: {
-                        unit: 'month'  // Mostrar por mes
+        // Crear la gráfica de Chart.js con los datos generados
+        const promocionesChart = new Chart(ctxPromociones, {
+            type: 'scatter', // Tipo de gráfico scatter para puntos
+            data: {
+                datasets: [{
+                    label: 'Promociones Canjeadas',
+                    data: promocionesData,  // Usar los datos finales (de la base de datos)
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    pointRadius: 5  // Tamaño de los puntos
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',  // Eje X de tiempo para mostrar fechas
+                        time: {
+                            unit: 'month'  // Mostrar por mes
+                        },
+                        title: {
+                            display: true,
+                            text: 'Fecha',
+                            font: { size: 16 }
+                        }
                     },
-                    title: {
-                        display: true,
-                        text: 'Fecha',
-                        font: { size: 16 }
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Promociones Canjeadas',
+                            font: { size: 16 }
+                        }
                     }
                 },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Promociones Canjeadas',
-                        font: { size: 16 }
-                    }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            const fecha = tooltipItem.raw.x.toLocaleDateString();
-                            const canjeadas = tooltipItem.raw.y;
-                            return `Fecha: ${fecha}, Canjeadas: ${canjeadas}`;
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                const fecha = tooltipItem.raw.x.toLocaleDateString();
+                                const canjeadas = tooltipItem.raw.y;
+                                return `Fecha: ${fecha}, Canjeadas: ${canjeadas}`;
+                            }
                         }
                     }
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
 
-
-
-
+    <!-- Script para la gráfica de Tarjetas por Sucursal -->
+    <script>
+        const ctxTarjetas = document.getElementById('tarjetasChart').getContext('2d');
+        const tarjetasData = <%- JSON.stringify(tarjetasPorSucursal) %>;
+        const sucursales = tarjetasData.map(tarjeta => tarjeta.Nombre_Sucursal);
+        const totalTarjetas = tarjetasData.map(tarjeta => tarjeta.Total_Tarjetas);
+    
+        new Chart(ctxTarjetas, {
+            type: 'bar',
+            data: {
+                labels: sucursales,
+                datasets: [{
+                    label: 'Total de Tarjetas por Sucursal',
+                    data: totalTarjetas,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Sucursales', font: { size: 16 } }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Tarjetas', font: { size: 16 } }
+                    }
+                }
+            }
+        });
+    </script>
+    
 </body>
 </html>

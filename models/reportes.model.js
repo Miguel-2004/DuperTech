@@ -1,3 +1,4 @@
+
 const db = require('../utils/database');
 
 module.exports = class Reporte {
@@ -38,7 +39,6 @@ module.exports = class Reporte {
                     mes
                 ORDER BY 
                     mes;
-
             `);
 
             await connection.release();
@@ -48,4 +48,27 @@ module.exports = class Reporte {
             throw error;
         }
     }
+
+    static async getTarjetasPorSucursal() {
+        try {
+            const connection = await db();
+            const [result] = await connection.execute(`
+                 SELECT 
+                s.Nombre_Establecimiento,
+                COUNT(t.ID_Tarjeta) AS Total_Tarjetas
+            FROM 
+                tarjeta t
+            JOIN 
+                establecimiento s ON t.ID_Establecimiento = s.ID_Establecimiento  -- Asegúrate de que estos nombres coincidan
+            GROUP BY 
+                s.Nombre_Establecimiento;
+            `);
+    
+            await connection.release();
+            return result;
+        } catch (error) {
+            console.error('Error en el modelo al ejecutar la consulta de tarjetas por sucursal:', error);
+            throw error;
+        }
+    }       
 };

@@ -24,4 +24,28 @@ module.exports = class Reporte {
             throw error;
         }
     }
+
+    static async reclamacion(){
+        try {
+            const connection = await db();
+            const [result] = await connection.execute(`
+                SELECT 
+                    DATE_FORMAT(Fecha_Reclamacion, '%Y-%m') AS mes,
+                    COUNT(*) AS canjeadas
+                FROM 
+                    reclamacion_recompensa
+                GROUP BY 
+                    mes
+                ORDER BY 
+                    mes;
+
+            `);
+
+            await connection.release();
+            return result;
+        } catch (error) {
+            console.log('Error en el modelo al ejecutar la consulta:', error);
+            throw error;
+        }
+    }
 };

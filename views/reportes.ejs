@@ -24,7 +24,10 @@
             width: 100%;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.3.0/luxon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0"></script>
+    
 </head>
 <body>
     <%- include('includes/sidebar') %> 
@@ -37,27 +40,33 @@
                     <canvas id="sellosChart"></canvas>
                 </div>
             </div>
+
+            <!-- Nueva gráfica de puntos -->
+            <div class="box box-centered">
+                <h1 class="title has-text-centered">Promociones Canjeadas a lo Largo del Tiempo</h1>
+                <div class="chart-container">
+                    <canvas id="promocionesChart"></canvas>
+                </div>
+            </div>
         </div>
     </section>
-
+    
+    <!-- Script para la gráfica de Sellos por Empleado -->
     <script>
         const ctx = document.getElementById('sellosChart').getContext('2d');
 
-        // Generar las etiquetas de la gráfica con el ID del empleado
         const labels = [
           <% sellosPorEmpleado.forEach(function(sello, index) { %>
             '<%= sello.ID_Empleado %>'<% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
           <% }); %>
         ];
 
-        // Generar los datos de la gráfica a partir del número total de sellos por empleado
         const data = [
           <% sellosPorEmpleado.forEach(function(sello, index) { %>
             <%= sello.Total_Sellos %><% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
           <% }); %>
         ];
 
-        // Guardar los nombres de los empleados para mostrarlos en el tooltip
         const nombresEmpleados = [
           <% sellosPorEmpleado.forEach(function(sello, index) { %>
             '<%= sello.Nombre_Empleado %>'<% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
@@ -82,11 +91,7 @@
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            // Personalizar el tooltip para mostrar solo el nombre del empleado y el número de sellos
-                            title: function() {
-                                // No mostrar el título (que sería la etiqueta del eje X)
-                                return '';
-                            },
+                            title: function() { return ''; },
                             label: function(tooltipItem) {
                                 const nombreEmpleado = nombresEmpleados[tooltipItem.dataIndex];
                                 const totalSellos = tooltipItem.raw;
@@ -97,46 +102,100 @@
                     legend: {
                         display: true,
                         labels: {
-                            font: {
-                                size: 14
-                            }
+                            font: { size: 14 }
                         }
                     }
                 },
                 scales: {
                     x: {
-                        ticks: {
-                            maxRotation: 90,
-                            minRotation: 45,
-                            font: {
-                                size: 14
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Empleados',
-                            font: {
-                                size: 16
-                            }
-                        }
+                        ticks: { maxRotation: 90, minRotation: 45, font: { size: 14 } },
+                        title: { display: true, text: 'Empleados', font: { size: 16 } }
                     },
                     y: {
-                        ticks: {
-                            font: {
-                                size: 14
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: 'Sellos',
-                            font: {
-                                size: 16
-                            }
-                        }
+                        ticks: { font: { size: 14 } },
+                        title: { display: true, text: 'Sellos', font: { size: 16 } }
                     }
                 }
             }
         });
     </script>
+
+  <!-- Script para la gráfica de Promociones Canjeadas -->
+<script>
+    const ctxPromociones = document.getElementById('promocionesChart').getContext('2d');
+
+    // Mostrar mensaje para verificar que el script está corriendo
+    console.log("El script para la gráfica de promociones está funcionando");
+
+    // Los datos que vienen de reclamaciones en formato JSON desde EJS
+    const promocionesData = [
+      <% reclamaciones.forEach(function(promo, index) { %>
+        { 
+          x: new Date(Date.UTC(<%= promo.mes.split('-')[0] %>, <%= promo.mes.split('-')[1] %> - 1, 1)),
+          y: <%= promo.canjeadas %> 
+        }<% if (index < reclamaciones.length - 1) { %>, <% } %>
+      <% }); %>
+    ];
+
+    // Verificar los datos en la consola para asegurarnos de que se generaron correctamente
+    console.log("Datos de promociones generados por EJS:", promocionesData);
+
+    // Asegurarse de que las fechas se están construyendo correctamente como objetos Date
+    promocionesData.forEach(dato => {
+        console.log("Fecha generada (x):", dato.x, "Cantidad (y):", dato.y);
+    });
+
+    // Crear la gráfica de Chart.js con los datos generados
+    const promocionesChart = new Chart(ctxPromociones, {
+        type: 'scatter', // Tipo de gráfico scatter para puntos
+        data: {
+            datasets: [{
+                label: 'Promociones Canjeadas',
+                data: promocionesData,  // Usar los datos finales (de la base de datos)
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                pointRadius: 5  // Tamaño de los puntos
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',  // Eje X de tiempo para mostrar fechas
+                    time: {
+                        unit: 'month'  // Mostrar por mes
+                    },
+                    title: {
+                        display: true,
+                        text: 'Fecha',
+                        font: { size: 16 }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Promociones Canjeadas',
+                        font: { size: 16 }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const fecha = tooltipItem.raw.x.toLocaleDateString();
+                            const canjeadas = tooltipItem.raw.y;
+                            return `Fecha: ${fecha}, Canjeadas: ${canjeadas}`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+
+
+
 </body>
 </html>

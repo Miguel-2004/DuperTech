@@ -211,8 +211,6 @@
             <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleado/empleados/editar" method="post">
                 <!-- Campo ID (oculto) -->
                 <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
-                <input type="hidden" id="editIDEstablecimiento" name="ID_Establecimiento">
-                <input type="hidden" id="editIDAdmin" name="id_Admin">
 
                 <!-- Campo Nombre -->
                 <div class="field">
@@ -242,7 +240,7 @@
                 <div class="field">
                     <label class="label">Contraseña</label>
                     <div class="control">
-                        <input id="editContrasenia" class="input" type="password" name="password" placeholder="Contraseña" required>
+                        <input id="editContrasenia" class="input" type="password" name="contrasena" placeholder="Contraseña" required>
                     </div>
                 </div>
 

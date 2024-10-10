@@ -3,7 +3,7 @@ const router = express.Router();
 const Controller = require('../controllers/empleadoController');
 
 // Crear un nuevo empleado
-router.get('/empleados/nuevo', Controller.editarEmpleado);
+router.get('/empleados/nuevo', Controller.getTrabajadores);
 router.post('/empleados/nuevo', Controller.nuevoEmpleado);
 
 // Editar un empleado existente

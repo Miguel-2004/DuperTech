@@ -6,6 +6,7 @@ exports.getReporteSellos = async (req, res, next) => {
         const reclamaciones = await ReporteModel.reclamacion();
         const tarjetasPorSucursal = await ReporteModel.getTarjetasPorSucursal();
         const sellosPorSucursal = await ReporteModel.getSellosPorSucursal();
+        console.log(tarjetasPorSucursal);
 
         res.render('reportes', { 
             pageTitle: 'Reporte de Sellos por Empleado', 
@@ -22,7 +23,6 @@ exports.getReporteSellos = async (req, res, next) => {
 
 exports.getReporteTarjetasPorSucursal = async (req, res, next) => {
     try {
-        const tarjetasPorSucursal = await ReporteModel.getTarjetasPorSucursal();
         const tarjetasArray = Array.isArray(tarjetasPorSucursal) ? tarjetasPorSucursal : [];
         res.render('reportes', { 
             pageTitle: 'Reporte de Tarjetas por Sucursal', 

@@ -157,7 +157,7 @@
         const tarjetasData = <%- JSON.stringify(tarjetasPorSucursal || []) %>;
 
         if (tarjetasData.length > 0) {
-            const sucursales = tarjetasData.map(tarjeta => tarjeta.Nombre_Sucursal);
+            const sucursales = tarjetasData.map(tarjeta => tarjeta.Nombre_Establecimiento);
             const totalTarjetas = tarjetasData.map(tarjeta => tarjeta.Total_Tarjetas);
 
             new Chart(ctxTarjetas, {
@@ -165,7 +165,7 @@
                 data: {
                     labels: sucursales,
                     datasets: [{
-                        label: 'Total de Tarjetas por Sucursal',
+                        label: 'Total de Tarjetas por Establecimiento',
                         data: totalTarjetas,
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
                         borderColor: 'rgba(54, 162, 235, 1)',

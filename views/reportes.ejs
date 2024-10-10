@@ -24,16 +24,14 @@
             width: 100%;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.3.0/luxon.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0"></script>
-    
 </head>
 <body>
     <%- include('includes/sidebar') %> 
 
     <section class="section">
         <div class="container">
+            <!-- Gráfica de Sellos por Empleado -->
             <div class="box box-centered">
                 <h1 class="title has-text-centered">Reporte de Sellos por Empleado</h1>
                 <div class="chart-container">
@@ -41,7 +39,7 @@
                 </div>
             </div>
 
-            <!-- Nueva gráfica de puntos -->
+            <!-- Gráfica de Promociones Canjeadas a lo Largo del Tiempo -->
             <div class="box box-centered">
                 <h1 class="title has-text-centered">Promociones Canjeadas a lo Largo del Tiempo</h1>
                 <div class="chart-container">
@@ -56,184 +54,175 @@
                     <canvas id="tarjetasChart"></canvas>
                 </div>
             </div>
+
+            <!-- Gráfica de Sellos por Sucursal (Gráfica de Pastel) -->
+            <div class="box box-centered">
+                <h1 class="title has-text-centered">Sellos Otorgados por Sucursal</h1>
+                <div class="chart-container">
+                    <canvas id="sellosPorSucursalChart"></canvas>
+                </div>
+            </div>
         </div>
     </section>
-    
+
+    <!-- Comprobación para ver si sellosPorSucursal está presente -->
+    <div>
+        <% if (sellosPorSucursal && sellosPorSucursal.length > 0) { %>
+            <pre><%= JSON.stringify(sellosPorSucursal, null, 2) %></pre>
+        <% } else { %>
+            <p>No hay datos disponibles para sellos por sucursal.</p>
+        <% } %>
+    </div>
+
     <!-- Script para la gráfica de Sellos por Empleado -->
     <script>
-        const ctx = document.getElementById('sellosChart').getContext('2d');
+        const ctxSellosChart = document.getElementById('sellosChart').getContext('2d');
+        const sellosEmpleadoData = <%- JSON.stringify(sellosPorEmpleado || []) %>;
 
-        const labels = [
-          <% sellosPorEmpleado.forEach(function(sello, index) { %>
-            '<%= sello.ID_Empleado %>'<% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
-          <% }); %>
-        ];
+        if (sellosEmpleadoData.length > 0) {
+            const empleadosLabels = sellosEmpleadoData.map(sello => sello.Nombre_Empleado);
+            const empleadosData = sellosEmpleadoData.map(sello => sello.Total_Sellos);
 
-        const data = [
-          <% sellosPorEmpleado.forEach(function(sello, index) { %>
-            <%= sello.Total_Sellos %><% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
-          <% }); %>
-        ];
-
-        const nombresEmpleados = [
-          <% sellosPorEmpleado.forEach(function(sello, index) { %>
-            '<%= sello.Nombre_Empleado %>'<% if (index < sellosPorEmpleado.length - 1) { %>, <% } %>
-          <% }); %>
-        ];
-
-        const sellosData = {
-            labels: labels,
-            datasets: [{
-                label: 'Total Sellos por Empleado',
-                data: data,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        };
-
-        const sellosChart = new Chart(ctx, {
-            type: 'bar',
-            data: sellosData,
-            options: {
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            title: function() { return ''; },
-                            label: function(tooltipItem) {
-                                const nombreEmpleado = nombresEmpleados[tooltipItem.dataIndex];
-                                const totalSellos = tooltipItem.raw;
-                                return `${nombreEmpleado}: ${totalSellos} sellos`;
-                            }
-                        }
-                    },
-                    legend: {
-                        display: true,
-                        labels: {
-                            font: { size: 14 }
-                        }
-                    }
+            new Chart(ctxSellosChart, {
+                type: 'bar',
+                data: {
+                    labels: empleadosLabels,
+                    datasets: [{
+                        label: 'Sellos por Empleado',
+                        data: empleadosData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
                 },
-                scales: {
-                    x: {
-                        ticks: { maxRotation: 90, minRotation: 45, font: { size: 14 } },
-                        title: { display: true, text: 'Empleados', font: { size: 16 } }
-                    },
-                    y: {
-                        ticks: { font: { size: 14 } },
-                        title: { display: true, text: 'Sellos', font: { size: 16 } }
+                options: {
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Empleados', font: { size: 16 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Sellos', font: { size: 16 } }
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            console.warn('No hay datos disponibles para la gráfica de sellos por empleado.');
+        }
     </script>
 
     <!-- Script para la gráfica de Promociones Canjeadas -->
     <script>
         const ctxPromociones = document.getElementById('promocionesChart').getContext('2d');
+        const promocionesData = <%- JSON.stringify(reclamaciones || []) %>;
 
-        // Mostrar mensaje para verificar que el script está corriendo
-        console.log("El script para la gráfica de promociones está funcionando");
+        if (promocionesData.length > 0) {
+            const fechas = promocionesData.map(promo => promo.mes);
+            const canjeadas = promocionesData.map(promo => promo.canjeadas);
 
-        // Los datos que vienen de reclamaciones en formato JSON desde EJS
-        const promocionesData = [
-          <% reclamaciones.forEach(function(promo, index) { %>
-            { 
-              x: new Date(Date.UTC(<%= promo.mes.split('-')[0] %>, <%= promo.mes.split('-')[1] %> - 1, 1)),
-              y: <%= promo.canjeadas %> 
-            }<% if (index < reclamaciones.length - 1) { %>, <% } %>
-          <% }); %>
-        ];
-
-        // Verificar los datos en la consola para asegurarnos de que se generaron correctamente
-        console.log("Datos de promociones generados por EJS:", promocionesData);
-
-        // Asegurarse de que las fechas se están construyendo correctamente como objetos Date
-        promocionesData.forEach(dato => {
-            console.log("Fecha generada (x):", dato.x, "Cantidad (y):", dato.y);
-        });
-
-        // Crear la gráfica de Chart.js con los datos generados
-        const promocionesChart = new Chart(ctxPromociones, {
-            type: 'scatter', // Tipo de gráfico scatter para puntos
-            data: {
-                datasets: [{
-                    label: 'Promociones Canjeadas',
-                    data: promocionesData,  // Usar los datos finales (de la base de datos)
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    pointRadius: 5  // Tamaño de los puntos
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        type: 'time',  // Eje X de tiempo para mostrar fechas
-                        time: {
-                            unit: 'month'  // Mostrar por mes
-                        },
-                        title: {
-                            display: true,
-                            text: 'Fecha',
-                            font: { size: 16 }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Promociones Canjeadas',
-                            font: { size: 16 }
-                        }
-                    }
+            new Chart(ctxPromociones, {
+                type: 'line',
+                data: {
+                    labels: fechas,
+                    datasets: [{
+                        label: 'Promociones Canjeadas',
+                        data: canjeadas,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        fill: false,
+                        pointRadius: 5
+                    }]
                 },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                const fecha = tooltipItem.raw.x.toLocaleDateString();
-                                const canjeadas = tooltipItem.raw.y;
-                                return `Fecha: ${fecha}, Canjeadas: ${canjeadas}`;
-                            }
+                options: {
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Fecha', font: { size: 16 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Canjeadas', font: { size: 16 } }
                         }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            console.warn('No hay datos disponibles para la gráfica de promociones.');
+        }
     </script>
 
     <!-- Script para la gráfica de Tarjetas por Sucursal -->
     <script>
         const ctxTarjetas = document.getElementById('tarjetasChart').getContext('2d');
-        const tarjetasData = <%- JSON.stringify(tarjetasPorSucursal) %>;
-        const sucursales = tarjetasData.map(tarjeta => tarjeta.Nombre_Sucursal);
-        const totalTarjetas = tarjetasData.map(tarjeta => tarjeta.Total_Tarjetas);
-    
-        new Chart(ctxTarjetas, {
-            type: 'bar',
-            data: {
-                labels: sucursales,
-                datasets: [{
-                    label: 'Total de Tarjetas por Sucursal',
-                    data: totalTarjetas,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: { display: true, text: 'Sucursales', font: { size: 16 } }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: 'Tarjetas', font: { size: 16 } }
+        const tarjetasData = <%- JSON.stringify(tarjetasPorSucursal || []) %>;
+
+        if (tarjetasData.length > 0) {
+            const sucursales = tarjetasData.map(tarjeta => tarjeta.Nombre_Sucursal);
+            const totalTarjetas = tarjetasData.map(tarjeta => tarjeta.Total_Tarjetas);
+
+            new Chart(ctxTarjetas, {
+                type: 'bar',
+                data: {
+                    labels: sucursales,
+                    datasets: [{
+                        label: 'Total de Tarjetas por Sucursal',
+                        data: totalTarjetas,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Sucursales', font: { size: 16 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Tarjetas', font: { size: 16 } }
+                        }
                     }
                 }
-            }
-        });
+            });
+        } else {
+            console.warn('No hay datos disponibles para la gráfica de tarjetas por sucursal.');
+        }
     </script>
-    
+
+    <!-- Script para la gráfica de Sellos por Sucursal -->
+    <script>
+        const ctxSellosPorSucursal = document.getElementById('sellosPorSucursalChart').getContext('2d');
+        const sellosSucursalData = <%- JSON.stringify(sellosPorSucursal || []) %>;
+
+        if (sellosSucursalData.length > 0) {
+            const nombresSucursales = sellosSucursalData.map(sello => sello.Nombre_Establecimiento);
+            const totalSellosSucursal = sellosSucursalData.map(sello => sello.Total_Sellos);
+
+            new Chart(ctxSellosPorSucursal, {
+                type: 'pie',
+                data: {
+                    labels: nombresSucursales,
+                    datasets: [{
+                        label: 'Total de Sellos por Sucursal',
+                        data: totalSellosSucursal,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Sellos otorgados por sucursal'
+                        },
+                        legend: {
+                            position: 'top',
+                        }
+                    }
+                }
+            });
+        } else {
+            console.warn('No hay datos disponibles para mostrar en la gráfica de sellos por sucursal.');
+        }
+    </script>
 </body>
 </html>

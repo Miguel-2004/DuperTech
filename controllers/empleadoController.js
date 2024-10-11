@@ -46,8 +46,18 @@ exports.getTrabajadores = async (req, res) => {
 
 exports.nuevoEmpleado = async (req, res, next) => {
     try {
+
+        // Obtener el número de página de la solicitud (predeterminada en 1 si no se pasa)
+        const currentPage = parseInt(req.query.page) || 1;
+        const limit = 10; // Número de elementos por página
+        const offset = (currentPage - 1) * limit;
+
         const establecimiento = await Establecimiento.getEstablecimientos();
         const admin = await Model.getAdmin();
+
+        const Trabajadores = await Model.getTrabajadorP(limit, offset);
+        const totalTrabajadores = await Model.countTrabajador();
+        const totalPages = Math.ceil(totalTrabajadores / limit);
 
         const nombre = req.body.nombre;
         const telefono = req.body.telefono;
@@ -61,7 +71,13 @@ exports.nuevoEmpleado = async (req, res, next) => {
         if (!empleado) {
             return res.render('empleados', { mensaje: 'Error al crear el empleado' });
         }
-        res.render('empleados');  // Redirige después de crear
+        res.render('empleados',{
+            Trabajadores: Trabajadores,
+            currentPage: currentPage,
+            totalPages: totalPages,
+            establecimiento:establecimiento,
+            admin: admin 
+        });  // Redirige después de crear
     } catch (e) {
         console.error(e);
         res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });

@@ -5,7 +5,6 @@ const cliente = require('../models/cliente.model');
 exports.getAllClientes = async (req, res, next) => {
     try{
         const Clientes = await cliente.getCliente();
-        //console.log(Clientes)
 
         const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
         res.render('clientes', { Clientes: ClientesArray });

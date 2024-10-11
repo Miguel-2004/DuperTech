@@ -40,7 +40,7 @@ app.use('/reportes',rutaReportes);
 
 // Página principal
 app.get('/', (req, res) => {
-    res.redirect('/users/Login');
+    res.redirect(process.env.PATH_SERVER+'users/Login');
 });
 
 app.get('/main', (req, res) => {

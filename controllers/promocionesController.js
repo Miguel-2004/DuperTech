@@ -28,7 +28,7 @@ exports.registrarPromocion = async (req, res) => {
 
     try {
         await PromocionesModel.registrarPromocion(nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
-        res.redirect('/promociones');
+        res.redirect(process.env.PATH_SERVER+'promociones');
     } catch (error) {
         console.error('Error al registrar la promoción:', error);
         res.status(500).send('Error al registrar la promoción.');
@@ -41,7 +41,7 @@ exports.editarPromocion = async (req, res) => {
 
     try {
         await PromocionesModel.editarPromocion(idRecompensa, nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo);
-        res.redirect('/promociones');
+        res.redirect(process.env.PATH_SERVER+'promociones');
     } catch (error) {
         console.error('Error al editar la promoción:', error);
         res.status(500).send('Error al editar la promoción.');
@@ -54,7 +54,7 @@ exports.eliminarPromocion = async (req, res) => {
 
     try {
         await PromocionesModel.eliminarPromocion(ID_Recompensa);
-        res.redirect('/promociones');
+        res.redirect(process.env.PATH_SERVER+'promociones');
     } catch (error) {
         console.error('Error al eliminar la promoción:', error);
         res.status(500).send('Error al eliminar la promoción.');

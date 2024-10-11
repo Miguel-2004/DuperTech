@@ -29,7 +29,7 @@ exports.agregarEstablecimiento = async (req, res) => {
     const { nombre, direccion } = req.body;
     try {
         await Establecimiento.agregarEstablecimiento(nombre, direccion);
-        res.redirect('/establecimientos');
+        res.redirect(process.env.PATH_SERVER+'establecimientos');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al agregar el establecimiento');
@@ -41,7 +41,7 @@ exports.editarEstablecimiento = async (req, res) => {
     const { id, nombre, direccion } = req.body;
     try {
         await Establecimiento.editarEstablecimiento(id, nombre, direccion);
-        res.redirect('/establecimientos');
+        res.redirect(process.env.PATH_SERVER+'establecimientos');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al editar el establecimiento');
@@ -53,7 +53,7 @@ exports.eliminarEstablecimiento = async (req, res) => {
     const { id } = req.body;
     try {
         await Establecimiento.eliminarEstablecimiento(id);
-        res.redirect('/establecimientos');
+        res.redirect(process.env.PATH_SERVER+'establecimientos');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al eliminar el establecimiento');

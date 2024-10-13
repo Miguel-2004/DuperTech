@@ -2,8 +2,8 @@ const db = require('../utils/database');
 
 // Contar el número total de promociones
 exports.countPromociones = async () => {
+    const connection = await db();
     try {
-        const connection = await db();
         const [result] = await connection.execute('SELECT COUNT(*) as total FROM recompensa');
         await connection.release();
         return result[0].total;
@@ -15,8 +15,8 @@ exports.countPromociones = async () => {
 
 // Obtener promociones con paginación
 exports.getPromocionesPaginated = async (limit, offset) => {
+    const connection = await db();
     try {
-        const connection = await db();
         const [result] = await connection.execute('SELECT * FROM recompensa LIMIT ? OFFSET ?', [limit, offset]);
         await connection.release();
         return result;

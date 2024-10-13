@@ -2,8 +2,8 @@ const db = require('../utils/database');
 
 module.exports = class Usuario {
     static async getTrabajador(limit,offset) {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute(`
                 SELECT * FROM empleado LIMIT ? OFFSET ?
             `, [limit, offset]);
@@ -16,8 +16,8 @@ module.exports = class Usuario {
 
     // Obtener trabajador con paginación
     static async getTrabajadorP(limit, offset) {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute(`
                 SELECT * FROM empleado LIMIT ? OFFSET ?
             `, [limit, offset]);
@@ -30,8 +30,8 @@ module.exports = class Usuario {
 
     // Contar el total de empleados
     static async countTrabajador() {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute('SELECT COUNT(*) as total FROM empleado');
             await connection.release();
             return result[0].total;
@@ -41,8 +41,8 @@ module.exports = class Usuario {
     }
 
     static async getAdmin() {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute(`
                 SELECT * FROM administrador
             `);

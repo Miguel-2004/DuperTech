@@ -145,6 +145,17 @@
                     <% } %>
                 </div>
             </div>
+
+            <!-- Botón para crear nueva tarjeta -->
+            <div class="has-text-centered" style="margin-top: 20px;">
+                <button id="openTarjetaModalBtn" class="button is-primary">
+                    <span class="icon is-small">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                    <span>Crear Tarjeta</span>
+                </button>
+            </div>            
+
         </section>
     </div>
 
@@ -165,6 +176,67 @@
             </footer>
         </div>
     </div>
+
+    <!-- Modal para añadir tarjeta -->
+<div class="modal" id="addTarjetaModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Añadir Tarjeta</p>
+            <button class="delete" aria-label="close" id="closeTarjetaModalBtn"></button>
+        </header>
+        <section class="modal-card-body">
+            <form id="formularioTarjeta" action="<%= process.env.PATH_SERVER %>tarjetas/nuevo" method="POST">
+                <!-- Formulario de añadir tarjeta -->
+                
+                <div class="field">
+                    <label class="label">Establecimiento</label>
+                    <div class="select">
+                        <select name="idestablecimiento" id="idestablecimiento" required>
+                            <% establecimientos.forEach((Establecimiento) => { %>
+                                <option value="<%= Establecimiento.ID_Establecimiento %>">
+                                    <%= Establecimiento.Nombre_Establecimiento %>
+                                </option>
+                            <% }); %>
+                        </select>                        
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Cliente</label>
+                    <div class="select">
+                        <select name="idcliente" id="idcliente" required>
+                            <% Clientes.forEach((cliente) => { %>
+                                <option value="<%= cliente.ID_Cliente %>" data-telefono="<%= cliente.Telefono_Cliente %>">
+                                    <%= cliente.Nombre_Cliente %> (Tel: <%= cliente.Telefono_Cliente %>)
+                                </option>
+                            <% }); %>
+                        </select>                        
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">ID Tarjeta (Autogenerado)</label>
+                    <div class="control">
+                        <input class="input" type="text" id="idtarjeta" name="idtarjeta" readonly required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Versión</label>
+                    <div class="control">
+                        <input class="input" type="text" name="version" placeholder="Versión de la tarjeta" required>
+                    </div>
+                </div>
+
+                <footer class="modal-card-foot">
+                    <button class="button is-success">Guardar</button>
+                </footer>
+            </form>
+        </section>
+    </div>
+</div>
+
 
     <script>
         // Abrir y cerrar la ventana modal para añadir sello
@@ -193,7 +265,57 @@
             alert(`Sello añadido a la tarjeta con ID: ${currentTarjetaID}`);
             addSelloModal.classList.remove('is-active');
         });
+
+        //seccion de crear tarjeta
+
+       // Obtener los elementos del DOM
+        const openTarjetaModalBtn = document.getElementById('openTarjetaModalBtn');
+        const addTarjetaModal = document.getElementById('addTarjetaModal');
+        const closeTarjetaModalBtn = document.getElementById('closeTarjetaModalBtn');
+
+        // Abrir el modal al hacer clic en el botón "Crear Tarjeta"
+        openTarjetaModalBtn.addEventListener('click', () => {
+            addTarjetaModal.classList.add('is-active');  // Añadir la clase 'is-active' para abrir el modal
+        });
+
+        // Cerrar el modal cuando se haga clic en el botón de cerrar
+        closeTarjetaModalBtn.addEventListener('click', () => {
+            addTarjetaModal.classList.remove('is-active');  // Quitar la clase 'is-active' para cerrar el modal
+        });
+
+        // Cerrar el modal cuando se haga clic fuera de él (en el fondo)
+        document.querySelector('.modal-background').addEventListener('click', () => {
+            addTarjetaModal.classList.remove('is-active');
+        });
+
+        //script de crear tarjeta
+        // Obtener elementos del formulario
+        const idEstablecimientoSelect = document.getElementById('idestablecimiento');
+        const idClienteSelect = document.getElementById('idcliente');
+        const idTarjetaInput = document.getElementById('idtarjeta');
+
+        // Función para generar el ID de la tarjeta basado en el establecimiento y el teléfono del cliente
+        function generarIdTarjeta() {
+            const idEstablecimiento = idEstablecimientoSelect.value;
+            const clienteSeleccionado = idClienteSelect.options[idClienteSelect.selectedIndex];
+            const telefonoCliente = clienteSeleccionado.getAttribute('data-telefono');
+            
+            if (idEstablecimiento && telefonoCliente) {
+                // Concatenar el ID de establecimiento con el número de teléfono del cliente
+                idTarjetaInput.value = `${idEstablecimiento}${telefonoCliente}`;
+            }
+        }
+
+        // Generar el ID cuando cambien el establecimiento o el cliente
+        idEstablecimientoSelect.addEventListener('change', generarIdTarjeta);
+        idClienteSelect.addEventListener('change', generarIdTarjeta);
+
+        // Inicializar el ID de la tarjeta en caso de que ya haya una selección por defecto
+        window.onload = generarIdTarjeta;
+
     </script>
+
+    
 
     <%- include('includes/footer') %>
 

@@ -4,8 +4,8 @@ module.exports = class Establecimiento {
 
     //obtener establecimientos sin paginacion
     static async getEstablecimientos() {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute(`
                 SELECT * FROM establecimiento
             `);
@@ -18,8 +18,8 @@ module.exports = class Establecimiento {
 
     // Obtener establecimientos con paginación
     static async getEstablecimientosPaginated(limit, offset) {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute(`
                 SELECT * FROM establecimiento LIMIT ? OFFSET ?
             `, [limit, offset]);
@@ -32,8 +32,8 @@ module.exports = class Establecimiento {
 
     // Contar el total de establecimientos
     static async countEstablecimientos() {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute('SELECT COUNT(*) as total FROM establecimiento');
             await connection.release();
             return result[0].total;

@@ -1,3 +1,4 @@
+const { connect } = require('../routes/tarjetas');
 const db = require('../utils/database');
 
 // Obtener tarjetas con paginación y filtros
@@ -94,13 +95,33 @@ exports.countTarjetas = async ({ idTarjeta = null, nombreCliente = null, telefon
 
 // Obtener todos los establecimientos
 exports.getEstablecimientos = async () => {
+    const connection = await db();
     try {
-        const connection = await db();
         const [result] = await connection.execute(`SELECT * FROM establecimiento`);
         await connection.release();
         return result;
     } catch (error) {
         console.error('Error al obtener los establecimientos:', error);
         throw error;
+    }
+};
+
+ 
+exports.crearTarjeta = async (idTarjeta, idCliente, ID_Establecimiento, fechaE, version) => {
+    const connection = await db();
+    try {
+        await connection.beginTransaction();
+        await connection.execute(`
+            INSERT INTO tarjeta (ID_Tarjeta, ID_Cliente, ID_Establecimiento, Fecha_Emision, Version)
+            VALUES (?, ?, ?, ?, ?)`,
+            [idTarjeta, idCliente, ID_Establecimiento, fechaE, version]
+        );
+        await connection.commit();
+        return "yes";
+    } catch (error) {
+        await connection.rollback();
+        throw error;
+    } finally {
+        await connection.release();
     }
 };

@@ -6,7 +6,6 @@ exports.getReporteSellos = async (req, res, next) => {
         const reclamaciones = await ReporteModel.reclamacion();
         const tarjetasPorSucursal = await ReporteModel.getTarjetasPorSucursal();
         const sellosPorSucursal = await ReporteModel.getSellosPorSucursal();
-        console.log(tarjetasPorSucursal);
 
         res.render('reportes', { 
             pageTitle: 'Reporte de Sellos por Empleado', 

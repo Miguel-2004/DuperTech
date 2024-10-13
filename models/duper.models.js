@@ -37,8 +37,8 @@ exports.usuarios = class {
 
     // Obtener los datos de los trabajadores
     static async getTrabajador() {
+        const connection = await db();
         try {
-            const connection = await db();
             const [result] = await connection.execute(`
                 SELECT * FROM empleado
             `);

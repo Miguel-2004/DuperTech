@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Tarjetas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <%- include('includes/head') %> 
+    <style>
+        .box-centered {
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .pagination-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination-button {
+            margin: 0 10px;
+        }
+
+        .pagination-info {
+            margin: 0 15px;
+            font-size: 1em;
+        }
+
+        .add-sello-btn {
+            margin-left: 10px;
+            background-color: #3273dc;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-sello-btn:hover {
+            background-color: #275a9e;
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('includes/sidebarE') %>
+
+    <!-- Main content -->
+    <div class="container">
+        <section class="section">
+            <div class="box box-centered"> 
+                <h1 class="title has-text-centered">Tarjetas</h1>
+
+                <!-- Filtro por establecimiento -->
+                <div class="field">
+                    <label class="label">Filtrar por Sucursal:</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select id="sucursalSelect" name="establecimiento" onchange="window.location.href='?establecimiento='+this.value;">
+                                <option value="">Todas las Sucursales</option>
+                                <% establecimientos.forEach(establecimiento => { %>
+                                    <option value="<%= establecimiento.Nombre_Establecimiento %>" <%= establecimiento.Nombre_Establecimiento === establecimientoFiltro ? 'selected' : '' %>>
+                                        <%= establecimiento.Nombre_Establecimiento %>
+                                    </option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de búsqueda para filtrar -->
+                <form action="<%= process.env.PATH_SERVER %>trabajador/tarjetasE" method="GET">
+                    <div class="field has-addons">
+                        <div class="control has-icons-left is-expanded">
+                            <input class="input" type="text" name="search" placeholder="Buscar por ID Tarjeta, Cliente o Teléfono..." value="<%= idTarjeta || nombreCliente || telefono %>">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link" type="submit">Buscar</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Tabla de tarjetas -->
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped is-hoverable">
+                        <thead>
+                            <tr>
+                                <th>ID Tarjeta</th>
+                                <th>Cliente</th>
+                                <th>Teléfono</th>
+                                <th>Sucursal</th>
+                                <th>Número de Sellos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tarjetasList">
+                            <% tarjetas.forEach(tarjeta => { %>
+                                <tr>
+                                    <td><%= tarjeta.ID_Tarjeta %></td>
+                                    <td><%= tarjeta.Nombre_Cliente %></td>
+                                    <td><%= tarjeta.Telefono_Cliente %></td>
+                                    <td><%= tarjeta.Nombre_Establecimiento %></td>
+                                    <td><%= tarjeta.Numero_Sellos %></td>
+                                    <td>
+                                        <button class="add-sello-btn" data-tarjeta-id="<%= tarjeta.ID_Tarjeta %>">Añadir Sello</button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Paginación simplificada con flechas -->
+                <div class="pagination-container">
+                    <% if (currentPage > 1) { %>
+                        <!-- Botón de página anterior (Flecha izquierda) -->
+                        <a href="?page=<%= currentPage - 1 %>&establecimiento=<%= establecimiento %>" class="button is-link pagination-button">
+                            <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                        </a>
+                    <% } %>
+
+                    <!-- Información de la página actual -->
+                    <span class="pagination-info">
+                        Página <%= currentPage %> de <%= totalPages %>
+                    </span>
+
+                    <% if (currentPage < totalPages) { %>
+                        <!-- Botón de página siguiente (Flecha derecha) -->
+                        <a href="?page=<%= currentPage + 1 %>&establecimiento=<%= establecimiento %>" class="button is-link pagination-button">
+                            <span class="icon"><i class="fas fa-arrow-right"></i></span>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Botón para crear nueva tarjeta -->
+            <div class="has-text-centered" style="margin-top: 20px;">
+                <button id="openTarjetaModalBtn" class="button is-primary">
+                    <span class="icon is-small">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                    <span>Crear Tarjeta</span>
+                </button>
+            </div>            
+
+        </section>
+    </div>
+
+    <!-- Ventana Modal para añadir sellos -->
+    <div class="modal" id="addSelloModal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Añadir Sello</p>
+                <button class="delete" aria-label="close" id="closeAddSelloModal"></button>
+            </header>
+            <section class="modal-card-body">
+                <p>¿Deseas añadir un sello a esta tarjeta?</p>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success" id="confirmAddSelloBtn">Confirmar</button>
+                <button class="button" id="cancelAddSelloBtn">Cancelar</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal para añadir tarjeta -->
+<div class="modal" id="addTarjetaModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Añadir Tarjeta</p>
+            <button class="delete" aria-label="close" id="closeTarjetaModalBtn"></button>
+        </header>
+        <section class="modal-card-body">
+            <form id="formularioTarjeta" action="<%= process.env.PATH_SERVER %>trabajador/tarjetasE/nuevo" method="POST">
+                <!-- Formulario de añadir tarjeta -->
+                
+                <div class="field">
+                    <label class="label">Establecimiento</label>
+                    <div class="select">
+                        <select name="idestablecimiento" id="idestablecimiento" required>
+                            <% establecimientos.forEach((Establecimiento) => { %>
+                                <option value="<%= Establecimiento.ID_Establecimiento %>">
+                                    <%= Establecimiento.Nombre_Establecimiento %>
+                                </option>
+                            <% }); %>
+                        </select>                        
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Cliente</label>
+                    <div class="select">
+                        <select name="idcliente" id="idcliente" required>
+                            <% Clientes.forEach((cliente) => { %>
+                                <option value="<%= cliente.ID_Cliente %>" data-telefono="<%= cliente.Telefono_Cliente %>">
+                                    <%= cliente.Nombre_Cliente %> (Tel: <%= cliente.Telefono_Cliente %>)
+                                </option>
+                            <% }); %>
+                        </select>                        
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">ID Tarjeta (Autogenerado)</label>
+                    <div class="control">
+                        <input class="input" type="text" id="idtarjeta" name="idtarjeta" readonly required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Versión</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="version" required>
+                                <% versiones.forEach((version) => { %>
+                                    <option value="<%= version.numero %>">
+                                        <%= version.numero %> <!-- Mostrar el valor de "numero" de la tabla "version" -->
+                                    </option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <footer class="modal-card-foot">
+                    <button class="button is-success">Guardar</button>
+                </footer>
+            </form>
+        </section>
+    </div>
+</div>
+
+
+    <script>
+        // Abrir y cerrar la ventana modal para añadir sello
+        const addSelloModal = document.getElementById('addSelloModal');
+        const closeAddSelloModal = document.getElementById('closeAddSelloModal');
+        const cancelAddSelloBtn = document.getElementById('cancelAddSelloBtn');
+        const confirmAddSelloBtn = document.getElementById('confirmAddSelloBtn');
+        let currentTarjetaID = null;
+
+        document.querySelectorAll('.add-sello-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                currentTarjetaID = this.getAttribute('data-tarjeta-id');
+                addSelloModal.classList.add('is-active');
+            });
+        });
+
+        closeAddSelloModal.addEventListener('click', () => {
+            addSelloModal.classList.remove('is-active');
+        });
+
+        cancelAddSelloBtn.addEventListener('click', () => {
+            addSelloModal.classList.remove('is-active');
+        });
+
+        confirmAddSelloBtn.addEventListener('click', () => {
+            alert(`Sello añadido a la tarjeta con ID: ${currentTarjetaID}`);
+            addSelloModal.classList.remove('is-active');
+        });
+
+        //seccion de crear tarjeta
+
+       // Obtener los elementos del DOM
+        const openTarjetaModalBtn = document.getElementById('openTarjetaModalBtn');
+        const addTarjetaModal = document.getElementById('addTarjetaModal');
+        const closeTarjetaModalBtn = document.getElementById('closeTarjetaModalBtn');
+
+        // Abrir el modal al hacer clic en el botón "Crear Tarjeta"
+        openTarjetaModalBtn.addEventListener('click', () => {
+            addTarjetaModal.classList.add('is-active');  // Añadir la clase 'is-active' para abrir el modal
+        });
+
+        // Cerrar el modal cuando se haga clic en el botón de cerrar
+        closeTarjetaModalBtn.addEventListener('click', () => {
+            addTarjetaModal.classList.remove('is-active');  // Quitar la clase 'is-active' para cerrar el modal
+        });
+
+        // Cerrar el modal cuando se haga clic fuera de él (en el fondo)
+        document.querySelector('.modal-background').addEventListener('click', () => {
+            addTarjetaModal.classList.remove('is-active');
+        });
+
+        //script de crear tarjeta
+        // Obtener elementos del formulario
+        const idEstablecimientoSelect = document.getElementById('idestablecimiento');
+        const idClienteSelect = document.getElementById('idcliente');
+        const idTarjetaInput = document.getElementById('idtarjeta');
+
+        // Función para generar el ID de la tarjeta basado en el establecimiento y el teléfono del cliente
+        function generarIdTarjeta() {
+            const idEstablecimiento = idEstablecimientoSelect.value;
+            const clienteSeleccionado = idClienteSelect.options[idClienteSelect.selectedIndex];
+            const telefonoCliente = clienteSeleccionado.getAttribute('data-telefono');
+            
+            if (idEstablecimiento && telefonoCliente) {
+                // Concatenar el ID de establecimiento con el número de teléfono del cliente
+                idTarjetaInput.value = `${idEstablecimiento}${telefonoCliente}`;
+            }
+        }
+
+        // Generar el ID cuando cambien el establecimiento o el cliente
+        idEstablecimientoSelect.addEventListener('change', generarIdTarjeta);
+        idClienteSelect.addEventListener('change', generarIdTarjeta);
+
+        // Inicializar el ID de la tarjeta en caso de que ya haya una selección por defecto
+        window.onload = generarIdTarjeta;
+
+    </script>
+
+    
+
+    <%- include('includes/footer') %>
+
+</body>
+</html>

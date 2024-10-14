@@ -10,7 +10,7 @@ exports.veryUser = function (usuario, password) {
 };
 
 // Clase para manejar usuarios.
-exports.usuarios = class {
+module.exports = class usuarios {
     // Verificar usuario para inicio de sesión
     static async verifyUser(correo, contrasena) {
         const connection = await db();
@@ -19,6 +19,30 @@ exports.usuarios = class {
     
             const [rows] = await connection.execute(`
                 SELECT * FROM administrador 
+                WHERE Usuario = ? AND Contrasenia = ?`, 
+                [correo, contrasena]
+            );
+    
+            const realResult = rows[0];
+            
+            await connection.commit();
+            return realResult;
+        } catch (e) {
+            await connection.rollback();
+            throw e;
+        } finally {
+            await connection.release();
+        }
+    }
+
+    // Verificar usuario para inicio de sesión
+    static async verifyEmpleado(correo, contrasena) {
+        const connection = await db();
+        try {
+            await connection.beginTransaction();
+    
+            const [rows] = await connection.execute(`
+                SELECT * FROM empleado 
                 WHERE Usuario = ? AND Contrasenia = ?`, 
                 [correo, contrasena]
             );

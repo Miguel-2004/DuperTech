@@ -4,6 +4,10 @@ exports.mainPage = (req, res) => {
     res.render('main', { pageTitle: 'Página Principal' });
 };
 
+exports.mainEPage = (req, res) => {
+    res.render('mainE', { pageTitle: 'Página Principal' });
+};
+
 exports.getAllClientes = async (req, res, next) => {
     try {
         const Clientes = await DuperModel.usuarios.getCliente();
@@ -19,18 +23,29 @@ exports.verificarUser = async (req, res, next) => {
     try {
         const userCorreo = req.body.email;
         const userContrasena = req.body.password;
-        const usuario = await DuperModel.usuarios.verifyUser(userCorreo, userContrasena);
 
-        if (!usuario) {
-            res.render('Login');
+        // Verificar si es un administrador (usuario)
+        const usuario = await DuperModel.verifyUser(userCorreo, userContrasena);
+        
+        // Verificar si es un empleado
+        const empleado = await DuperModel.verifyEmpleado(userCorreo, userContrasena);
+
+        if (usuario) {
+            res.render('main');  // Vista específica para administradores
+        } else if (empleado) {
+            
+            res.redirect(process.env.PATH_SERVER+'trabajador');  // Vista específica para empleados
         } else {
-            res.render('main');
+            // Si no es ni administrador ni empleado, redirigir al login
+            res.render('Login');
         }
     } catch (e) {
         console.error(e);
         res.render('Login');
     }
 };
+
+
 
 exports.getReporte = async (req, res) => {
     const { category } = req.query;

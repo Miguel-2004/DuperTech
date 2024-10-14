@@ -1,0 +1,63 @@
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 60px;
+        background-color: #084461;
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    li {
+        margin: 15px 0;
+    }
+
+    li a {
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    li a:hover {
+        background-color: #094b6c;
+        color: white;
+    }
+
+    img {
+        max-width: 30px;
+        max-height: 30px;
+    }
+
+    .content {
+        margin-left: 80px;
+        padding: 20px;
+    }
+</style>
+
+<ul>
+    <li>
+        <a href="<%= process.env.PATH_SERVER %>trabajador">
+            <img id="btn1" src="<%= process.env.PATH_SERVER %>images/DB_S_ICON.png" alt="Duperbrand_logo">
+        </a>          
+    </li>      
+    <li>
+        <a href="<%= process.env.PATH_SERVER %>trabajador/tarjetasE">
+            <img id="btn4" src="<%= process.env.PATH_SERVER %>images/TJ_ICON.png" alt="tarjeta_logo">
+        </a>  
+    </li>
+    
+</ul>

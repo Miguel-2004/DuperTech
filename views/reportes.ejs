@@ -108,11 +108,19 @@
     <script>
         const ctxPromociones = document.getElementById('promocionesChart').getContext('2d');
         const promocionesData = <%- JSON.stringify(reclamaciones || []) %>;
-
+    
+        // Arreglo con los nombres de los meses
+        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    
         if (promocionesData.length > 0) {
-            const fechas = promocionesData.map(promo => promo.mes);
+            // Mapea los meses numéricos a los nombres de los meses
+            const fechas = promocionesData.map(promo => {
+                const [year, month] = promo.mes.split('-'); // Divide el año y el mes
+                return meses[parseInt(month, 10) - 1] + ' ' + year; // Mapea el número del mes a su nombre
+            });
+    
             const canjeadas = promocionesData.map(promo => promo.canjeadas);
-
+    
             new Chart(ctxPromociones, {
                 type: 'line',
                 data: {
@@ -129,11 +137,11 @@
                 options: {
                     scales: {
                         x: {
-                            title: { display: true, text: 'Fecha', font: { size: 16 } }
+                            title: { display: true, text: 'Mes', font: { size: 16 } }
                         },
                         y: {
                             beginAtZero: true,
-                            title: { display: true, text: 'Canjeadas', font: { size: 16 } }
+                            title: { display: true, text: 'Cantidad canjeadas', font: { size: 16 } }
                         }
                     }
                 }
@@ -142,6 +150,7 @@
             console.warn('No hay datos disponibles para la gráfica de promociones.');
         }
     </script>
+    
 
     <!-- Script para la gráfica de Tarjetas por Sucursal -->
     <script>

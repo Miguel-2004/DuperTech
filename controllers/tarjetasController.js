@@ -1,6 +1,7 @@
 const TarjetasModel = require('../models/tarjetas.model');
 const cliente = require('../models/cliente.model');
 const Establecimiento = require('../models/establecimientos.model');
+const version = require('../models/version.model');
 
 // Listar tarjetas con paginación y filtros
 exports.listarTarjetas = async (req, res) => {
@@ -41,6 +42,7 @@ exports.listarTarjetas = async (req, res) => {
         // Obtener los clientes sin tarjeta
         const Clientes = await cliente.getClienteSinTarjeta();
 
+        const versiones = await version.getVersion();
 
         // Renderizar la vista de tarjetas
         res.render('tarjetas', {
@@ -54,7 +56,8 @@ exports.listarTarjetas = async (req, res) => {
             establecimiento,
             establecimientoFiltro: establecimiento,
             establecimientos,
-            Clientes // Ahora también pasas los clientes sin tarjeta
+            Clientes,
+            versiones
         });
     } catch (error) {
         console.error('Error al listar las tarjetas:', error);

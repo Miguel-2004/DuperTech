@@ -63,7 +63,32 @@
             display: none;
         }
 
-        
+        /* Estilo de tabla con líneas continuas */
+        .table.is-fullwidth.is-striped.is-hoverable {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #363636;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75em 1em;
+            border-bottom: 2px solid #dbdbdb; /* Línea continua entre filas */
+        }
+
+        .table thead th {
+            border-bottom: 3px solid #dbdbdb; /* Línea más gruesa en el encabezado */
+        }
+
+        .table.is-striped tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table.is-hoverable tbody tr:hover {
+            background-color: #f5f5f5;
+        }
     </style>
 </head>
 <body>
@@ -73,7 +98,7 @@
     <div class="container">
         <section class="section">
             <div class="box box-centered">
-                <h1 class="title">Trabajadores</h1>
+                <h1 class="title has-text-centered">Trabajadores</h1>
 
                 <!-- Search -->
                 <div class="field has-addons">
@@ -85,22 +110,36 @@
                     </div>
                 </div>
 
-                <!-- Worker List with Edit Button -->
-                <div class="list">
-                    <% Trabajadores.forEach((Trabajadores) => { %>
-                        <div class="list-item">
-                            <span class="worker-name"><%= Trabajadores.Nombre_Empleado %></span>
-                            <button class="button is-small is-link is-light edit-button" 
-                            onclick="mostrarPopupEditar('<%= Trabajadores.Nombre_Empleado %>', 
-                                    '<%= Trabajadores.ID_Empleado %>', 
-                                    '<%= Trabajadores.Telefono_Empleado %>', 
-                                    '<%= Trabajadores.Usuario %>', 
-                                    '<%= Trabajadores.Contrasenia %>', 
-                                    '<%= Trabajadores.ID_Establecimiento %>', 
-                                    '<%= Trabajadores.ID_Admin %>')">Editar</button>
-                        </div>
-                    <% }) %>
-                </div>
+                <!-- Tabla de trabajadores con líneas continuas -->
+                <table class="table is-fullwidth is-striped is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Usuario</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% Trabajadores.forEach((Trabajadores) => { %>
+                            <tr>
+                                <td><%= Trabajadores.Nombre_Empleado %></td>
+                                <td><%= Trabajadores.Telefono_Empleado %></td>
+                                <td><%= Trabajadores.Usuario %></td>
+                                <td>
+                                    <button class="button is-small is-link is-light edit-button" 
+                                    onclick="mostrarPopupEditar('<%= Trabajadores.Nombre_Empleado %>', 
+                                            '<%= Trabajadores.ID_Empleado %>', 
+                                            '<%= Trabajadores.Telefono_Empleado %>', 
+                                            '<%= Trabajadores.Usuario %>', 
+                                            '<%= Trabajadores.Contrasenia %>', 
+                                            '<%= Trabajadores.ID_Establecimiento %>', 
+                                            '<%= Trabajadores.ID_Admin %>')">Editar</button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
 
                 <!-- Paginación simplificada con flechas -->
                 <div class="pagination-container">
@@ -119,8 +158,6 @@
                     <% } %>
                 </div>
             </div>
-
-
 
             <!-- Botón para añadir trabajador -->
             <div class="has-text-centered mt-5">
@@ -272,13 +309,10 @@
                     </div>
                 </div>
 
-
                 <!-- Botón para guardar cambios -->
                 <button class="button is-link is-fullwidth mt-4" type="submit">Guardar Cambios</button>
             </form>
         </div>
-
-
     </div>
 
     <script>

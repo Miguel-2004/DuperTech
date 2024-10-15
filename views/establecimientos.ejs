@@ -57,7 +57,7 @@
                     <table class="table is-fullwidth">
                         <thead>
                             <tr>
-                                <th>ID Establecimiento</th>
+                                <th>Establecimiento</th>
                                 <th>Nombre Establecimiento</th>
                                 <th>Dirección</th>
                                 <th>Acciones</th>
@@ -75,7 +75,7 @@
                                                 <!-- Botón para abrir pop-up de edición -->
                                                 <button class="button is-small is-link" 
                                                         onclick="editarEstablecimiento('<%= establecimiento.ID_Establecimiento %>', '<%= establecimiento.Nombre_Establecimiento %>', '<%= establecimiento.Dir_Estab %>')">Editar</button>
-                                                <form action="<%= process.env.PATH_SERVER %>establecimientos/eliminar" method="POST" style="display:inline;">
+                                                <form action="/establecimientos/eliminar" method="POST" style="display:inline;">
                                                     <input type="hidden" name="id" value="<%= establecimiento.ID_Establecimiento %>">
                                                     <button type="submit" class="button is-small is-danger">Eliminar</button>
                                                 </form>
@@ -121,7 +121,7 @@
     <div class="modal" id="addModal">
         <div class="modal-content">
             <h2 class="title is-4 has-text-link">Registrar Nuevo Establecimiento</h2>
-            <form action="<%= process.env.PATH_SERVER %>establecimientos/agregar" method="POST">
+            <form action="/establecimientos/agregar" method="POST">
                 <div class="field">
                     <label for="nombre" class="label">Nombre Establecimiento:</label>
                     <div class="control">
@@ -144,7 +144,7 @@
     <div class="modal" id="editModal">
         <div class="modal-content">
             <h2 class="title is-4 has-text-link">Editar Establecimiento</h2>
-            <form action="<%= process.env.PATH_SERVER %>establecimientos/editar" method="POST">
+            <form action="/establecimientos/editar" method="POST">
                 <input type="hidden" id="idEstablecimiento" name="id">
                 <div class="field">
                     <label for="nombreEdit" class="label">Nombre Establecimiento:</label>

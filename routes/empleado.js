@@ -7,8 +7,8 @@ router.get('/empleados/nuevo', Controller.getTrabajadores);
 router.post('/empleados/nuevo', Controller.nuevoEmpleado);
 
 // Editar un empleado existente
-router.get('/empleados/editar', Controller.getTrabajadores);  // Para cargar la página de edición
-router.post('/empleados/editar', Controller.editarEmpleado);     // Para enviar los datos de edición
+router.get('/empleados/editar', Controller.getTrabajadores);  
+router.post('/empleados/editar', Controller.editarEmpleado);     
 
 // Obtener todos los empleados
 router.get('/empleados', Controller.getTrabajadores);

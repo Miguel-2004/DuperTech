@@ -37,7 +37,8 @@
         color: white;
     }
 
-    img {
+    /* Estilos específicos para las imágenes del sidebar */
+    .sidebar-icon {
         max-width: 30px;
         max-height: 30px;
     }
@@ -48,41 +49,41 @@
     }
 </style>
 
+
 <ul>
     <li>
         <a href="<%= process.env.PATH_SERVER %>users/main">
-            <img id="btn1" src="<%= process.env.PATH_SERVER %>images/DB_S_ICON.png" alt="Duperbrand_logo">
+            <img class="sidebar-icon" id="btn1" src="<%= process.env.PATH_SERVER %>images/DB_S_ICON.png" alt="Duperbrand_logo">
         </a>          
     </li>      
     <li>
         <a href="<%= process.env.PATH_SERVER %>empleado/empleados">
-            <img id="btn2" src="<%= process.env.PATH_SERVER %>images/EMP_ICON.png" alt="empleado_logo">
+            <img class="sidebar-icon" id="btn2" src="<%= process.env.PATH_SERVER %>images/EMP_ICON.png" alt="empleado_logo">
         </a>          
     </li>
     <li>
         <a href="<%= process.env.PATH_SERVER %>cliente/clientes">
-            <img id="btn3" src="<%= process.env.PATH_SERVER %>images/CLI_ICON.png" alt="cliente_logo">
+            <img class="sidebar-icon" id="btn3" src="<%= process.env.PATH_SERVER %>images/CLI_ICON.png" alt="cliente_logo">
         </a>  
     </li>
     <li>
         <a href="<%= process.env.PATH_SERVER %>tarjetas">
-            <img id="btn4" src="<%= process.env.PATH_SERVER %>images/TJ_ICON.png" alt="tarjeta_logo">
+            <img class="sidebar-icon" id="btn4" src="<%= process.env.PATH_SERVER %>images/TJ_ICON.png" alt="tarjeta_logo">
         </a>  
     </li>
     <li>
         <a href="<%= process.env.PATH_SERVER %>promociones">
-            <img id="btn5" src="<%= process.env.PATH_SERVER %>images/PRO_ICON.png" alt="Promo_logo">
+            <img class="sidebar-icon" id="btn5" src="<%= process.env.PATH_SERVER %>images/PRO_ICON.png" alt="Promo_logo">
         </a>  
     </li>
     <li>
         <a href="<%= process.env.PATH_SERVER %>reportes">
-            <img id="btn6" src="<%= process.env.PATH_SERVER %>images/REP_ICON.png" alt="Graf_logo">
+            <img class="sidebar-icon" id="btn6" src="<%= process.env.PATH_SERVER %>images/REP_ICON.png" alt="Graf_logo">
         </a>  
     </li>
     <li>
         <a href="<%= process.env.PATH_SERVER %>establecimientos">
-            <img id="btn6" src="<%= process.env.PATH_SERVER %>images/Tien_Icon.png" alt="sucursales_logo">
+            <img class="sidebar-icon" id="btn7" src="<%= process.env.PATH_SERVER %>images/Tien_Icon.png" alt="sucursales_logo">
         </a>  
     </li>
-
 </ul>

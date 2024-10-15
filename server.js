@@ -26,6 +26,7 @@ const rutaTarjetas = require('./routes/tarjetas');
 const rutaPromociones = require ('./routes/promociones');
 const rutaEstablecimientos = require ('./routes/establecimientos');
 const rutaReportes = require('./routes/reportes');
+const rutaVersion = require('./routes/version');
 
 const rutaTrabajador = require('./routes/trabajador');
 
@@ -38,6 +39,7 @@ app.use('/tarjetas', rutaTarjetas);
 app.use('/promociones', rutaPromociones);
 app.use('/establecimientos', rutaEstablecimientos);
 app.use('/reportes',rutaReportes);
+app.use('/version',rutaVersion);
 
 app.use('/trabajador',rutaTrabajador);
 
@@ -46,13 +48,6 @@ app.get('/', (req, res) => {
     res.redirect(process.env.PATH_SERVER+'users/Login');
 });
 
-app.get('/main', (req, res) => {
-    res.render('main', { pageTitle: 'Página Principal' });
-});
-
-app.get('/clientes', (req, res) => {
-    res.render('clientes', { pageTitle: 'Clientes' });
-});
 
 // Manejo de rutas no encontradas
 app.use((req, res, next) => {

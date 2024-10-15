@@ -188,3 +188,7 @@ exports.nuevaTarjetaE = async (req, res, next) => {
         return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetas?error=errorGeneral');
     }
 };  
+
+exports.versionpage = (req, res) => {
+    res.render('version', { pageTitle: 'modificar version' });
+};

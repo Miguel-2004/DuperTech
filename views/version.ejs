@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Version</title>    
+    <%- include('includes/head') %> 
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Josefin Sans', sans-serif;
+        }
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .card {
+            width: 500px;
+            height: 300px;
+            color: #fff;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .front, .back {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 20px 30px;
+            overflow: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .front {
+            z-index: 2;
+            transform: rotateY(0deg);
+        }
+        .back {
+            transform: rotateY(180deg);
+            background-image: linear-gradient(45deg, #ff7c5c, #32a852); 
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .map-img {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .card-no {
+            font-size: 35px;
+            margin-top: 60px;
+        }
+        .card-holder {
+            font-size: 12px;
+            margin-top: 40px;
+        }
+        .name {
+            font-size: 22px;
+            margin-top: 20px;
+        }
+
+        .stamps-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columnas */
+            grid-gap: 10px; /* Espacio entre los círculos */
+            justify-items: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .stamp {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background-color: rgba(255, 255, 255, 0.5); /* Color de fondo de los sellos */
+        }
+
+        /* Estilo de los controles */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            color: #333;
+            width: 200px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-size: 14px;
+        }
+        input[type="color"],
+        input[type="file"] {
+            width: 100%;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #fff; 
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+<style>
+    .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 10px;
+        color: #333;
+        width: 200px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Botón Estándar */
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        background-color: #3498db; /* Azul por defecto */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        text-decoration: none;
+    }
+
+    .button:hover {
+        background-color: #2980b9; /* Cambia a un azul más oscuro al pasar el cursor */
+        transform: scale(1.05); /* Pequeño zoom al hacer hover */
+    }
+
+    .button:active {
+        background-color: #2471a3; /* Azul aún más oscuro al hacer clic */
+        transform: scale(0.98); /* Reducir un poco el tamaño al hacer clic */
+    }
+
+    /* Estilo para el botón "Guardar Versión" */
+    .button-save {
+        background-color: #2ecc71; /* Verde */
+    }
+
+    .button-save:hover {
+        background-color: #27ae60;
+    }
+
+    .button-save:active {
+        background-color: #229954;
+    }
+
+    /* Estilo para el botón "Nueva Versión" */
+    .button-new {
+        background-color: #e74c3c; /* Rojo */
+    }
+
+    .button-new:hover {
+        background-color: #c0392b;
+    }
+
+    .button-new:active {
+        background-color: #a93226;
+    }
+
+</style>
+
+</head>
+<body>
+    <%- include('includes/sidebar') %>
+
+    <div class="container">
+        <!-- Tarjeta -->
+        <div class="card" id="flip-card">
+            <div class="card-inner">
+                <div class="front" id="card-front" style=" background-color: <%= versiones[0].color %>;">
+                    <img src="<%= process.env.PATH_SERVER %><%= versiones[0].imagen %>" id="front-image" class="map-img"></img>
+                    <div class="row">
+                        <img src="<%= process.env.PATH_SERVER %>images/DB_S_ICON.png" class="imgFondo" width="60px">
+                    </div>
+                    <div class="row card-no">
+                        <p>1234567890</p>
+                    </div>
+                    <div class="row card-holder">
+                        <p>CARD HOLDER</p>
+                        <p>nombre de sucursal</p>
+                    </div>
+                    <div class="row name">
+                        <p>joe alison</p>
+                        <p>chilakos</p>
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="stamps-container">
+                        <!-- Asegúrate de que haya 12 círculos para los sellos -->
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                        <div class="stamp"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+
+       <!-- Controles para personalizar la tarjeta -->
+        <form action="<%= process.env.PATH_SERVER %>version/update" method="POST">
+            <div class="controls">
+                <!-- Selector de versión -->
+                <label for="version-selector">Seleccionar versión:</label>
+                <select id="version-selector" name="versionId">
+                    <% versiones.forEach(function(version) { %>
+                        <option value="<%= version.numero %>" <%= version.numero === versiones.numero ? 'selected' : '' %>>
+                            Versión <%= version.numero %>
+                        </option>
+                    <% }) %>
+                </select>
+
+                <!-- Selector de color -->
+                <label for="color-picker">Seleccionar color de fondo:</label>
+                <input type="color" id="color-picker" name="color" value="<%= versiones[0].color %>">
+
+                <!-- Selector para Promo1 -->
+                <label for="promocion1-selector">Seleccionar Promoción 1:</label>
+                <select id="promocion1-selector" name="promo1">
+                    <% promociones.forEach(function(promo) { %>
+                        <option value="<%= promo.ID_Recompensa %>" <%= versiones.promo1 === promo.ID_Recompensa ? 'selected' : '' %>>
+                            <%= promo.Nombre_Recompensa %>
+                        </option>
+                    <% }) %>
+                </select>
+
+                <!-- Selector para Promo2 -->
+                <label for="promocion2-selector">Seleccionar Promoción 2:</label>
+                <select id="promocion2-selector" name="promo2">
+                    <% promociones.forEach(function(promo) { %>
+                        <option value="<%= promo.ID_Recompensa %>" <%= versiones.promo2 === promo.ID_Recompensa ? 'selected' : '' %>>
+                            <%= promo.Nombre_Recompensa %>
+                        </option>
+                    <% }) %>
+                </select>
+
+                <!-- Botón para Guardar la Versión -->
+                <button class="button is-link" type="submit">Guardar Versión</button>
+
+                <!-- Botón para Crear una Nueva Versión -->
+                <button class="button is-success" type="submit" formaction="<%= process.env.PATH_SERVER %>version/create">Nueva Versión</button>
+            </div>
+        </form>
+    </div>
+    
+
+    <script>
+        // Voltear tarjeta al hacer clic
+        const flipCard = document.getElementById('flip-card');
+        flipCard.addEventListener('click', function() {
+            flipCard.classList.toggle('flipped');
+        });
+    
+        const versionSelector = document.getElementById('version-selector');
+        const colorPicker = document.getElementById('color-picker');
+        const frontImage = document.getElementById('front-image');
+        const cardFront = document.getElementById('card-front');
+        const promo1Selector = document.getElementById('promocion1-selector');
+        const promo2Selector = document.getElementById('promocion2-selector');
+        const saveVersionBtn = document.getElementById('save-version');
+    
+        // Al cambiar la versión seleccionada
+        versionSelector.addEventListener('change', function () {
+            const versionId = versionSelector.value;
+    
+            // Hacer una solicitud para obtener los datos de la versión seleccionada
+            fetch(`/versiones/${versionId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Actualizar el color y la imagen de fondo
+                    colorPicker.value = data.color;
+                    cardFront.style.backgroundColor = data.color;
+                    frontImage.src = data.imagen;
+    
+                    // Actualizar las promociones seleccionadas
+                    promo1Selector.value = data.promo1;
+                    promo2Selector.value = data.promo2;
+                });
+        });
+    
+        // Cambiar color de fondo de la tarjeta al cambiar el color en el selector
+        colorPicker.addEventListener('input', function () {
+            cardFront.style.backgroundColor = colorPicker.value; // Actualizar color de la tarjeta en vivo
+        });
+    
+        // Guardar los cambios de la versión
+        saveVersionBtn.addEventListener('click', function () {
+            const versionId = versionSelector.value;
+            const color = colorPicker.value;
+            const promo1 = promo1Selector.value;
+            const promo2 = promo2Selector.value;
+    
+            // Enviar los datos actualizados al servidor
+            fetch(`/versiones/update`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: versionId,
+                    color: color,
+                    promo1: promo1,
+                    promo2: promo2
+                })
+            }).then(() => {
+                alert('Versión actualizada');
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>

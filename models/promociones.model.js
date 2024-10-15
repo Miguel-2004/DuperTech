@@ -26,6 +26,18 @@ exports.getPromocionesPaginated = async (limit, offset) => {
     }
 };
 
+exports.getPromociones = async (limit, offset) => {
+    const connection = await db();
+    try {
+        const [result] = await connection.execute('SELECT * FROM recompensa');
+        await connection.release();
+        return result;
+    } catch (error) {
+        console.error('Error al obtener las promociones paginadas:', error);
+        throw error;
+    }
+};
+
 // Registrar nueva promoción (en recompensa y regalo)
 exports.registrarPromocion = async (nombreRecompensa, fechaInicio, fechaFinal, descripcionRegalo) => {
     const connection = await db();

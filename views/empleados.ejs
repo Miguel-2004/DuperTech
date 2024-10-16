@@ -6,7 +6,7 @@
     <style>
         /* Estilo para centrar y agrandar el recuadro */
         .box-centered {
-            width: 80%; /* Ajusta el tamaño del recuadro */
+            width: 80%;
             max-width: 1200px;
             margin: 50px auto;
             padding: 20px;
@@ -34,6 +34,7 @@
             justify-content: center;
             margin-top: 20px;
         }
+
         .pagination-button {
             margin: 0 5px;
         }
@@ -103,7 +104,7 @@
                 <!-- Search -->
                 <div class="field has-addons">
                     <div class="control has-icons-left is-expanded">
-                        <input class="input" type="text" placeholder="Buscar">
+                        <input class="input" type="text" placeholder="Buscar" value="<%= searchQuery %>" name="search">
                         <span class="icon is-small is-left">
                             <i class="fas fa-search"></i>
                         </span>
@@ -117,6 +118,7 @@
                             <th>Nombre</th>
                             <th>Teléfono</th>
                             <th>Usuario</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -126,6 +128,17 @@
                                 <td><%= Trabajadores.Nombre_Empleado %></td>
                                 <td><%= Trabajadores.Telefono_Empleado %></td>
                                 <td><%= Trabajadores.Usuario %></td>
+
+                                <!-- Menú desplegable de estado -->
+                                <td>
+                                    <div class="select is-small">
+                                        <select onchange="actualizarEstado('<%= Trabajadores.ID_Empleado %>', this.value)">
+                                            <option value="1" <%= Trabajadores.estado === 1 ? 'selected' : '' %>>Activo</option>
+                                            <option value="0" <%= Trabajadores.estado === 0 ? 'selected' : '' %>>Inactivo</option>
+                                        </select>
+                                    </div>
+                                </td>
+
                                 <td>
                                     <button class="button is-small is-link is-light edit-button" 
                                     onclick="mostrarPopupEditar('<%= Trabajadores.Nombre_Empleado %>', 
@@ -149,6 +162,8 @@
                             <span class="icon"><i class="fas fa-arrow-left"></i></span>
                         </a>
                     <% } %>
+
+                    <span class="pagination-info">Página <%= currentPage %> de <%= totalPages %></span>
 
                     <% if (currentPage < totalPages) { %>
                         <!-- Botón de página siguiente (Flecha derecha) -->
@@ -352,8 +367,35 @@
     document.getElementById("closeEditPopup").addEventListener("click", function() {
         document.getElementById("editPopup").style.display = "none";
     });
+
+        // Función para actualizar el estado de un empleado
+    function actualizarEstado(idEmpleado, nuevoEstado) {
+        fetch('/empleados/actualizarEstado', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json', 
+        },
+        body: JSON.stringify({
+            idEmpleado: idEmpleado,  
+            estado: nuevoEstado 
+        }),
+    })
+    .then(response => response.json())  // Procesamos la respuesta como JSON
+    .then(data => {
+        if (data.success) {
+            alert('Estado actualizado con éxito');
+        } else {
+            alert('Error al actualizar el estado');
+        }
+    })
+    .catch(error => {
+        // Si hay algún error en la solicitud, lo mostramos en la consola
+        console.error('Error:', error);
+    });
+}
+
     </script>
 
     <%- include('includes/footer') %>
 </body>
-</html>
+</html> 

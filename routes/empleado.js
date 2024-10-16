@@ -10,9 +10,11 @@ router.post('/empleados/nuevo', Controller.nuevoEmpleado);
 router.get('/empleados/editar', Controller.getTrabajadores);  
 router.post('/empleados/editar', Controller.editarEmpleado);     
 
+// Actualizar el estado del empleado
+router.post('/empleados/actualizarEstado', Controller.actualizarEstado);
+
 // Obtener todos los empleados
 router.get('/empleados', Controller.getTrabajadores);
 router.post('/empleados', Controller.getTrabajadores);
-
 
 module.exports = router;

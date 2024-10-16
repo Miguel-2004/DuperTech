@@ -15,10 +15,10 @@ exports.getAllTrabajadores = async (req, res, next) => {
     }
 };
 
-//Obtener los empleados con paginacion
+// Obtener los empleados con paginación y búsqueda por nombre
 exports.getTrabajadores = async (req, res) => {
     try {
-        // Obtener el número de página de la solicitud (predeterminada en 1 si no se pasa)
+        const searchQuery = req.query.search || ''; // Búsqueda solo por nombre
         const currentPage = parseInt(req.query.page) || 1;
         const limit = 10; // Número de elementos por página
         const offset = (currentPage - 1) * limit;
@@ -26,38 +26,33 @@ exports.getTrabajadores = async (req, res) => {
         const establecimiento = await Establecimiento.getEstablecimientos();
         const admin = await Model.getAdmin();
 
-        // Obtener los trabajadores y el total
-        const Trabajadores = await Model.getTrabajadorP(limit, offset);
-        const totalTrabajadores = await Model.countTrabajador();
+        // Obtener los trabajadores y el total con búsqueda por nombre
+        const Trabajadores = await Model.searchTrabajador(searchQuery, limit, offset);
+        const totalTrabajadores = await Model.countSearchTrabajador(searchQuery);
         const totalPages = Math.ceil(totalTrabajadores / limit);
 
         res.render('empleados', {
             Trabajadores: Trabajadores,
             currentPage: currentPage,
             totalPages: totalPages,
-            establecimiento:establecimiento,
-            admin: admin 
+            establecimiento: establecimiento,
+            admin: admin,
+            searchQuery: searchQuery // Pasar el término de búsqueda a la vista
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error al obtener los establecimientos');
+        res.status(500).send('Error al obtener los empleados');
     }
 };
 
 exports.nuevoEmpleado = async (req, res, next) => {
     try {
-
-        // Obtener el número de página de la solicitud (predeterminada en 1 si no se pasa)
         const currentPage = parseInt(req.query.page) || 1;
-        const limit = 10; // Número de elementos por página
+        const limit = 10;
         const offset = (currentPage - 1) * limit;
 
         const establecimiento = await Establecimiento.getEstablecimientos();
         const admin = await Model.getAdmin();
-
-        const Trabajadores = await Model.getTrabajadorP(limit, offset);
-        const totalTrabajadores = await Model.countTrabajador();
-        const totalPages = Math.ceil(totalTrabajadores / limit);
 
         const nombre = req.body.nombre;
         const telefono = req.body.telefono;
@@ -71,13 +66,10 @@ exports.nuevoEmpleado = async (req, res, next) => {
         if (!empleado) {
             return res.render('empleados', { mensaje: 'Error al crear el empleado' });
         }
-        res.render('empleados',{
-            Trabajadores: Trabajadores,
-            currentPage: currentPage,
-            totalPages: totalPages,
-            establecimiento:establecimiento,
+        res.render('empleados', {
+            establecimiento: establecimiento,
             admin: admin 
-        });  // Redirige después de crear
+        });
     } catch (e) {
         console.error(e);
         res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });
@@ -86,17 +78,14 @@ exports.nuevoEmpleado = async (req, res, next) => {
 
 exports.editarEmpleado = async (req, res, next) => {
     try {
-        // Número de página y tamaño de página desde los parámetros de consulta
-        const page = parseInt(req.query.page) || 1; // Página actual, por defecto es 1
-        const limit = 10; // Número de trabajadores por página
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
         const offset = (page - 1) * limit;
 
-        // Obtener el número total de trabajadores para calcular el total de páginas
-        const totalTrabajadores = await Model.countTrabajador(); // Asume que tienes una función para contar trabajadores
+        const totalTrabajadores = await Model.countTrabajador();
         const establecimiento = await Establecimiento.getEstablecimientos();
         const admin = await Model.getAdmin();
 
-        // Obtener los trabajadores paginados
         const Trabajadores = await Model.getTrabajador(limit, offset);
         const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
         const totalPages = Math.ceil(totalTrabajadores / limit);
@@ -109,9 +98,6 @@ exports.editarEmpleado = async (req, res, next) => {
             admin: admin
         });
 
-        // Calcular el número total de página
-
-        // Datos del trabajador para editar
         const nombre = req.body.nombre || null;
         const telefono = req.body.telefono || null;
         const usuario = req.body.usuario || null;
@@ -120,15 +106,12 @@ exports.editarEmpleado = async (req, res, next) => {
         const id_Admin = req.body.id_Admin || null;
         const ID_Empleado = req.body.ID_Empleado || null;
 
-        // Lógica de edición
         const empleado = await Model.editTrabajador(nombre, telefono, usuario, contrasena, ID_Es, id_Admin, ID_Empleado);
 
         if (!empleado) {
-            return res.render('empleados', {mensaje: "error", Trabajadores: TrabajadoresArray, currentPage: page, totalPages: totalPages, establecimiento: establecimiento,
-                admin: admin});
+            return res.render('empleados', {mensaje: "error", Trabajadores: TrabajadoresArray});
         }
 
-        // Renderizar la página con los trabajadores paginados
         res.render('empleados', {
             Trabajadores: TrabajadoresArray,
             currentPage: page,
@@ -140,5 +123,22 @@ exports.editarEmpleado = async (req, res, next) => {
     } catch (error) {
         console.error(error);
         res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });
+    }
+};
+
+// Actualizar el estado del empleado
+exports.actualizarEstado = async (req, res) => {
+    const { idEmpleado, estado } = req.body;
+
+    if (!idEmpleado || estado === undefined) {
+        return res.status(400).json({ success: false, message: 'Datos incompletos' });
+    }
+
+    try {
+        await Model.actualizarEstado(idEmpleado, estado);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error al actualizar en la base de datos:', error);
+        res.status(500).json({ success: false, message: 'Error al actualizar el estado.' });
     }
 };

@@ -1,7 +1,7 @@
 const db = require('../utils/database');
 
 module.exports = class Usuario {
-    static async getTrabajador(limit,offset) {
+    static async getTrabajador(limit, offset) {
         const connection = await db();
         try {
             const [result] = await connection.execute(`
@@ -14,21 +14,6 @@ module.exports = class Usuario {
         }
     }
 
-    // Obtener trabajador con paginación
-    static async getTrabajadorP(limit, offset) {
-        const connection = await db();
-        try {
-            const [result] = await connection.execute(`
-                SELECT * FROM empleado LIMIT ? OFFSET ?
-            `, [limit, offset]);
-            await connection.release();
-            return result;
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    // Contar el total de empleados
     static async countTrabajador() {
         const connection = await db();
         try {
@@ -65,7 +50,7 @@ module.exports = class Usuario {
             await connection.commit();
             return "yes";
         } catch (error) {
-            await connection.rollback();  // Rollback in case of an error
+            await connection.rollback();
             throw error;
         } finally {
             await connection.release();
@@ -76,8 +61,10 @@ module.exports = class Usuario {
         const connection = await db();
         try {
             await connection.beginTransaction();
-            const[result] = await connection.execute(`UPDATE empleado SET Nombre_Empleado = ?, Telefono_Empleado = ?, Usuario = ?, Contrasenia = ?, ID_Establecimiento = ?, ID_Admin = ? WHERE ID_Empleado = ?`,
-                [nombre, telefono, usuario, contrasena, ID_Es, id_Admin, ID_Empleado]  // Asegúrate de tener el ID_Empleado
+            await connection.execute(`
+                UPDATE empleado SET Nombre_Empleado = ?, Telefono_Empleado = ?, Usuario = ?, Contrasenia = ?, ID_Establecimiento = ?, ID_Admin = ?
+                WHERE ID_Empleado = ?`,
+                [nombre, telefono, usuario, contrasena, ID_Es, id_Admin, ID_Empleado]
             );
             await connection.commit();
             return "yes";
@@ -87,4 +74,46 @@ module.exports = class Usuario {
             await connection.release();
         }
     };
+
+    static async searchTrabajador(searchQuery, limit, offset) {
+        const connection = await db();
+        try {
+            const [result] = await connection.execute(`
+                SELECT * FROM empleado 
+                WHERE Nombre_Empleado LIKE ? 
+                LIMIT ? OFFSET ?
+            `, [`%${searchQuery}%`, limit, offset]);
+            await connection.release();
+            return result;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    static async countSearchTrabajador(searchQuery) {
+        const connection = await db();
+        try {
+            const [result] = await connection.execute(`
+                SELECT COUNT(*) as total FROM empleado 
+                WHERE Nombre_Empleado LIKE ?
+            `, [`%${searchQuery}%`]);
+            await connection.release();
+            return result[0].total;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    static async actualizarEstado(idEmpleado, estado) {
+        const connection = await db();
+        try {
+            await connection.execute(`
+                UPDATE empleado SET estado = ? WHERE ID_Empleado = ?
+            `, [estado, idEmpleado]);
+            await connection.release();
+        } catch (error) {
+            console.error('Error al actualizar en la base de datos:', error);
+            throw error;
+        }
+    }
 };

@@ -1,32 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Version</title>    
-    <%- include('includes/head') %> 
+    <title>Versiones de Tarjetas</title>
+    <%- include('includes/head') %>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap');
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Josefin Sans', sans-serif;
+        /* Estilo para centrar y agrandar el recuadro */
+        .box-centered {
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
         }
-        .container {
-            min-height: 100vh;
-            width: 100%;
-            background: #fff;
+    
+        /* Contenedor que incluye el modal y la tarjeta */
+        .popup-card-container {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            gap: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 900px; /* Ajuste de tamaño */
+            width: 100%;
         }
+    
+        .popup {
+            position: relative;
+            max-width: 400px;
+        }
+    
+        /* Estilo de la tarjeta */
         .card {
-            width: 500px;
-            height: 300px;
-            color: #fff;
+            position: relative;
+            width: 350px;
+            height: 220px; /* Aumento de altura para un mejor ajuste */
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
             perspective: 1000px;
+            overflow: hidden;
         }
+    
+        /* Contenedor interno de la tarjeta para animación de giro */
         .card-inner {
             width: 100%;
             height: 100%;
@@ -34,9 +59,25 @@
             transform-style: preserve-3d;
             transition: transform 0.8s;
         }
+    
         .card.flipped .card-inner {
             transform: rotateY(180deg);
         }
+    
+        /* Imagen de fondo opaca */
+        .card img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+            object-fit: cover;
+            z-index: -1;
+            border-radius: 15px;
+        }
+    
+        /* Contenido de la tarjeta */
         .front, .back {
             width: 100%;
             height: 100%;
@@ -44,24 +85,33 @@
             top: 0;
             left: 0;
             padding: 20px 30px;
-            overflow: hidden;
             backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+    
         .front {
             z-index: 2;
             transform: rotateY(0deg);
         }
+    
         .back {
             transform: rotateY(180deg);
-            background-image: linear-gradient(45deg, #ff7c5c, #32a852); 
+            background-image: linear-gradient(45deg, #ff7c5c, #32a852);
         }
-        .row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+    
+        /* Texto de la tarjeta, ajustado para una mejor legibilidad */
+        .card-content {
+            z-index: 1;
+            color: white;
+            font-size: 24px;
+            text-align: center;
         }
+
         .map-img {
             width: 100%;
             position: absolute;
@@ -70,140 +120,160 @@
             opacity: 0.3;
             z-index: -1;
         }
-
-        .card-no {
-            font-size: 35px;
-            margin-top: 60px;
+    
+        /* Estilo para cada línea de contenido de la tarjeta */
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: 18px; /* Ajuste del tamaño del texto */
+            color: #fff; /* Color del texto */
         }
-        .card-holder {
-            font-size: 12px;
-            margin-top: 40px;
+    
+        /* Asegúrate de que los elementos dentro de la tarjeta tengan un buen espaciado */
+        .row.card-no, .row.card-holder, .row.name {
+            margin-top: 10px;
         }
-        .name {
-            font-size: 22px;
-            margin-top: 20px;
-        }
-
+    
+        /* Sello estilo para la parte trasera de la tarjeta */
         .stamps-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr); /* 4 columnas */
-            grid-gap: 10px; /* Espacio entre los círculos */
+            grid-gap: 10px;
             justify-items: center;
             align-items: center;
             height: 100%;
         }
-
+    
         .stamp {
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
             border: 2px solid white;
-            background-color: rgba(255, 255, 255, 0.5); /* Color de fondo de los sellos */
+        }
+    
+        /* Encabezado del popup */
+        .popup-header {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        /* Estilo de los controles */
-        .controls {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            background-color: #f5f5f5;
-            padding: 20px;
-            border-radius: 10px;
-            color: #333;
-            width: 200px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Estilo para el logo "DB" en la tarjeta */
+        .imgFondo {
+            position: absolute;  /* Posicionarlo en la parte superior */
+            top: 20px;           /* Ajustar la posición desde el borde superior */
+            left: 20px;          /* Ajustar la posición desde el borde izquierdo */
+            width: 60px;         /* Tamaño del logo */
+            z-index: 2;          /* Asegurarse de que esté por encima de otros elementos */
+            opacity: 1;          /* Sin transparencia */
         }
-        label {
-            font-size: 14px;
-        }
-        input[type="color"],
-        input[type="file"] {
-            width: 100%;
-            padding: 5px;
-            border: none;
-            border-radius: 5px;
-            background-color: #fff; 
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+
     </style>
-
-<style>
-    .controls {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        background-color: #f5f5f5;
-        padding: 20px;
-        border-radius: 10px;
-        color: #333;
-        width: 200px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Botón Estándar */
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        font-size: 16px;
-        font-weight: 600;
-        color: #fff;
-        background-color: #3498db; /* Azul por defecto */
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        text-decoration: none;
-    }
-
-    .button:hover {
-        background-color: #2980b9; /* Cambia a un azul más oscuro al pasar el cursor */
-        transform: scale(1.05); /* Pequeño zoom al hacer hover */
-    }
-
-    .button:active {
-        background-color: #2471a3; /* Azul aún más oscuro al hacer clic */
-        transform: scale(0.98); /* Reducir un poco el tamaño al hacer clic */
-    }
-
-    /* Estilo para el botón "Guardar Versión" */
-    .button-save {
-        background-color: #2ecc71; /* Verde */
-    }
-
-    .button-save:hover {
-        background-color: #27ae60;
-    }
-
-    .button-save:active {
-        background-color: #229954;
-    }
-
-    /* Estilo para el botón "Nueva Versión" */
-    .button-new {
-        background-color: #e74c3c; /* Rojo */
-    }
-
-    .button-new:hover {
-        background-color: #c0392b;
-    }
-
-    .button-new:active {
-        background-color: #a93226;
-    }
-
-</style>
-
+    
 </head>
 <body>
-    <%- include('includes/sidebar') %>
 
-    <div class="container">
-        <!-- Tarjeta -->
+<%- include('includes/sidebar') %>
+
+<div class="container">
+    <section class="section">
+        <div class="box box-centered">
+            <h1 class="title has-text-centered">Versiones de Tarjetas</h1>
+
+            <!-- Tabla de versiones -->
+            <table class="table is-fullwidth is-striped is-hoverable">
+                <thead>
+                    <tr>
+                        <th>Versión</th>
+                        <th>Promoción 1</th>
+                        <th>Promoción 2</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% versiones.forEach(function(version) { %>
+                        <tr>
+                            <td><%= version.numero %></td>
+                            <td><%= version.promo1 %></td>
+                            <td><%= version.promo2 %></td>
+                            <td>
+                                <button class="button is-small is-link is-light edit-button" 
+                                    onclick="mostrarPopupEditar('<%= version.numero %>', 
+                                            '<%= version.promo1 %>', 
+                                            '<%= version.promo2 %>', 
+                                            '<%= version.color %>',
+                                            '<%= version.imagen %>')">Editar</button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<!-- Contenedor del popup y la tarjeta -->
+<div id="popup-container" class="popup-card-container" style="display: none;">
+    <!-- Modal de edición -->
+    <div class="popup">
+        <header class="popup-header">
+            <h2>Editar Versión</h2>
+            <!-- Botón de cerrar -->
+            <button id="close-popup" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+        </header>
+        <form id="edit-form" action="<%= process.env.PATH_SERVER %>version/update" method="POST">
+            <div class="field">
+                <label class="label">Número de Versión</label>
+                <div class="control">
+                    <input class="input" type="text" id="version" name="version" value="" readonly>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Promoción 1</label>
+                <div class="control">
+                    <div class="select">
+                        <select id="promo1" name="promo1">
+                            <% promociones.forEach(function(promo) { %>
+                                <option value="<%= promo.ID_Recompensa %>"><%= promo.Nombre_Recompensa %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Promoción 2</label>
+                <div class="control">
+                    <div class="select">
+                        <select id="promo2" name="promo2">
+                            <% promociones.forEach(function(promo) { %>
+                                <option value="<%= promo.ID_Recompensa %>"><%= promo.Nombre_Recompensa %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Color de Fondo</label>
+                <input type="color" id="color-picker" name="color" value="#217158">
+            </div>
+
+            <div class="control">
+                <button type="submit" class="button is-success">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tarjeta restaurada al lado derecho del modal -->
+    <div class="card-container">
         <div class="card" id="flip-card">
             <div class="card-inner">
-                <div class="front" id="card-front" style=" background-color: <%= versiones[0].color %>;">
-                    <img src="<%= process.env.PATH_SERVER %><%= versiones[0].imagen %>" id="front-image" class="map-img"></img>
+                <div class="front" id="card-front" style="background-color: <%= versiones.color %>;">
+                    <img src="<%= process.env.PATH_SERVER %><%= versiones.imagen %>" id="front-image" class="map-img">
                     <div class="row">
                         <img src="<%= process.env.PATH_SERVER %>images/DB_S_ICON.png" class="imgFondo" width="60px">
                     </div>
@@ -221,7 +291,7 @@
                 </div>
                 <div class="back">
                     <div class="stamps-container">
-                        <!-- Asegúrate de que haya 12 círculos para los sellos -->
+                        <!-- Sellos de la tarjeta restaurados -->
                         <div class="stamp"></div>
                         <div class="stamp"></div>
                         <div class="stamp"></div>
@@ -236,122 +306,98 @@
                         <div class="stamp"></div>
                     </div>
                 </div>
-                
             </div>
         </div>
-        
-
-       <!-- Controles para personalizar la tarjeta -->
-        <form action="<%= process.env.PATH_SERVER %>version/update" method="POST">
-            <div class="controls">
-                <!-- Selector de versión -->
-                <label for="version-selector">Seleccionar versión:</label>
-                <select id="version-selector" name="versionId">
-                    <% versiones.forEach(function(version) { %>
-                        <option value="<%= version.numero %>" <%= version.numero === versiones.numero ? 'selected' : '' %>>
-                            Versión <%= version.numero %>
-                        </option>
-                    <% }) %>
-                </select>
-
-                <!-- Selector de color -->
-                <label for="color-picker">Seleccionar color de fondo:</label>
-                <input type="color" id="color-picker" name="color" value="<%= versiones[0].color %>">
-
-                <!-- Selector para Promo1 -->
-                <label for="promocion1-selector">Seleccionar Promoción 1:</label>
-                <select id="promocion1-selector" name="promo1">
-                    <% promociones.forEach(function(promo) { %>
-                        <option value="<%= promo.ID_Recompensa %>" <%= versiones.promo1 === promo.ID_Recompensa ? 'selected' : '' %>>
-                            <%= promo.Nombre_Recompensa %>
-                        </option>
-                    <% }) %>
-                </select>
-
-                <!-- Selector para Promo2 -->
-                <label for="promocion2-selector">Seleccionar Promoción 2:</label>
-                <select id="promocion2-selector" name="promo2">
-                    <% promociones.forEach(function(promo) { %>
-                        <option value="<%= promo.ID_Recompensa %>" <%= versiones.promo2 === promo.ID_Recompensa ? 'selected' : '' %>>
-                            <%= promo.Nombre_Recompensa %>
-                        </option>
-                    <% }) %>
-                </select>
-
-                <!-- Botón para Guardar la Versión -->
-                <button class="button is-link" type="submit">Guardar Versión</button>
-
-                <!-- Botón para Crear una Nueva Versión -->
-                <button class="button is-success" type="submit" formaction="<%= process.env.PATH_SERVER %>version/create">Nueva Versión</button>
-            </div>
-        </form>
     </div>
+</div>
+
+
     
 
-    <script>
-        // Voltear tarjeta al hacer clic
+</div>
+
+<script>
+    // Esperar a que el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Verificar que el elemento flip-card exista antes de agregar el evento
         const flipCard = document.getElementById('flip-card');
-        flipCard.addEventListener('click', function() {
-            flipCard.classList.toggle('flipped');
-        });
-    
-        const versionSelector = document.getElementById('version-selector');
-        const colorPicker = document.getElementById('color-picker');
-        const frontImage = document.getElementById('front-image');
-        const cardFront = document.getElementById('card-front');
-        const promo1Selector = document.getElementById('promocion1-selector');
-        const promo2Selector = document.getElementById('promocion2-selector');
-        const saveVersionBtn = document.getElementById('save-version');
-    
-        // Al cambiar la versión seleccionada
-        versionSelector.addEventListener('change', function () {
-            const versionId = versionSelector.value;
-    
-            // Hacer una solicitud para obtener los datos de la versión seleccionada
-            fetch(`/versiones/${versionId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Actualizar el color y la imagen de fondo
-                    colorPicker.value = data.color;
-                    cardFront.style.backgroundColor = data.color;
-                    frontImage.src = data.imagen;
-    
-                    // Actualizar las promociones seleccionadas
-                    promo1Selector.value = data.promo1;
-                    promo2Selector.value = data.promo2;
-                });
-        });
-    
-        // Cambiar color de fondo de la tarjeta al cambiar el color en el selector
-        colorPicker.addEventListener('input', function () {
-            cardFront.style.backgroundColor = colorPicker.value; // Actualizar color de la tarjeta en vivo
-        });
-    
-        // Guardar los cambios de la versión
-        saveVersionBtn.addEventListener('click', function () {
-            const versionId = versionSelector.value;
-            const color = colorPicker.value;
-            const promo1 = promo1Selector.value;
-            const promo2 = promo2Selector.value;
-    
-            // Enviar los datos actualizados al servidor
-            fetch(`/versiones/update`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: versionId,
-                    color: color,
-                    promo1: promo1,
-                    promo2: promo2
-                })
-            }).then(() => {
-                alert('Versión actualizada');
+        if (flipCard) {
+            flipCard.addEventListener('click', function () {
+                flipCard.classList.toggle('flipped');
             });
-        });
-    </script>
-    
-    
+        } else {
+            console.error('Elemento flip-card no encontrado');
+        }
+
+        // Función para mostrar el popup de edición con los datos de la versión seleccionada
+        function mostrarPopupEditar(numero, promo1, promo2, color, imagen) {
+            // Mostrar el popup
+            const popupContainer = document.getElementById('popup-container');
+            if (popupContainer) {
+                popupContainer.style.display = 'flex';
+            }
+
+            // Rellenar el formulario con los datos de la versión
+            const versionField = document.getElementById('version');
+            const promo1Field = document.getElementById('promo1');
+            const promo2Field = document.getElementById('promo2');
+            const colorPicker = document.getElementById('color-picker');
+            const cardImage = document.getElementById('front-image');
+            const cardFront = document.getElementById('card-front');
+
+            if (versionField) versionField.value = numero;
+            if (promo1Field) promo1Field.value = promo1;
+            if (promo2Field) promo2Field.value = promo2;
+            if (colorPicker) colorPicker.value = color;
+
+            // Cambiar la imagen y el color de fondo de la tarjeta si los elementos existen
+            if (cardImage) {
+                cardImage.src = imagen;
+            } else {
+                console.error('Elemento front-image no encontrado');
+            }
+
+            if (cardFront) {
+                cardFront.style.backgroundColor = color;
+            } else {
+                console.error('Elemento card-front no encontrado');
+            }
+        }
+
+        // Cambiar el color de fondo de la tarjeta mientras se edita
+        const colorPicker = document.getElementById('color-picker');
+        if (colorPicker) {
+            colorPicker.addEventListener('input', function () {
+                const cardFront = document.getElementById('card-front');
+                if (cardFront) {
+                    cardFront.style.backgroundColor = colorPicker.value;
+                }
+            });
+        } else {
+            console.error('Elemento color-picker no encontrado');
+        }
+
+        // Evento para cerrar el popup cuando se hace clic en la "X"
+        const closePopupButton = document.getElementById('close-popup');
+        if (closePopupButton) {
+            closePopupButton.addEventListener('click', function () {
+                const popupContainer = document.getElementById('popup-container');
+                if (popupContainer) {
+                    popupContainer.style.display = 'none';
+                }
+            });
+        } else {
+            console.error('Botón de cerrar popup no encontrado');
+        }
+
+        // Exponer la función mostrarPopupEditar globalmente para poder ser llamada por botones de edición
+        window.mostrarPopupEditar = mostrarPopupEditar;
+    });
+</script>
+
+
+
+<%- include('includes/footer') %>
 </body>
 </html>

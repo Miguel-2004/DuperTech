@@ -9,7 +9,7 @@ router.post('/update', versionC.updateVersion);
 router.post('/create', versionC.createVersion);
 
 
-router.get('/', versionC.getVersiones);
-router.post('/',versionC.getVersiones);
+router.get('/', versionC.getVersionesPag);
+router.post('/',versionC.getVersionesPag);
 
 module.exports = router;

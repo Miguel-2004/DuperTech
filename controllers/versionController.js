@@ -15,15 +15,51 @@ exports.getVersiones = async (req, res) => {
     }
 };
 
+exports.getVersionesPag = async (req, res) => {
+    try {
+        // Obtener el número de página de la solicitud (predeterminada en 1 si no se pasa)
+        const currentPage = parseInt(req.query.page) || 1;
+        const limit = 10; // Número de elementos por página
+        const offset = (currentPage - 1) * limit;
+
+        const promociones = await Promocion.getPromociones();
+
+        // Obtener los trabajadores y el total
+        const versiones = await Version.getVersionP(limit, offset);
+        const totalVersiones = await Version.countVersion();
+        const totalPages = Math.ceil(totalVersiones / limit);
+
+        res.render('version', {
+            versiones: versiones,
+            currentPage: currentPage,
+            totalPages: totalPages,
+            promociones:promociones
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al obtener los establecimientos');
+    }
+};
+
 // Actualizar una versión existente
 exports.updateVersion = async (req, res) => {
     try {
-        const { id, color, promo1, promo2 } = req.body;
-        await Version.updateVersion(id, color, promo1, promo2);
-        res.json({ success: true, message: 'Versión actualizada correctamente' });
+        const id = req.body.version;
+        const color = req.body.color;
+        const promo1 = req.body.promo1;
+        const promo2 = req.body.promo2;
+
+        console.log(id , color, promo1, promo2);
+
+        const version = await Version.updateVersion(id, color, promo1, promo2);
+        
+        if (!version) {
+            return res.redirect(process.env.PATH_SERVER +'version', { mensaje: 'Error al crear la version' });
+        }
+        res.redirect(process.env.PATH_SERVER +'version');
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, message: 'Error al actualizar la versión' });
+        console.error('Error al actualizar los datos',err);
+        res.status(500).send( 'Error al actualizar la versión' );
     }
 };
 

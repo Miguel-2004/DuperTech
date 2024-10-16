@@ -9,9 +9,35 @@ module.exports = class Version {
         try {
             const [result] = await connection.execute(`
                 SELECT * FROM version 
-            `); // Asegúrate de que estés obteniendo todos los datos que necesitas (color, imagen, etc.)
+            `); 
             await connection.release();
             return result;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    // Obtener las versiones paginadas
+    static async getVersionP(limit, offset) {
+        const connection = await db();
+        try {
+            const [result] = await connection.execute(`
+                SELECT * FROM version LIMIT ? OFFSET ?
+            `, [limit, offset]);
+            await connection.release();
+            return result;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    // Contar el total de empleados
+    static async countVersion() {
+        const connection = await db();
+        try {
+            const [result] = await connection.execute('SELECT COUNT(*) as total FROM version');
+            await connection.release();
+            return result[0].total;
         } catch (e) {
             throw e;
         }
@@ -38,11 +64,12 @@ module.exports = class Version {
     static async updateVersion(id, color, promo1, promo2) {
         const connection = await db();
         try {
-            await connection.execute(`
+            const [result] = await connection.execute(`
                 UPDATE version 
                 SET color = ?, promo1 = ?, promo2 = ?
                 WHERE numero = ?`, [color, promo1, promo2, id]);
             await connection.release();
+            return result;
         } catch (e) {
             throw e;
         }

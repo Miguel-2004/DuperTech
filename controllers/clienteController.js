@@ -44,6 +44,31 @@ exports.nuevoCliente = async (req, res, next) => {
 };
 
 
+exports.nuevoClienteE = async (req, res, next) => {
+    try {
+        // Extraer los datos del cuerpo de la solicitud
+        const nombre = req.body.nombre;
+        const telefono = req.body.telefono;
+        const FechaNac = req.body.FechaNac;
+        const sexo = req.body.sexo;
+
+        // Crear un nuevo cliente
+        const nuevoCliente = await cliente.crearCliente(nombre, telefono, FechaNac, sexo);
+
+        if (!nuevoCliente) {
+            return res.redirect(process.env.PATH_SERVER +'trabajador/tarjetasE', { mensaje: 'Error al crear el cliente' });
+        }
+
+        // Renderizar la vista con la lista actualizada de clientes
+        res.redirect(process.env.PATH_SERVER +'trabajador/tarjetasE');
+
+    } catch (e) {
+        console.error(e);
+        res.status(500).redirect(process.env.PATH_SERVER +'trabajador/tarjetasE', { mensaje: 'Error al cargar los datos' });
+    }
+};
+
+
 exports.editarCliente = async (req, res, next) => {
     try {
         // Obtener los clientes

@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const duperController = require('../controllers/duper.controller');
 const tarjetasController = require('../controllers/tarjetasController');
+const clienteController = require('../controllers/clienteController');
 
 router.get('/tarjetasE/nuevo',tarjetasController.listarTarjetasE);
 router.post('/tarjetasE/nuevo',tarjetasController.nuevaTarjetaE);
 
 router.post('/tarjetasE/sello',tarjetasController.masSellosE);
+
+router.post('/tarjetasE/cliente',clienteController.nuevoClienteE);
 
 router.get('/tarjetasE',tarjetasController.listarTarjetasE);
 router.post('/tarjetasE',tarjetasController.listarTarjetasE);

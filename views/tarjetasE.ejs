@@ -154,7 +154,12 @@
                     </span>
                     <span>Crear Tarjeta</span>
                 </button>
-            </div>            
+            </div>       
+            
+            <!-- Boton para añadir Clientes -->
+            <div class="has-text-centered mt-5">
+                <button class="button is-primary" id="addClientBtn">Añadir Empleado</button>
+            </div>
 
         </section>
     </div>
@@ -251,6 +256,56 @@
 </div>
 
 
+<!-- Modal para añadir clientes -->
+<div class="modal" id="addcliente">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Añadir Clientes</p>
+            <button class="delete" aria-label="close" id="closeModalBtn"></button>
+        </header>
+        <section class="modal-card-body">
+            <form id="formularioCliente" action="<%= process.env.PATH_SERVER %>trabajador/tarjetasE/cliente" method="POST">
+                <div class="field">
+                    <label class="label">Nombre del cliente</label>
+                    <div class="control">
+                        <input class="input" type="text" name="nombre" placeholder="Nombre" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Teléfono</label>
+                    <div class="control">
+                        <input class="input" type="tel" name="telefono" placeholder="Teléfono" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Fecha de nacimiento</label>
+                    <div class="control">
+                        <input class="input" type="date" name="FechaNac" placeholder="Fecha de nacimiento" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Sexo</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="sexo" required>
+                                <option value="">Seleccione una opción</option>
+                                <option value="M">M</option>
+                                <option value="F">F</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <footer class="modal-card-foot">
+                    <button class="button is-success">Guardar</button>
+                </footer>
+            </form>
+        </section>
+    </div>
+</div>
+<!-- fin del formulario para crear un cliente -->
+
+
     <script>
         // Abrir y cerrar la ventana modal para añadir sello
     const addSelloModal = document.getElementById('addSelloModal');
@@ -332,6 +387,19 @@
 
     // Inicializar el ID de la tarjeta en caso de que ya haya una selección por defecto
     window.onload = generarIdTarjeta;
+
+    // Funcionalidad para añadir clientes
+    const addClientBtn = document.getElementById('addClientBtn');
+        const addClientModal = document.getElementById('addcliente');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        addClientBtn.addEventListener('click', () => {
+            addClientModal.classList.add('is-active');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            addClientModal.classList.remove('is-active');
+        });
 
     </script>
 

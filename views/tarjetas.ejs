@@ -171,22 +171,26 @@
     </div>
 
     <!-- Ventana Modal para añadir sellos -->
-    <div class="modal" id="addSelloModal">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Añadir Sello</p>
-                <button class="delete" aria-label="close" id="closeAddSelloModal"></button>
-            </header>
-            <section class="modal-card-body">
+<div class="modal" id="addSelloModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Añadir Sello</p>
+            <button class="delete" aria-label="close" id="closeAddSelloModal"></button>
+        </header>
+        <section class="modal-card-body">
+            <form action="<%= process.env.PATH_SERVER %>tarjetas/sello" method="POST" id="addSelloForm">
+                <input type="hidden" name="idtarjeta" value="<%= idTarjeta %>">
                 <p>¿Deseas añadir un sello a esta tarjeta?</p>
-            </section>
-            <footer class="modal-card-foot">
-                <button class="button is-success" id="confirmAddSelloBtn">Confirmar</button>
-                <button class="button" id="cancelAddSelloBtn">Cancelar</button>
-            </footer>
-        </div>
+            </form>
+        </section>
+        <footer class="modal-card-foot">
+            <!-- El botón de confirmar envía el formulario -->
+            <button class="button is-success" id="confirmAddSelloBtn" form="addSelloForm">Confirmar</button>
+            <button class="button" id="cancelAddSelloBtn">Cancelar</button>
+        </footer>
     </div>
+</div>
 
     <!-- Modal para añadir tarjeta -->
 <div class="modal" id="addTarjetaModal">
@@ -240,7 +244,7 @@
                             <select name="version" required>
                                 <% versiones.forEach((version) => { %>
                                     <option value="<%= version.numero %>">
-                                        <%= version.numero %> <!-- Mostrar el valor de "numero" de la tabla "version" -->
+                                        <%= version.numero %> 
                                     </option>
                                 <% }); %>
                             </select>
@@ -258,82 +262,90 @@
 </div>
 
 
-    <script>
-        // Abrir y cerrar la ventana modal para añadir sello
-        const addSelloModal = document.getElementById('addSelloModal');
-        const closeAddSelloModal = document.getElementById('closeAddSelloModal');
-        const cancelAddSelloBtn = document.getElementById('cancelAddSelloBtn');
-        const confirmAddSelloBtn = document.getElementById('confirmAddSelloBtn');
-        let currentTarjetaID = null;
+<script>
+    // Abrir y cerrar la ventana modal para añadir sello
+    const addSelloModal = document.getElementById('addSelloModal');
+    const closeAddSelloModal = document.getElementById('closeAddSelloModal');
+    const cancelAddSelloBtn = document.getElementById('cancelAddSelloBtn');
+    const confirmAddSelloBtn = document.getElementById('confirmAddSelloBtn');
+    let currentTarjetaID = null;
 
-        document.querySelectorAll('.add-sello-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                currentTarjetaID = this.getAttribute('data-tarjeta-id');
-                addSelloModal.classList.add('is-active');
-            });
+    // Añadir evento a cada botón "Añadir Sello" para abrir el modal y guardar el ID de la tarjeta
+    document.querySelectorAll('.add-sello-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            currentTarjetaID = this.getAttribute('data-tarjeta-id');
+            addSelloModal.classList.add('is-active');
         });
+    });
 
-        closeAddSelloModal.addEventListener('click', () => {
-            addSelloModal.classList.remove('is-active');
-        });
+    // Cerrar modal al hacer clic en el botón de cerrar
+    closeAddSelloModal.addEventListener('click', () => {
+        addSelloModal.classList.remove('is-active');
+    });
 
-        cancelAddSelloBtn.addEventListener('click', () => {
-            addSelloModal.classList.remove('is-active');
-        });
+    // Cerrar modal al hacer clic en "Cancelar"
+    cancelAddSelloBtn.addEventListener('click', () => {
+        addSelloModal.classList.remove('is-active');
+    });
 
-        confirmAddSelloBtn.addEventListener('click', () => {
-            alert(`Sello añadido a la tarjeta con ID: ${currentTarjetaID}`);
-            addSelloModal.classList.remove('is-active');
-        });
+    // Confirmar y añadir sello (enviar formulario)
+    confirmAddSelloBtn.addEventListener('click', () => {
+        // Asignar el ID de la tarjeta al campo oculto del formulario
+        document.querySelector('#addSelloForm input[name="idtarjeta"]').value = currentTarjetaID;
+        // Enviar el formulario para añadir el sello
+        document.getElementById('addSelloForm').submit();
+    });
 
-        //seccion de crear tarjeta
+    // Sección de crear tarjeta
 
-       // Obtener los elementos del DOM
-        const openTarjetaModalBtn = document.getElementById('openTarjetaModalBtn');
-        const addTarjetaModal = document.getElementById('addTarjetaModal');
-        const closeTarjetaModalBtn = document.getElementById('closeTarjetaModalBtn');
+    // Obtener los elementos del DOM
+    const openTarjetaModalBtn = document.getElementById('openTarjetaModalBtn');
+    const addTarjetaModal = document.getElementById('addTarjetaModal');
+    const closeTarjetaModalBtn = document.getElementById('closeTarjetaModalBtn');
 
-        // Abrir el modal al hacer clic en el botón "Crear Tarjeta"
-        openTarjetaModalBtn.addEventListener('click', () => {
-            addTarjetaModal.classList.add('is-active');  // Añadir la clase 'is-active' para abrir el modal
-        });
+    // Abrir el modal al hacer clic en el botón "Crear Tarjeta"
+    openTarjetaModalBtn.addEventListener('click', () => {
+        addTarjetaModal.classList.add('is-active');  // Añadir la clase 'is-active' para abrir el modal
+    });
 
-        // Cerrar el modal cuando se haga clic en el botón de cerrar
-        closeTarjetaModalBtn.addEventListener('click', () => {
-            addTarjetaModal.classList.remove('is-active');  // Quitar la clase 'is-active' para cerrar el modal
-        });
+    // Cerrar el modal cuando se haga clic en el botón de cerrar
+    closeTarjetaModalBtn.addEventListener('click', () => {
+        addTarjetaModal.classList.remove('is-active');  // Quitar la clase 'is-active' para cerrar el modal
+    });
 
-        // Cerrar el modal cuando se haga clic fuera de él (en el fondo)
-        document.querySelector('.modal-background').addEventListener('click', () => {
-            addTarjetaModal.classList.remove('is-active');
-        });
+    // Cerrar el modal cuando se haga clic fuera de él (en el fondo)
+    document.querySelector('#addTarjetaModal .modal-background').addEventListener('click', () => {
+        addTarjetaModal.classList.remove('is-active');
+    });
 
-        //script de crear tarjeta
-        // Obtener elementos del formulario
-        const idEstablecimientoSelect = document.getElementById('idestablecimiento');
-        const idClienteSelect = document.getElementById('idcliente');
-        const idTarjetaInput = document.getElementById('idtarjeta');
+    // Script para generar automáticamente el ID de la tarjeta
 
-        // Función para generar el ID de la tarjeta basado en el establecimiento y el teléfono del cliente
-        function generarIdTarjeta() {
-            const idEstablecimiento = idEstablecimientoSelect.value;
-            const clienteSeleccionado = idClienteSelect.options[idClienteSelect.selectedIndex];
-            const telefonoCliente = clienteSeleccionado.getAttribute('data-telefono');
-            
-            if (idEstablecimiento && telefonoCliente) {
-                // Concatenar el ID de establecimiento con el número de teléfono del cliente
-                idTarjetaInput.value = `${idEstablecimiento}${telefonoCliente}`;
-            }
+    // Obtener elementos del formulario
+    const idEstablecimientoSelect = document.getElementById('idestablecimiento');
+    const idClienteSelect = document.getElementById('idcliente');
+    const idTarjetaInput = document.getElementById('idtarjeta');
+
+    // Función para generar el ID de la tarjeta basado en el establecimiento y el teléfono del cliente
+    function generarIdTarjeta() {
+        const idEstablecimiento = idEstablecimientoSelect.value;
+        const clienteSeleccionado = idClienteSelect.options[idClienteSelect.selectedIndex];
+        const telefonoCliente = clienteSeleccionado.getAttribute('data-telefono');
+        
+        if (idEstablecimiento && telefonoCliente) {
+            // Concatenar el ID de establecimiento con el número de teléfono del cliente
+            idTarjetaInput.value = `${idEstablecimiento}${telefonoCliente}`;
         }
+    }
 
-        // Generar el ID cuando cambien el establecimiento o el cliente
-        idEstablecimientoSelect.addEventListener('change', generarIdTarjeta);
-        idClienteSelect.addEventListener('change', generarIdTarjeta);
+    // Generar el ID cuando cambie el establecimiento o el cliente
+    idEstablecimientoSelect.addEventListener('change', generarIdTarjeta);
+    idClienteSelect.addEventListener('change', generarIdTarjeta);
 
-        // Inicializar el ID de la tarjeta en caso de que ya haya una selección por defecto
-        window.onload = generarIdTarjeta;
+    // Inicializar el ID de la tarjeta en caso de que ya haya una selección por defecto
+    window.onload = generarIdTarjeta;
 
-    </script>
+</script>
+
 
     
 

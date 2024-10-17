@@ -192,3 +192,29 @@ exports.nuevaTarjetaE = async (req, res, next) => {
 exports.versionpage = (req, res) => {
     res.render('version', { pageTitle: 'modificar version' });
 };
+
+exports.masSellos = async (req, res) => {
+    try {
+        // Extracción de datos del formulario
+        const idtarjeta = req.body.idtarjeta;
+
+        console.log(idtarjeta);
+
+        // Añadir un sello a la tarjeta
+        const Tarjeta = await TarjetasModel.Sello(idtarjeta);
+
+        if (!Tarjeta) {
+            // Si no se puede añadir el sello, redirigir con un error
+            return res.redirect(process.env.PATH_SERVER + 'tarjetas?error=nuevoSello');
+        }
+
+        // Si se añade el sello correctamente, redirigir a la página de tarjetas
+        return res.redirect(process.env.PATH_SERVER + 'tarjetas');
+    } catch (e) {
+        console.error("Error en el proceso de añadir sello:", e);
+
+        // Si ocurre un error, redirigir con un mensaje de error
+        return res.redirect(process.env.PATH_SERVER + 'tarjetas?error=errorGeneral');
+    }
+};
+ 

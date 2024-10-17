@@ -125,3 +125,51 @@ exports.crearTarjeta = async (idTarjeta, idCliente, ID_Establecimiento, fechaE, 
         await connection.release();
     }
 };
+
+exports.Sello = async (idTarjeta) => {
+    const connection = await db();
+    try {
+        await connection.beginTransaction();
+        
+        // Primero obtenemos el valor actual del sello en la tarjeta
+        const [rows] = await connection.execute(`
+            SELECT Numero_Sellos FROM tarjeta WHERE ID_Tarjeta = ?`,
+            [idTarjeta]
+        );
+        
+        // Si no se encuentra la tarjeta, lanzamos un error
+        if (rows.length === 0) {
+            throw new Error("Tarjeta no encontrada");
+        }
+        
+        // Obtenemos el valor actual del sello, si es null, empezamos en 0
+        const selloActual = rows[0].Numero_Sellos || 0;
+        
+        // Añadimos 1 al valor actual
+        const nuevoSello = selloActual + 1;
+        
+        // Actualizamos el valor del sello en la tarjeta
+        await connection.execute(`
+            UPDATE tarjeta
+            SET Numero_Sellos = ?
+            WHERE ID_Tarjeta = ?`,
+            [nuevoSello, idTarjeta]
+        );
+        
+        await connection.commit();
+        
+        // Devolver un objeto con más información, si es necesario
+        return {
+            message: "Sello añadido correctamente",
+            nuevoSello
+        };
+    } catch (error) {
+        await connection.rollback();
+        console.error("Error al añadir el sello:", error);
+        throw error;
+    } finally {
+        await connection.release();
+    }
+};
+
+

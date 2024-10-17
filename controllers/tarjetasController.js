@@ -176,16 +176,16 @@ exports.nuevaTarjetaE = async (req, res, next) => {
 
         if (!Tarjeta) {
             // Si la tarjeta no se crea correctamente, redirige a la página de tarjetas con un mensaje de error
-            return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetas?error=creacionTarjeta');
+            return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetasE?error=creacionTarjeta');
         }
 
         // Si la creación es exitosa, redirige a la página principal de tarjetas
-        return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetas');
+        return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetasE');
     } catch (e) {
         console.error("Error en el proceso de creación de tarjeta:", e);
 
         // Si ocurre un error inesperado, redirige a la página de tarjetas con un mensaje de error
-        return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetas?error=errorGeneral');
+        return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetasE?error=errorGeneral');
     }
 };  
 
@@ -218,3 +218,28 @@ exports.masSellos = async (req, res) => {
     }
 };
  
+
+exports.masSellosE = async (req, res) => {
+    try {
+        // Extracción de datos del formulario
+        const idtarjeta = req.body.idtarjeta;
+
+        console.log(idtarjeta);
+
+        // Añadir un sello a la tarjeta
+        const Tarjeta = await TarjetasModel.Sello(idtarjeta);
+
+        if (!Tarjeta) {
+            // Si no se puede añadir el sello, redirigir con un error
+            return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetasE?error=nuevoSello');
+        }
+
+        // Si se añade el sello correctamente, redirigir a la página de tarjetas
+        return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetasE');
+    } catch (e) {
+        console.error("Error en el proceso de añadir sello:", e);
+
+        // Si ocurre un error, redirigir con un mensaje de error
+        return res.redirect(process.env.PATH_SERVER + 'trabajador/tarjetasE?error=errorGeneral');
+    }
+};

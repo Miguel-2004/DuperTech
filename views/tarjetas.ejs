@@ -171,26 +171,26 @@
     </div>
 
     <!-- Ventana Modal para añadir sellos -->
-<div class="modal" id="addSelloModal">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-        <header class="modal-card-head">
-            <p class="modal-card-title">Añadir Sello</p>
-            <button class="delete" aria-label="close" id="closeAddSelloModal"></button>
-        </header>
-        <section class="modal-card-body">
-            <form action="<%= process.env.PATH_SERVER %>tarjetas/sello" method="POST" id="addSelloForm">
-                <input type="hidden" name="idtarjeta" value="<%= idTarjeta %>">
-                <p>¿Deseas añadir un sello a esta tarjeta?</p>
-            </form>
-        </section>
-        <footer class="modal-card-foot">
-            <!-- El botón de confirmar envía el formulario -->
-            <button class="button is-success" id="confirmAddSelloBtn" form="addSelloForm">Confirmar</button>
-            <button class="button" id="cancelAddSelloBtn">Cancelar</button>
-        </footer>
+    <div class="modal" id="addSelloModal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Añadir Sello</p>
+                <button class="delete" aria-label="close" id="closeAddSelloModal"></button>
+            </header>
+            <section class="modal-card-body">
+                <form action="<%= process.env.PATH_SERVER %>tarjetas/sello" method="POST" id="addSelloForm">
+                    <input type="hidden" name="idtarjeta" value="<%= idTarjeta %>">
+                    <p>¿Deseas añadir un sello a esta tarjeta?</p>
+                </form>
+            </section>
+            <footer class="modal-card-foot">
+                <!-- El botón de confirmar envía el formulario -->
+                <button class="button is-success" id="confirmAddSelloBtn" form="addSelloForm">Confirmar</button>
+                <button class="button" id="cancelAddSelloBtn">Cancelar</button>
+            </footer>
+        </div>
     </div>
-</div>
 
     <!-- Modal para añadir tarjeta -->
 <div class="modal" id="addTarjetaModal">

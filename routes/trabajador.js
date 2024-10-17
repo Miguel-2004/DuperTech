@@ -6,6 +6,8 @@ const tarjetasController = require('../controllers/tarjetasController');
 router.get('/tarjetasE/nuevo',tarjetasController.listarTarjetasE);
 router.post('/tarjetasE/nuevo',tarjetasController.nuevaTarjetaE);
 
+router.post('/tarjetasE/sello',tarjetasController.masSellosE);
+
 router.get('/tarjetasE',tarjetasController.listarTarjetasE);
 router.post('/tarjetasE',tarjetasController.listarTarjetasE);
 

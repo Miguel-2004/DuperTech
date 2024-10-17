@@ -39,11 +39,14 @@ exports.nuevoEmpleado = async (req, res) => {
         const establecimiento = await Establecimiento.getEstablecimientos();
         const admin = await Model.getAdmin();
 
-        res.render('nuevoEmpleado', {
-            nuevoUsuario: nuevoUsuario,
-            establecimiento: establecimiento,
-            admin: admin
-        });
+        const { nombre, telefono, usuario,password, ID_Establecimiento, id_Admin } = req.body;
+
+        const empleado = await Model.createEmpleado(nombre, telefono, usuario,password, ID_Establecimiento, id_Admin);
+
+        if (!empleado) {
+            return res.redirect('/empleado/empleados', { mensaje: "Error"});
+        }
+        res.redirect('/empleado/empleados');
     } catch (error) {
         console.error(error);
         res.status(500).render('nuevoEmpleado', { mensaje: 'Error al cargar los datos' });
@@ -57,32 +60,25 @@ exports.editarEmpleado = async (req, res) => {
         const limit = 10;
         const offset = (page - 1) * limit;
 
-        const totalTrabajadores = await Model.countTrabajador();
         const establecimiento = await Establecimiento.getEstablecimientos();
         const admin = await Model.getAdmin();
 
-        const Trabajadores = await Model.getTrabajador(limit, offset);
-        const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
-        const totalPages = Math.ceil(totalTrabajadores / limit);
 
         const { nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado } = req.body;
 
+        console.log(nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado);
+
         const empleado = await Model.editTrabajador(nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado);
 
+
         if (!empleado) {
-            return res.render('empleados', { mensaje: "Error", Trabajadores: TrabajadoresArray, currentPage: page, totalPages: totalPages, establecimiento: establecimiento, admin: admin });
+            return res.redirect('/empleado/empleados', { mensaje: "Error"});
         }
 
-        res.render('empleados', {
-            Trabajadores: TrabajadoresArray,
-            currentPage: page,
-            totalPages: totalPages,
-            establecimiento: establecimiento,
-            admin: admin
-        });
+        res.redirect('/empleado/empleados');
     } catch (error) {
         console.error(error);
-        res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });
+        res.status(500).send('Error al editar empleado');
     }
 };
 

@@ -3,7 +3,7 @@ const router = express.Router();
 const Controller = require('../controllers/empleadoController');
 
 // Ruta para mostrar el formulario de creación de un nuevo empleado
-router.get('/empleados/nuevo', Controller.nuevoEmpleado);
+router.get('/empleados/nuevo', Controller.getTrabajadores);
 
 // Ruta para procesar la creación de un nuevo empleado
 router.post('/empleados/nuevo', Controller.nuevoEmpleado);

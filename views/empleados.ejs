@@ -195,7 +195,7 @@
                         <div class="field">
                             <label class="label">Establecimiento</label>
                             <div class="select">
-                                <select name="ID_Establecimiento" id="nuevoSelectEstablecimiento" onchange="actualizarNuevoAdmin()" required>
+                                <select name="ID_Establecimiento" id="nuevoSelectEstablecimiento" required>
                                     <% establecimiento.forEach((est) => { %>
                                         <option value="<%= est.ID_Establecimiento %>">
                                             <%= est.Nombre_Establecimiento %>

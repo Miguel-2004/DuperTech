@@ -142,14 +142,14 @@ module.exports = class Usuario {
         const connection = await db();
         try {
             await connection.beginTransaction();
-            await connection.execute(`
+            const [result] = await connection.execute(`
                 UPDATE empleado 
                 SET Nombre_Empleado = ?, Telefono_Empleado = ?, ID_Establecimiento = ?, ID_Admin = ? 
                 WHERE ID_Empleado = ?`,
                 [nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado]
             );
             await connection.commit();
-            return "yes";
+            return result;
         } catch (error) {
             throw error;
         } finally {

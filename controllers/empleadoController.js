@@ -44,9 +44,9 @@ exports.nuevoEmpleado = async (req, res) => {
         const empleado = await Model.createEmpleado(nombre, telefono, usuario,password, ID_Establecimiento, id_Admin);
 
         if (!empleado) {
-            return res.redirect('/empleado/empleados', { mensaje: "Error"});
+            return res.redirect(process.env.PATH_SERVER +'empleado/empleados', { mensaje: "Error"});
         }
-        res.redirect('/empleado/empleados');
+        res.redirect(process.env.PATH_SERVER +'empleado/empleados');
     } catch (error) {
         console.error(error);
         res.status(500).render('nuevoEmpleado', { mensaje: 'Error al cargar los datos' });
@@ -66,16 +66,14 @@ exports.editarEmpleado = async (req, res) => {
 
         const { nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado } = req.body;
 
-        console.log(nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado);
-
         const empleado = await Model.editTrabajador(nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado);
 
 
         if (!empleado) {
-            return res.redirect('/empleado/empleados', { mensaje: "Error"});
+            return res.redirect(process.env.PATH_SERVER +'empleado/empleados', { mensaje: "Error"});
         }
 
-        res.redirect('/empleado/empleados');
+        res.redirect(process.env.PATH_SERVER +'empleado/empleados');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al editar empleado');
@@ -96,7 +94,7 @@ exports.actualizarEstado = async (req, res) => {
         await Model.actualizarEstado(idEmpleado, estado);
 
         // Redirigir de nuevo a la página de empleados después de la actualización
-        res.redirect('/empleado/empleados');
+        res.redirect(process.env.PATH_SERVER +'empleado/empleados');
     } catch (error) {
         console.error('Error al actualizar en la base de datos:', error);
         res.status(500).send('Error al actualizar el estado.');

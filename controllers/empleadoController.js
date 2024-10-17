@@ -1,34 +1,19 @@
 const Model = require('../models/empeladoModel');
 const Establecimiento = require('../models/establecimientos.model');
 
-exports.getAllTrabajadores = async (req, res, next) => {
-    try {
-        const Trabajadores = await Model.getTrabajador();
-        const establecimiento = await Establecimiento.getEstablecimientos();
-        const admin = await Model.getAdmin();
-
-        const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
-        res.render('empleados', { Trabajadores: TrabajadoresArray, establecimiento: establecimiento, admin: admin });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error al cargar la página principal');
-    }
-};
-
-// Obtener los empleados con paginación y búsqueda por nombre
+// Obtener empleados y administradores con búsqueda y paginación
 exports.getTrabajadores = async (req, res) => {
     try {
-        const searchQuery = req.query.search || ''; // Búsqueda solo por nombre
+        const searchQuery = req.query.search || '';  // Capturar búsqueda
         const currentPage = parseInt(req.query.page) || 1;
-        const limit = 10; // Número de elementos por página
+        const limit = 10;
         const offset = (currentPage - 1) * limit;
 
         const establecimiento = await Establecimiento.getEstablecimientos();
-        const admin = await Model.getAdmin();
+        const admin = await Model.searchAdmin(searchQuery);  // Búsqueda por nombre de admin
 
-        // Obtener los trabajadores y el total con búsqueda por nombre
         const Trabajadores = await Model.searchTrabajador(searchQuery, limit, offset);
-        const totalTrabajadores = await Model.countSearchTrabajador(searchQuery);
+        const totalTrabajadores = await Model.countSearchTrabajador(searchQuery);  // Contar trabajadores que coinciden con la búsqueda
         const totalPages = Math.ceil(totalTrabajadores / limit);
 
         res.render('empleados', {
@@ -37,46 +22,36 @@ exports.getTrabajadores = async (req, res) => {
             totalPages: totalPages,
             establecimiento: establecimiento,
             admin: admin,
-            searchQuery: searchQuery // Pasar el término de búsqueda a la vista
+            searchQuery: searchQuery
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error al obtener los empleados');
+        res.status(500).send('Error al obtener los empleados o administradores');
     }
 };
 
-exports.nuevoEmpleado = async (req, res, next) => {
+// Crear un nuevo empleado
+exports.nuevoEmpleado = async (req, res) => {
     try {
-        const currentPage = parseInt(req.query.page) || 1;
-        const limit = 10;
-        const offset = (currentPage - 1) * limit;
+        const ultimoUsuario = await Model.getUltimoUsuario();  // Obtener último usuario
+        const nuevoUsuario = parseInt(ultimoUsuario) + 1;  // Incrementar usuario
 
         const establecimiento = await Establecimiento.getEstablecimientos();
         const admin = await Model.getAdmin();
 
-        const nombre = req.body.nombre;
-        const telefono = req.body.telefono;
-        const usuario = req.body.usuario;
-        const contrasena = req.body.password;
-        const ID_Es = req.body.ID_Establecimiento;
-        const id_Admin = req.body.id_Admin;
-
-        const empleado = await Model.createEmpleado(nombre, telefono, usuario, contrasena, ID_Es, id_Admin);
-
-        if (!empleado) {
-            return res.render('empleados', { mensaje: 'Error al crear el empleado' });
-        }
-        res.render('empleados', {
+        res.render('nuevoEmpleado', {
+            nuevoUsuario: nuevoUsuario,
             establecimiento: establecimiento,
-            admin: admin 
+            admin: admin
         });
-    } catch (e) {
-        console.error(e);
-        res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).render('nuevoEmpleado', { mensaje: 'Error al cargar los datos' });
     }
 };
 
-exports.editarEmpleado = async (req, res, next) => {
+// Editar un empleado
+exports.editarEmpleado = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = 10;
@@ -90,26 +65,12 @@ exports.editarEmpleado = async (req, res, next) => {
         const TrabajadoresArray = Array.isArray(Trabajadores) ? Trabajadores : [Trabajadores];
         const totalPages = Math.ceil(totalTrabajadores / limit);
 
-        res.render('empleados', {
-            Trabajadores: TrabajadoresArray,
-            currentPage: page,
-            totalPages: totalPages,
-            establecimiento: establecimiento,
-            admin: admin
-        });
+        const { nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado } = req.body;
 
-        const nombre = req.body.nombre || null;
-        const telefono = req.body.telefono || null;
-        const usuario = req.body.usuario || null;
-        const contrasena = req.body.contrasena || null;
-        const ID_Es = req.body.ID_Establecimiento || null;
-        const id_Admin = req.body.id_Admin || null;
-        const ID_Empleado = req.body.ID_Empleado || null;
-
-        const empleado = await Model.editTrabajador(nombre, telefono, usuario, contrasena, ID_Es, id_Admin, ID_Empleado);
+        const empleado = await Model.editTrabajador(nombre, telefono, ID_Establecimiento, id_Admin, ID_Empleado);
 
         if (!empleado) {
-            return res.render('empleados', {mensaje: "error", Trabajadores: TrabajadoresArray});
+            return res.render('empleados', { mensaje: "Error", Trabajadores: TrabajadoresArray, currentPage: page, totalPages: totalPages, establecimiento: establecimiento, admin: admin });
         }
 
         res.render('empleados', {
@@ -119,7 +80,6 @@ exports.editarEmpleado = async (req, res, next) => {
             establecimiento: establecimiento,
             admin: admin
         });
-        
     } catch (error) {
         console.error(error);
         res.status(500).render('empleados', { mensaje: 'Error al cargar los datos' });
@@ -130,15 +90,42 @@ exports.editarEmpleado = async (req, res, next) => {
 exports.actualizarEstado = async (req, res) => {
     const { idEmpleado, estado } = req.body;
 
+    // Verificación de que los datos existan
     if (!idEmpleado || estado === undefined) {
-        return res.status(400).json({ success: false, message: 'Datos incompletos' });
+        return res.status(400).send('Datos incompletos.');
     }
 
     try {
+        // Actualización en la base de datos
         await Model.actualizarEstado(idEmpleado, estado);
-        res.json({ success: true });
+
+        // Redirigir de nuevo a la página de empleados después de la actualización
+        res.redirect('/empleado');
     } catch (error) {
         console.error('Error al actualizar en la base de datos:', error);
-        res.status(500).json({ success: false, message: 'Error al actualizar el estado.' });
+        res.status(500).send('Error al actualizar el estado.');
+    }
+};
+
+// Obtener el último usuario para autoincremento
+exports.obtenerUltimoUsuario = async (req, res) => {
+    try {
+        const ultimoUsuario = await Model.getUltimoUsuario();
+        res.json({ ultimoUsuario });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error al obtener el último usuario.' });
+    }
+};
+
+// Obtener el administrador por establecimiento
+exports.obtenerAdminPorEstablecimiento = async (req, res) => {
+    const { ID_Establecimiento } = req.params;
+    try {
+        const admins = await Model.getAdminsPorEstablecimiento(ID_Establecimiento);
+        res.json({ admins });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error al obtener el administrador.' });
     }
 };

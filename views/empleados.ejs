@@ -4,7 +4,6 @@
     <title>Empleados</title>
     <%- include('includes/head') %>
     <style>
-        /* Estilo para centrar y agrandar el recuadro */
         .box-centered {
             width: 80%;
             max-width: 1200px;
@@ -12,31 +11,36 @@
             padding: 20px;
         }
 
-        .list-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e5e5e5;
+        .table.is-fullwidth.is-striped.is-hoverable {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #363636;
+            border-collapse: collapse;
+            border-spacing: 0;
         }
 
-        .worker-name {
-            flex-grow: 1;
-            margin-right: 20px;
+        .table th,
+        .table td {
+            padding: 0.75em 1em;
+            border-bottom: 2px solid #dbdbdb;
         }
 
-        .edit-button {
-            margin-left: auto;
+        .table thead th {
+            border-bottom: 3px solid #dbdbdb;
+        }
+
+        .table.is-striped tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table.is-hoverable tbody tr:hover {
+            background-color: #f5f5f5;
         }
 
         .pagination-container {
             display: flex;
             justify-content: center;
             margin-top: 20px;
-        }
-
-        .pagination-button {
-            margin: 0 5px;
         }
 
         .popup {
@@ -63,33 +67,6 @@
             z-index: 999;
             display: none;
         }
-
-        /* Estilo de tabla con líneas continuas */
-        .table.is-fullwidth.is-striped.is-hoverable {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #363636;
-            border-collapse: collapse;
-            border-spacing: 0;
-        }
-
-        .table th,
-        .table td {
-            padding: 0.75em 1em;
-            border-bottom: 2px solid #dbdbdb; /* Línea continua entre filas */
-        }
-
-        .table thead th {
-            border-bottom: 3px solid #dbdbdb; /* Línea más gruesa en el encabezado */
-        }
-
-        .table.is-striped tbody tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-
-        .table.is-hoverable tbody tr:hover {
-            background-color: #f5f5f5;
-        }
     </style>
 </head>
 <body>
@@ -102,16 +79,18 @@
                 <h1 class="title has-text-centered">Trabajadores</h1>
 
                 <!-- Search -->
-                <div class="field has-addons">
-                    <div class="control has-icons-left is-expanded">
-                        <input class="input" type="text" placeholder="Buscar" value="<%= searchQuery %>" name="search">
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-search"></i>
-                        </span>
+                <form method="GET" action="/empleados">
+                    <div class="field has-addons">
+                        <div class="control has-icons-left is-expanded">
+                            <input class="input" type="text" placeholder="Buscar" value="<%= searchQuery %>" name="search">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-search"></i>
+                            </span>
+                        </div>
                     </div>
-                </div>
+                </form>
 
-                <!-- Tabla de trabajadores con líneas continuas -->
+                <!-- Tabla de trabajadores -->
                 <table class="table is-fullwidth is-striped is-hoverable">
                     <thead>
                         <tr>
@@ -123,41 +102,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% Trabajadores.forEach((Trabajadores) => { %>
+                        <% Trabajadores.forEach((trabajador) => { %>
                             <tr>
-                                <td><%= Trabajadores.Nombre_Empleado %></td>
-                                <td><%= Trabajadores.Telefono_Empleado %></td>
-                                <td><%= Trabajadores.Usuario %></td>
+                                <td><%= trabajador.Nombre_Empleado %></td>
+                                <td><%= trabajador.Telefono_Empleado %></td>
+                                <td><%= trabajador.Usuario %></td>
 
                                 <!-- Menú desplegable de estado -->
                                 <td>
-                                    <div class="select is-small">
-                                        <select onchange="actualizarEstado('<%= Trabajadores.ID_Empleado %>', this.value)">
-                                            <option value="1" <%= Trabajadores.estado === 1 ? 'selected' : '' %>>Activo</option>
-                                            <option value="0" <%= Trabajadores.estado === 0 ? 'selected' : '' %>>Inactivo</option>
+                                    <form action="/empleados/actualizarEstado" method="POST">
+                                        <input type="hidden" name="idEmpleado" value="<%= trabajador.ID_Empleado %>">
+                                        <select name="estado" onchange="this.form.submit()">
+                                            <option value="1" <%= trabajador.estado === 1 ? 'selected' : '' %>>Activo</option>
+                                            <option value="0" <%= trabajador.estado === 0 ? 'selected' : '' %>>Inactivo</option>
                                         </select>
-                                    </div>
+                                    </form>
                                 </td>
 
                                 <td>
                                     <button class="button is-small is-link is-light edit-button" 
-                                    onclick="mostrarPopupEditar('<%= Trabajadores.Nombre_Empleado %>', 
-                                            '<%= Trabajadores.ID_Empleado %>', 
-                                            '<%= Trabajadores.Telefono_Empleado %>', 
-                                            '<%= Trabajadores.Usuario %>', 
-                                            '<%= Trabajadores.Contrasenia %>', 
-                                            '<%= Trabajadores.ID_Establecimiento %>', 
-                                            '<%= Trabajadores.ID_Admin %>')">Editar</button>
+                                    onclick="mostrarPopupEditar('<%= trabajador.Nombre_Empleado %>', 
+                                            '<%= trabajador.ID_Empleado %>', 
+                                            '<%= trabajador.Telefono_Empleado %>', 
+                                            '<%= trabajador.Usuario %>', 
+                                            '<%= trabajador.Contrasenia %>', 
+                                            '<%= trabajador.ID_Establecimiento %>', 
+                                            '<%= trabajador.ID_Admin %>')">Editar</button>
                                 </td>
                             </tr>
                         <% }) %>
                     </tbody>
                 </table>
 
-                <!-- Paginación simplificada con flechas -->
+                <!-- Paginación -->
                 <div class="pagination-container">
                     <% if (currentPage > 1) { %>
-                        <!-- Botón de página anterior (Flecha izquierda) -->
                         <a href="?page=<%= currentPage - 1 %>" class="button is-link pagination-button">
                             <span class="icon"><i class="fas fa-arrow-left"></i></span>
                         </a>
@@ -166,7 +145,6 @@
                     <span class="pagination-info">Página <%= currentPage %> de <%= totalPages %></span>
 
                     <% if (currentPage < totalPages) { %>
-                        <!-- Botón de página siguiente (Flecha derecha) -->
                         <a href="?page=<%= currentPage + 1 %>" class="button is-link pagination-button">
                             <span class="icon"><i class="fas fa-arrow-right"></i></span>
                         </a>
@@ -176,7 +154,7 @@
 
             <!-- Botón para añadir trabajador -->
             <div class="has-text-centered mt-5">
-                <button class="button is-success is-medium">Añadir</button>
+                <button class="button is-success is-medium" id="addWorkerBtn">Añadir</button>
             </div>
         </section>
 
@@ -189,8 +167,7 @@
                     <button class="delete" aria-label="close" id="closeModalBtn"></button>
                 </header>
                 <section class="modal-card-body">
-                    <form id="formularioEmpleado" action="<%= process.env.PATH_SERVER %>empleado/empleados/nuevo" method="POST">
-                        <!-- Formulario de añadir trabajador -->
+                    <form id="formularioEmpleado" action="/empleados/nuevo" method="POST">
                         <div class="field">
                             <label class="label">Nombre del Trabajador</label>
                             <div class="control">
@@ -206,7 +183,7 @@
                         <div class="field">
                             <label class="label">Usuario</label>
                             <div class="control">
-                                <input class="input" type="text" name="usuario" placeholder="Correo electrónico" required>
+                                <input class="input" type="text" name="usuario" id="usuarioInput" placeholder="Usuario" required>
                             </div>
                         </div>
                         <div class="field">
@@ -218,10 +195,10 @@
                         <div class="field">
                             <label class="label">Establecimiento</label>
                             <div class="select">
-                                <select name="ID_Establecimiento" required>
-                                    <% establecimiento.forEach((establecimiento) => { %>
-                                        <option value="<%= establecimiento.ID_Establecimiento %>">
-                                            <%= establecimiento.Nombre_Establecimiento %>
+                                <select name="ID_Establecimiento" id="nuevoSelectEstablecimiento" onchange="actualizarNuevoAdmin()" required>
+                                    <% establecimiento.forEach((est) => { %>
+                                        <option value="<%= est.ID_Establecimiento %>">
+                                            <%= est.Nombre_Establecimiento %>
                                         </option>
                                     <% }); %>
                                 </select>
@@ -230,7 +207,7 @@
                         <div class="field">
                             <label class="label">Administrador</label>
                             <div class="select">
-                                <select name="id_Admin" required>
+                                <select name="id_Admin" id="nuevoAdminSelect" required>
                                     <% admin.forEach((admin) => { %>
                                         <option value="<%= admin.ID_Admin %>">
                                             <%= admin.Nombre %>
@@ -253,64 +230,47 @@
 
         <!-- Pop-up de Edición -->
         <div class="popup" id="editPopup" style="display: none;">
-            <!-- Botón de cerrar -->
             <button id="closeEditPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
-
-            <!-- Título -->
             <h2 class="title is-4 has-text-link">Editar detalles del trabajador</h2>
 
-            <!-- Formulario de edición con el action establecido -->
-            <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleado/empleados/editar" method="post">
-                <!-- Campo ID (oculto) -->
+            <form id="editar_info" action="/empleados/editar" method="post">
                 <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
-
-                <!-- Campo Nombre -->
                 <div class="field">
                     <label class="label">Nombre</label>
                     <div class="control">
                         <input id="editNombre" class="input" type="text" name="nombre" placeholder="Nombre del trabajador" required>
                     </div>
                 </div>
-
-                <!-- Campo Teléfono -->
                 <div class="field">
                     <label class="label">Teléfono</label>
                     <div class="control">
                         <input id="editTelefono" class="input" type="text" name="telefono" placeholder="Teléfono" required>
                     </div>
                 </div>
-
-                <!-- Campo Usuario -->
                 <div class="field">
                     <label class="label">Usuario</label>
                     <div class="control">
-                        <input id="editUsuario" class="input" type="text" name="usuario" placeholder="Usuario" required>
+                        <input id="editUsuario" class="input" type="text" name="usuario" placeholder="Usuario" readonly>
                     </div>
                 </div>
-
-                <!-- Campo Contraseña -->
                 <div class="field">
                     <label class="label">Contraseña</label>
                     <div class="control">
-                        <input id="editContrasenia" class="input" type="password" name="contrasena" placeholder="Contraseña" required>
+                        <input id="editContrasenia" class="input" type="password" name="contrasena" placeholder="Contraseña" readonly>
                     </div>
                 </div>
-
-                <!-- Campo Establecimiento -->
                 <div class="field">
                     <label class="label">Establecimiento</label>
                     <div class="select">
                         <select id="editIDEstablecimiento" name="ID_Establecimiento" required>
-                            <% establecimiento.forEach((establecimiento) => { %>
-                                <option value="<%= establecimiento.ID_Establecimiento %>">
-                                    <%= establecimiento.Nombre_Establecimiento %>
+                            <% establecimiento.forEach((est) => { %>
+                                <option value="<%= est.ID_Establecimiento %>">
+                                    <%= est.Nombre_Establecimiento %>
                                 </option>
                             <% }); %>
                         </select>
                     </div>
                 </div>
-
-                <!-- Campo Administrador -->
                 <div class="field">
                     <label class="label">Administrador</label>
                     <div class="select">
@@ -323,16 +283,13 @@
                         </select>
                     </div>
                 </div>
-
-                <!-- Botón para guardar cambios -->
                 <button class="button is-link is-fullwidth mt-4" type="submit">Guardar Cambios</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Funcionalidad de abrir y cerrar modal de añadir trabajador
-        const addWorkerBtn = document.querySelector('.button.is-success.is-medium');
+        const addWorkerBtn = document.getElementById('addWorkerBtn');
         const addWorkerModal = document.getElementById('addWorkerModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
@@ -344,58 +301,73 @@
             addWorkerModal.classList.remove('is-active');
         });
 
-        // Función para mostrar el popup con los datos del trabajador
-    function mostrarPopupEditar(nombre, idEmpleado, telefono, usuario, contrasenia, idEstablecimiento, idAdmin) {
-        // Mostrar el popup de edición
-        document.getElementById("editPopup").style.display = "block";
-
-        // Llenar los campos del popup con los datos del trabajador
-        document.getElementById("editNombre").value = nombre;
-        document.getElementById("editIDEmpleado").value = idEmpleado;
-        document.getElementById("editTelefono").value = telefono;
-        document.getElementById("editUsuario").value = usuario;
-        document.getElementById("editContrasenia").value = contrasenia;
-        
-        // Seleccionar el establecimiento correcto
-        document.getElementById("editIDEstablecimiento").value = idEstablecimiento;
-
-        // Seleccionar el administrador correcto
-        document.getElementById("editIDAdmin").value = idAdmin;
-    }
-
-    // Cerrar el popup cuando se haga clic en el botón de cerrar
-    document.getElementById("closeEditPopup").addEventListener("click", function() {
-        document.getElementById("editPopup").style.display = "none";
-    });
-
-        // Función para actualizar el estado de un empleado
-    function actualizarEstado(idEmpleado, nuevoEstado) {
-        fetch('/empleados/actualizarEstado', {
-        method: 'POST', 
-        headers: {
-            'Content-Type': 'application/json', 
-        },
-        body: JSON.stringify({
-            idEmpleado: idEmpleado,  
-            estado: nuevoEstado 
-        }),
-    })
-    .then(response => response.json())  // Procesamos la respuesta como JSON
-    .then(data => {
-        if (data.success) {
-            alert('Estado actualizado con éxito');
-        } else {
-            alert('Error al actualizar el estado');
+        function mostrarPopupEditar(nombre, idEmpleado, telefono, usuario, contrasenia, idEstablecimiento, idAdmin) {
+            document.getElementById("editPopup").style.display = "block";
+            document.getElementById("editNombre").value = nombre;
+            document.getElementById("editIDEmpleado").value = idEmpleado;
+            document.getElementById("editTelefono").value = telefono;
+            document.getElementById("editUsuario").value = usuario;
+            document.getElementById("editContrasenia").value = contrasenia;
+            document.getElementById("editIDEstablecimiento").value = idEstablecimiento;
+            document.getElementById("editIDAdmin").value = idAdmin;
         }
-    })
-    .catch(error => {
-        // Si hay algún error en la solicitud, lo mostramos en la consola
-        console.error('Error:', error);
-    });
-}
 
+        document.getElementById("closeEditPopup").addEventListener("click", function() {
+            document.getElementById("editPopup").style.display = "none";
+        });
+
+        function actualizarEstado(idEmpleado, nuevoEstado) {
+            fetch('/empleados/actualizarEstado', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    idEmpleado: idEmpleado,
+                    estado: nuevoEstado
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Estado actualizado con éxito');
+                    window.location.reload();
+                } else {
+                    alert('Error al actualizar el estado');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        window.onload = function() {
+            fetch('/empleados/obtenerUltimoUsuario')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('usuarioInput').value = data.ultimoUsuario + 1;
+                })
+                .catch(error => console.error('Error al obtener el último usuario:', error));
+        };
+
+        function actualizarNuevoAdmin() {
+            const establecimientoID = document.getElementById('nuevoSelectEstablecimiento').value;
+            fetch(`/empleados/obtenerAdminPorEstablecimiento/${establecimientoID}`)
+                .then(response => response.json())
+                .then(data => {
+                    const adminSelect = document.getElementById('nuevoAdminSelect');
+                    adminSelect.innerHTML = '';
+                    data.admins.forEach(admin => {
+                        const option = document.createElement('option');
+                        option.value = admin.ID_Admin;
+                        option.text = admin.Nombre;
+                        adminSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error al obtener el administrador:', error));
+        }
     </script>
 
     <%- include('includes/footer') %>
 </body>
-</html> 
+</html>

@@ -5,22 +5,13 @@
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
-        .box-centered {
-            width: 60%;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
         .chart-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 400px;
             margin: 0 auto;
         }
         canvas {
-            max-height: 400px;
+            max-height: 300px;
             width: 100%;
         }
     </style>
@@ -31,40 +22,49 @@
 
     <section class="section">
         <div class="container">
-            <!-- Gráfica de Sellos por Empleado -->
-            <div class="box box-centered">
-                <h1 class="title has-text-centered">Reporte de Sellos por Empleado</h1>
-                <div class="chart-container">
-                    <canvas id="sellosChart"></canvas>
+            <div class="columns is-multiline is-centered">
+                <!-- Gráfica de Sellos por Empleado -->
+                <div class="column is-half">
+                    <div class="box">
+                        <h1 class="title has-text-centered">Reporte de Sellos por Empleado</h1>
+                        <div class="chart-container">
+                            <canvas id="sellosChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Gráfica de Promociones Canjeadas a lo Largo del Tiempo -->
-            <div class="box box-centered">
-                <h1 class="title has-text-centered">Promociones Canjeadas a lo Largo del Tiempo</h1>
-                <div class="chart-container">
-                    <canvas id="promocionesChart"></canvas>
+                <!-- Gráfica de Promociones Canjeadas a lo Largo del Tiempo -->
+                <div class="column is-half">
+                    <div class="box">
+                        <h1 class="title has-text-centered">Promociones Canjeadas a lo Largo del Tiempo</h1>
+                        <div class="chart-container">
+                            <canvas id="promocionesChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Gráfica de Tarjetas por Sucursal -->
-            <div class="box box-centered">
-                <h1 class="title has-text-centered">Tarjetas por Sucursal</h1>
-                <div class="chart-container">
-                    <canvas id="tarjetasChart"></canvas>
+                <!-- Gráfica de Tarjetas por Sucursal -->
+                <div class="column is-half">
+                    <div class="box">
+                        <h1 class="title has-text-centered">Tarjetas por Sucursal</h1>
+                        <div class="chart-container">
+                            <canvas id="tarjetasChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Gráfica de Sellos por Sucursal (Gráfica de Pastel) -->
-            <div class="box box-centered">
-                <h1 class="title has-text-centered">Sellos Otorgados por Sucursal</h1>
-                <div class="chart-container">
-                    <canvas id="sellosPorSucursalChart"></canvas>
+                <!-- Gráfica de Sellos por Sucursal (Gráfica de Pastel) -->
+                <div class="column is-half">
+                    <div class="box">
+                        <h1 class="title has-text-centered">Sellos Otorgados por Sucursal</h1>
+                        <div class="chart-container">
+                            <canvas id="sellosPorSucursalChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
 
     <!-- Script para la gráfica de Sellos por Empleado -->
     <script>
@@ -109,14 +109,12 @@
         const ctxPromociones = document.getElementById('promocionesChart').getContext('2d');
         const promocionesData = <%- JSON.stringify(reclamaciones || []) %>;
     
-        // Arreglo con los nombres de los meses
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     
         if (promocionesData.length > 0) {
-            // Mapea los meses numéricos a los nombres de los meses
             const fechas = promocionesData.map(promo => {
-                const [year, month] = promo.mes.split('-'); // Divide el año y el mes
-                return meses[parseInt(month, 10) - 1] + ' ' + year; // Mapea el número del mes a su nombre
+                const [year, month] = promo.mes.split('-'); 
+                return meses[parseInt(month, 10) - 1] + ' ' + year;
             });
     
             const canjeadas = promocionesData.map(promo => promo.canjeadas);
@@ -151,7 +149,6 @@
         }
     </script>
     
-
     <!-- Script para la gráfica de Tarjetas por Sucursal -->
     <script>
         const ctxTarjetas = document.getElementById('tarjetasChart').getContext('2d');

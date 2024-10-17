@@ -10,10 +10,12 @@ const duperController = require('./controllers/duper.controller');
 
 // Middleware para procesar formularios
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Configurar EJS como motor de vistas
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+app.set('views', path.join(__dirname, 'views'));
 
 // Middleware para servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));

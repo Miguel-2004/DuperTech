@@ -26,7 +26,7 @@
             background-color: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            max-width: 900px; /* Ajuste de tamaño */
+            max-width: 900px; 
             width: 100%;
         }
     
@@ -39,7 +39,7 @@
         .card {
             position: relative;
             width: 350px;
-            height: 220px; /* Aumento de altura para un mejor ajuste */
+            height: 220px; 
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: #fff;
@@ -112,12 +112,12 @@
         /* Estilo para el logo db en la tarjeta */
         .imgFondo {
             position: absolute;
-            top: 10px;  /* Posición superior */
-            left: 10px;  /* Posición a la izquierda */
-            width: 50px;  /* Ajuste de tamaño pequeño */
-            height: auto; /* Mantiene la proporción */
-            z-index: 10;  /* Asegúrate de que esté encima de otros elementos */
-            opacity: 1;   /* Sin opacidad */
+            top: 10px;  
+            left: 10px;  
+            width: 50px;  
+            height: auto; 
+            z-index: 10;  
+            opacity: 1;   
         }
     
         /* Estilo para cada línea de contenido de la tarjeta */
@@ -126,8 +126,8 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            font-size: 18px; /* Ajuste del tamaño del texto */
-            color: #fff; /* Color del texto */
+            font-size: 18px; 
+            color: #fff; 
         }
     
         .card-holder {
@@ -158,13 +158,12 @@
             border: 2px solid white;
         }
     
-        /* Encabezado del popup */
+        
         .popup-header {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        /* Estilo para el logo "DB" en la tarjeta */
 
     </style>
     
@@ -272,7 +271,7 @@
     <div class="card-container">
         <div class="card" id="flip-card">
             <div class="card-inner">
-                <div class="front" id="card-front" style="background-color: <%= versiones.color %>;">
+                <div class="front" id="card-front" style="background-color: <%= versiones.color %>">
                     <img src="<%= process.env.PATH_SERVER %><%= versiones.imagen %>" id="front-image" class="map-img">
                     <div class="row">
                         <img src="<%= process.env.PATH_SERVER %>images/DB_S_ICON.png" class="imgFondo" width="60px">
@@ -321,7 +320,7 @@
             <!-- Botón de cerrar -->
             <button id="close-popup1" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
         </header>
-        <form id="create-form" action="<%= process.env.PATH_SERVER %>version/create" method="POST" enctype="multipart/form-data">
+        <form id="create-form" action="<%= process.env.PATH_SERVER %>version/create" method="POST">
             <!-- Campo oculto para la imagen -->
             <div class="field" style="display: none;">
                 <label class="label">Imagen</label>
@@ -519,8 +518,6 @@ document.querySelectorAll('#flip-card-create').forEach(function(card) {
 document.getElementById('color-picker-create').addEventListener('input', function () {
     document.getElementById('card-front-create').style.backgroundColor = this.value;
 });
-
-
 
 </script>
 

@@ -19,7 +19,7 @@ module.exports = class usuarios {
     
             const [rows] = await connection.execute(`
                 SELECT * FROM administrador 
-                WHERE Usuario = ? AND Contrasenia = ?`, 
+                WHERE Usuario = ? AND Contrasenia = ? AND estado = 1`, 
                 [correo, contrasena]
             );
     
@@ -43,7 +43,7 @@ module.exports = class usuarios {
     
             const [rows] = await connection.execute(`
                 SELECT * FROM empleado 
-                WHERE Usuario = ? AND Contrasenia = ?`, 
+                WHERE Usuario = ? AND Contrasenia = ? AND estado = 1`, 
                 [correo, contrasena]
             );
     

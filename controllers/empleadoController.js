@@ -100,7 +100,7 @@ exports.actualizarEstado = async (req, res) => {
         await Model.actualizarEstado(idEmpleado, estado);
 
         // Redirigir de nuevo a la página de empleados después de la actualización
-        res.redirect('/empleado');
+        res.redirect('/empleado/empleados');
     } catch (error) {
         console.error('Error al actualizar en la base de datos:', error);
         res.status(500).send('Error al actualizar el estado.');

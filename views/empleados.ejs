@@ -79,7 +79,7 @@
                 <h1 class="title has-text-centered">Trabajadores</h1>
 
                 <!-- Search -->
-                <form method="GET" action="/empleados">
+                <form method="GET" action="<%= process.env.PATH_SERVER %>empleado/empleados">
                     <div class="field has-addons">
                         <div class="control has-icons-left is-expanded">
                             <input class="input" type="text" placeholder="Buscar" value="<%= searchQuery %>" name="search">
@@ -110,7 +110,7 @@
 
                                 <!-- Menú desplegable de estado -->
                                 <td>
-                                    <form action="/empleados/actualizarEstado" method="POST">
+                                    <form action="<%= process.env.PATH_SERVER %>empleado/empleados/actualizarEstado" method="POST">
                                         <input type="hidden" name="idEmpleado" value="<%= trabajador.ID_Empleado %>">
                                         <select name="estado" onchange="this.form.submit()">
                                             <option value="1" <%= trabajador.estado === 1 ? 'selected' : '' %>>Activo</option>
@@ -167,7 +167,7 @@
                     <button class="delete" aria-label="close" id="closeModalBtn"></button>
                 </header>
                 <section class="modal-card-body">
-                    <form id="formularioEmpleado" action="/empleados/nuevo" method="POST">
+                    <form id="formularioEmpleado" action="<%= process.env.PATH_SERVER %>empleado/empleados/nuevo" method="POST">
                         <div class="field">
                             <label class="label">Nombre del Trabajador</label>
                             <div class="control">
@@ -233,7 +233,7 @@
             <button id="closeEditPopup" class="delete" style="position: absolute; top: 10px; right: 10px;"></button>
             <h2 class="title is-4 has-text-link">Editar detalles del trabajador</h2>
 
-            <form id="editar_info" action="/empleados/editar" method="post">
+            <form id="editar_info" action="<%= process.env.PATH_SERVER %>empleado/empleados/editar" method="post">
                 <input type="hidden" id="editIDEmpleado" name="ID_Empleado">
                 <div class="field">
                     <label class="label">Nombre</label>

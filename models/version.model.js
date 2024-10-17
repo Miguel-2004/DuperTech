@@ -77,11 +77,14 @@ module.exports = class Version {
     
 
     // Crear una nueva versión
-    static async createVersion(color, promo1, promo2) {
+    static async createVer(color, promo1, promo2, imagen) {
         const connection = await db();
         try {
-            await connection.execute(`INSERT INTO version (color, promo1, promo2) VALUES (?, ?, ?)`, [color, promo1, promo2]);
+            const [result] = await connection.execute(`INSERT INTO version (color, promo1, promo2, imagen) VALUES (?, ?, ?, ?)`, [color, promo1, promo2, imagen]);
+            await connection.commit();
+            
             await connection.release();
+            return result;
         } catch (e) {
             throw e;
         }

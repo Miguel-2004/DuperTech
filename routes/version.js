@@ -6,6 +6,7 @@ const versionC = require('../controllers/versionController');
 router.post('/update', versionC.updateVersion);
 
 // Ruta para crear una nueva versión
+router.get('/create', versionC.getVersionesPag)
 router.post('/create', versionC.createVersion);
 
 

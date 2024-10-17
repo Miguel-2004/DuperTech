@@ -52,7 +52,7 @@ exports.updateVersion = async (req, res) => {
         console.log(id , color, promo1, promo2);
 
         const version = await Version.updateVersion(id, color, promo1, promo2);
-        
+
         if (!version) {
             return res.redirect(process.env.PATH_SERVER +'version', { mensaje: 'Error al crear la version' });
         }
@@ -66,8 +66,22 @@ exports.updateVersion = async (req, res) => {
 // Crear una nueva versión
 exports.createVersion = async (req, res) => {
     try {
-        const { color, promo1, promo2 } = req.body;
-        await Version.createVersion(color, promo1, promo2);  // Crear nueva versión
+
+        console.log("Datos recibidos en el cuerpo:", req.body);
+        
+        const color = req.body.color || null;
+        const promo1 = req.body.promo1 || null;
+        const promo2 = req.body.promo2 || null;
+        const imagen = req.body.image || null;
+
+        console.log(color, promo1, promo2, imagen);
+
+        const version = await Version.createVer(color, promo1, promo2, imagen);  // Crear nueva versión
+        console.log(version);
+
+        if (!version) {
+            return res.redirect(process.env.PATH_SERVER +'version', { mensaje: 'Error al crear la version' });
+        }
         res.redirect(process.env.PATH_SERVER + 'version'); // Redirigir después de crear
     } catch (err) {
         console.error(err);

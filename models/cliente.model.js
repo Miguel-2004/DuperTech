@@ -16,6 +16,40 @@ module.exports = class Cliente {
         }
     }
 
+    // Obtener los datos de los clientes con paginación y búsqueda
+    static async searchCliente(searchQuery, limit, offset) {
+        const connection = await db();
+        try {
+          const [result] = await connection.execute(`
+            SELECT * FROM cliente c JOIN tarjeta t ON c.ID_Cliente = t.ID_Cliente
+            WHERE c.Nombre_Cliente LIKE ? OR c.Telefono_Cliente LIKE ?
+            LIMIT ? OFFSET ?
+          `, [`%${searchQuery}%`, `%${searchQuery}%`, limit, offset]);
+      
+          return result;
+        } catch (e) {
+          console.error(e);
+          throw e;
+        } finally {
+          await connection.release();  // Asegúrate de liberar la conexión
+        }
+      }
+
+    // Contar el número de clientes con búsqueda
+    static async countSearchClientes(searchQuery) {
+        const connection = await db();
+        try {
+            const [result] = await connection.execute(`
+                SELECT COUNT(*) as count FROM cliente
+                WHERE Nombre_Cliente LIKE ? OR Telefono_Cliente LIKE ?
+            `, [`%${searchQuery}%`, `%${searchQuery}%`]);
+            await connection.release();
+            return result[0].count;
+        } catch (e) {
+            throw e;
+        }
+    }
+
     static async crearCliente (nombre, telefono, FechaNac, sexo) {
         const connection = await db();
         try {

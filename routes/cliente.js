@@ -11,5 +11,4 @@ router.post('/clientes/editar', Controller.editarCliente);
 router.get('/clientes', Controller.getAllClientes);
 router.post('/clientes', Controller.getAllClientes);
 
-
 module.exports = router;

@@ -3,11 +3,20 @@ const Establecimiento = require('../models/establecimientos.model');
 const cliente = require('../models/cliente.model');
 
 exports.getAllClientes = async (req, res, next) => {
-    try{
-        const Clientes = await cliente.getCliente();
+    try {
+        const searchQuery = req.query.search || ''; // Obtener el término de búsqueda
+        const page = parseInt(req.query.page) || 1; // Página actual, por defecto 1
+        const limit = 10; // Número de clientes por página
+        const offset = (page - 1) * limit;
+
+        // Obtener clientes filtrados por búsqueda y paginación
+        const Clientes = await cliente.searchCliente(searchQuery, limit, offset);
+        const totalClientes = await cliente.countSearchClientes(searchQuery); // Contar los resultados filtrados
+
+        const totalPages = Math.ceil(totalClientes / limit); // Número total de páginas
 
         const ClientesArray = Array.isArray(Clientes) ? Clientes : [Clientes];
-        res.render('clientes', { Clientes: ClientesArray });
+        res.render('clientes', { Clientes: ClientesArray, currentPage: page, totalPages, searchQuery });
 
     } catch (err) {
         console.error(err);
@@ -97,4 +106,3 @@ exports.editarCliente = async (req, res, next) => {
         res.status(500).render('clientes', { mensaje: 'Error al cargar los datos' });
     }
 };
-
